@@ -6,19 +6,23 @@ import static java.lang.Math.toRadians;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 import java.util.List;
 
@@ -26,7 +30,7 @@ import java.util.List;
 public class Thunderbot2023
 {
     // defines all variables
-    BNO055IMU imu = null;
+    IMU imu = null;
     DcMotorEx leftFront = null;
     DcMotorEx rightFront = null;
     DcMotorEx leftRear = null;
@@ -40,6 +44,7 @@ public class Thunderbot2023
     double allMotors = 0;
     double heading = 0;
     List<LynxModule> allHubs;
+    //Eyes vision = new Eyes();
 
     double initialPosition = 0;
     boolean moving = false;
@@ -73,21 +78,15 @@ public class Thunderbot2023
     {
         try
         {
-            // Set up the parameters with which we will use our IMU. Note that integration
-            // algorithm here just reports accelerations to the logcat log; it doesn't actually
-            // provide positional information.
-            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-            parameters.loggingEnabled = true;
-            parameters.loggingTag = "IMU";
-            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-            // Retrieve and initialize the IMU.
-            imu = ahwMap.get(BNO055IMU.class, "imu");
-            imu.initialize(parameters);
-            imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            imu = ahwMap.get(IMU.class, "imu");
+
+            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+
+            RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+            imu.initialize(new IMU.Parameters(orientationOnRobot));
         }
         catch (Exception p_exeception)
         {
@@ -209,10 +208,9 @@ public class Thunderbot2023
      */
     public double updateHeading()
     {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
-                AngleUnit.DEGREES);
-        return -AngleUnit.DEGREES.normalize(
-                AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+        return orientation.getYaw(AngleUnit.DEGREES);
     }
     public void update() {
         for (LynxModule module : allHubs) {
@@ -245,7 +243,7 @@ public class Thunderbot2023
         rightFront.setPower(0);
         leftRear.setPower(0);
         rightRear.setPower(0);
-    }
+      }
 
 }
 

@@ -17,7 +17,7 @@ public class Teleop extends OpMode
         robot.init(hardwareMap, telemetry, false);
 
         telemetry.addData("Init", "Done");
-
+        //launcher.init(hardwareMap);
 
     }
 

@@ -218,8 +218,8 @@ public class Thunderbot2023
         rightRear.setPower(backRight);
     }
     public void OrientedDrive(double forward, double right, double clockwise) {
-        double gyroAngle = angles.firstAngle;
-        double theta = gyroAngle;
+        double gyroAngle = updateHeading();
+        double theta = Math.toRadians(gyroAngle);
         double vx = (forward * cos(theta)) - (right * sin(theta));
         double vy = (forward * sin(theta)) + (right * cos(theta));
         double omega = clockwise;

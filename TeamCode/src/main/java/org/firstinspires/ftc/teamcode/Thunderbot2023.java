@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.toRadians;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -20,8 +19,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 import java.util.List;
@@ -31,10 +28,20 @@ public class Thunderbot2023
 {
     // defines all variables
     IMU imu = null;
+
+    Orientation angles = new Orientation();
     DcMotorEx leftFront = null;
     DcMotorEx rightFront = null;
     DcMotorEx leftRear = null;
     DcMotorEx rightRear = null;
+
+    Motor rightFront1;
+    Motor rightRear1;
+    Motor leftFront1;
+    Motor leftRear1;
+
+
+
 
     // Position Variables
     long leftFrontPosition = 0;
@@ -43,13 +50,11 @@ public class Thunderbot2023
     long rightRearPosition = 0;
     double allMotors = 0;
     double heading = 0;
+    double initRotation = 0;
+
     List<LynxModule> allHubs;
     //Eyes vision = new Eyes();
 
-    double initialPosition = 0;
-    boolean moving = false;
-    double startAngle = 0;
-    boolean angleWrap = false;
 
     // converts inches to motor ticks
     static final double COUNTS_PER_MOTOR_REV = 28; // REV HD Hex motor
@@ -63,10 +68,7 @@ public class Thunderbot2023
     /**
      * Constructor
      */
-    public Thunderbot2023()
-    {
-
-    }
+    public Thunderbot2023() {}
 
     /**
      * Initializes the Thunderbot and connects its hardware to the HardwareMap
@@ -78,7 +80,6 @@ public class Thunderbot2023
     {
         try
         {
-
             imu = ahwMap.get(IMU.class, "imu");
 
             RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
@@ -87,6 +88,12 @@ public class Thunderbot2023
             RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
             imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+            angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                    AngleUnit.DEGREES);
+
+            initRotation = angles.firstAngle;
+
         }
         catch (Exception p_exeception)
         {
@@ -109,56 +116,65 @@ public class Thunderbot2023
             telemetry.addData("Lynx Module not found", 0);
         }
 
-        try
-        {
-            rightFront = ahwMap.get(DcMotorEx.class, "rightFront");
-            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        catch (Exception e)
-        {
-            telemetry.addData("rightFront not found in config file", 0);
-        }
+//        try
+//        {
+//            rightFront = ahwMap.get(DcMotorEx.class, "rightFront");
+//            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+//            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        }
+//        catch (Exception e)
+//        {
+//            telemetry.addData("rightFront not found in config file", 0);
+//        }
+//
+//        try
+//        {
+//            rightRear = ahwMap.get(DcMotorEx.class, "rightRear");
+//            rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+//            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        }
+//        catch (Exception e)
+//        {
+//            telemetry.addData("rightRear not found in config file", 0);
+//        }
+//
+//        try
+//        {
+//            leftFront = ahwMap.get(DcMotorEx.class, "leftFront");
+//            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+//            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        }
+//        catch (Exception e)
+//        {
+//            telemetry.addData("leftFront not found in config file", 0);
+//        }
+//
+//        try
+//        {
+//            leftRear = ahwMap.get(DcMotorEx.class, "leftRear");
+//            leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
+//            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        }
+//        catch (Exception e)
+//        {
+//            telemetry.addData("leftRear not found in config file", 0);
+//        }
 
-        try
-        {
-            rightRear = ahwMap.get(DcMotorEx.class, "rightRear");
-            rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        catch (Exception e)
-        {
-            telemetry.addData("rightRear not found in config file", 0);
-        }
-
-        try
-        {
-            leftFront = ahwMap.get(DcMotorEx.class, "leftFront");
-            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        catch (Exception e)
-        {
-            telemetry.addData("leftFront not found in config file", 0);
-        }
-
-        try
-        {
-            leftRear = ahwMap.get(DcMotorEx.class, "leftRear");
-            leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
-            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        catch (Exception e)
-        {
-            telemetry.addData("leftRear not found in config file", 0);
+        try{
+            rightFront1 = new Motor(ahwMap, "rightFront");
+            rightRear1 = new Motor(ahwMap, "rightRear");
+            leftFront1 = new Motor(ahwMap, "leftFront");
+            leftRear1 = new Motor(ahwMap, "leftRear");
+        } catch (Exception e) {
+            telemetry.addData("Motors FTCLib not found in config file", 0);
         }
     }
 
@@ -201,6 +217,23 @@ public class Thunderbot2023
         leftRear.setPower(backLeft);
         rightRear.setPower(backRight);
     }
+    public void OrientedDrive(double forward, double right, double clockwise) {
+        double gyroAngle = angles.firstAngle;
+        double theta = gyroAngle;
+        double vx = (forward * cos(theta)) - (right * sin(theta));
+        double vy = (forward * sin(theta)) + (right * cos(theta));
+        double omega = clockwise;
+
+        double frontLeftSpeed = vx - vy + omega;
+        double frontRghtSpeed = vx + vy + omega;
+        double rearLeftSpeed = vx + vy - omega;
+        double rearRightSpeed = vx - vy - omega;
+
+        leftFront.setPower(frontLeftSpeed);
+        rightFront.setPower(frontRghtSpeed);
+        leftRear.setPower(rearLeftSpeed);
+        rightRear.setPower(rearRightSpeed);
+    }
 
     /**
      * Get the heading angle from the imu and convert it to degrees.
@@ -231,19 +264,18 @@ public class Thunderbot2023
         telemetry.addData("Heading: ", heading);
     }
 
-    public void start() {
-    }
+    public void start(){}
 
     /**
      * Stop all the motors.
      */
-    public void stop()
-    {
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
-      }
+//    public void stop()
+//    {
+//        leftFront.set(0);
+//        rightFront.set(0);
+//        leftRear.set(0);
+//        rightRear.set(0);
+//      }
 
 }
 

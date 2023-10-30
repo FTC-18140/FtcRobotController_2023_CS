@@ -31,23 +31,6 @@ public class CustomVisionProcessor implements VisionProcessor
     private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 
 
-    Mat smallMat = new Mat();
-    Mat threshMatLow = new Mat();
-    Mat threshMatHigh = new Mat();
-    Mat threshMatTot = new Mat();
-    Mat erodeMat = new Mat();
-    Mat dilateMat = new Mat();
-    Mat laplacianMat = new Mat();
-
-    Scalar lowerBoundLow = new Scalar(0, 200, 30);
-    Scalar upperBoundLow = new Scalar(5, 255, 255);
-    Scalar lowerBoundHigh = new Scalar(170, 200, 30);
-    Scalar upperBoundHigh = new Scalar(180, 255, 255);
-
-    Size kernelSize = new Size(1, 1);
-
-
-    Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, kernelSize);
 
     @Override
     public void init(int width, int height, CameraCalibration calibration)
@@ -123,11 +106,29 @@ public class CustomVisionProcessor implements VisionProcessor
             }
             Moments moments = Imgproc.moments(findContoursOutput.get(maxIndex));
 
+            double xPos = moments.m10/moments.m00;
+            double yPos = moments.m01/moments.m00;
 
+            if (xPos < 200 )
+            {
+                // LEFT
+            }
+            else if ( xPos > 300)
+            {
+                // RIGHT
+            }
+            else
+            {
+                // CENTER
+            }
 
         }
+        else
+        {
+            // CENTER
+        }
 
-        return laplacianMat;
+        return frame;
     }
 
     @Override
@@ -274,13 +275,7 @@ public class CustomVisionProcessor implements VisionProcessor
         Imgproc.dilate(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
     }
 
-    /**
-     * Sets the values of pixels in a binary image to their distance to the nearest black pixel.
-     * @param input The image on which to perform the Distance Transform.
-     * @param type The Transform.
-     * @param maskSize the size of the mask.
-     * @param output The image in which to store the output.
-     */
+
     private void findContours(Mat input, boolean externalOnly,
                               List<MatOfPoint> contours) {
         Mat hierarchy = new Mat();

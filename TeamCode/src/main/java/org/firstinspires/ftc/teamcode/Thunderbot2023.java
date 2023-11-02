@@ -40,8 +40,9 @@ public class Thunderbot2023
     Motor leftFront1;
     Motor leftRear1;
 
-
-
+    Delivery delivery = new Delivery();
+    Lift lift = new Lift();
+    Intake intake = new Intake();
 
     // Position Variables
     long leftFrontPosition = 0;
@@ -116,66 +117,64 @@ public class Thunderbot2023
             telemetry.addData("Lynx Module not found", 0);
         }
 
-//        try
-//        {
-//            rightFront = ahwMap.get(DcMotorEx.class, "rightFront");
-//            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-//            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        }
-//        catch (Exception e)
-//        {
-//            telemetry.addData("rightFront not found in config file", 0);
-//        }
-//
-//        try
-//        {
-//            rightRear = ahwMap.get(DcMotorEx.class, "rightRear");
-//            rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-//            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        }
-//        catch (Exception e)
-//        {
-//            telemetry.addData("rightRear not found in config file", 0);
-//        }
-//
-//        try
-//        {
-//            leftFront = ahwMap.get(DcMotorEx.class, "leftFront");
-//            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-//            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        }
-//        catch (Exception e)
-//        {
-//            telemetry.addData("leftFront not found in config file", 0);
-//        }
-//
-//        try
-//        {
-//            leftRear = ahwMap.get(DcMotorEx.class, "leftRear");
-//            leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
-//            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        }
-//        catch (Exception e)
-//        {
-//            telemetry.addData("leftRear not found in config file", 0);
-//        }
-
-        try{
-            rightFront1 = new Motor(ahwMap, "rightFront");
-            rightRear1 = new Motor(ahwMap, "rightRear");
-            leftFront1 = new Motor(ahwMap, "leftFront");
-            leftRear1 = new Motor(ahwMap, "leftRear");
-        } catch (Exception e) {
-            telemetry.addData("Motors FTCLib not found in config file", 0);
+        try
+        {
+            rightFront = ahwMap.get(DcMotorEx.class, "rightFront");
+            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+        catch (Exception e)
+        {
+            telemetry.addData("rightFront not found in config file", 0);
+        }
+
+        try
+        {
+            rightRear = ahwMap.get(DcMotorEx.class, "rightRear");
+            rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        catch (Exception e)
+        {
+            telemetry.addData("rightRear not found in config file", 0);
+        }
+
+        try
+        {
+            leftFront = ahwMap.get(DcMotorEx.class, "leftFront");
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        catch (Exception e)
+        {
+            telemetry.addData("leftFront not found in config file", 0);
+        }
+
+        try
+        {
+            leftRear = ahwMap.get(DcMotorEx.class, "leftRear");
+            leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
+            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        catch (Exception e)
+        {
+            telemetry.addData("leftRear not found in config file", 0);
+        }
+
+        delivery.init(ahwMap, telem);
+
+        lift.init(ahwMap, telem);
+
+        intake.init(ahwMap, telem);
+
     }
 
     /**
@@ -184,7 +183,7 @@ public class Thunderbot2023
      *
      * @param foward    - Any forward motion including backwards
      * @param right     - Any movement from left to right
-     * @param clockwise - Any turning movements
+     * @param clockwise ffb - Any turning movements
      */
     public void joystickDrive(double foward, double right, double clockwise) {
         double frontLeft = foward + clockwise + right;
@@ -217,20 +216,25 @@ public class Thunderbot2023
         leftRear.setPower(backLeft);
         rightRear.setPower(backRight);
     }
-    public void OrientedDrive(double forward, double right, double clockwise) {
+    public void orientedDrive(double forward, double right, double clockwise) {
         double gyroAngle = updateHeading();
         double theta = Math.toRadians(gyroAngle);
-        double vx = (forward * cos(theta)) - (right * sin(theta));
-        double vy = (forward * sin(theta)) + (right * cos(theta));
+        double vx = (forward * cos(-theta)) - (right * sin(-theta));
+        double vy = (forward * sin(-theta)) + (right * cos(-theta));
         double omega = clockwise;
 
-        double frontLeftSpeed = vx - vy + omega;
-        double frontRghtSpeed = vx + vy + omega;
-        double rearLeftSpeed = vx + vy - omega;
-        double rearRightSpeed = vx - vy - omega;
+        double y = forward;
+        double x = right * 1.1;
+        double rx = clockwise;
+
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftSpeed = (vx - vy + omega) / denominator;
+        double frontRightSpeed = (vx + vy + omega) / denominator;
+        double rearLeftSpeed = (vx + vy - omega) / denominator;
+        double rearRightSpeed = (vx - vy - omega) / denominator;
 
         leftFront.setPower(frontLeftSpeed);
-        rightFront.setPower(frontRghtSpeed);
+        rightFront.setPower(frontRightSpeed);
         leftRear.setPower(rearLeftSpeed);
         rightRear.setPower(rearRightSpeed);
     }

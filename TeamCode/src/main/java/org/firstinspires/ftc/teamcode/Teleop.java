@@ -35,7 +35,7 @@ public class Teleop extends OpMode  {
     }
 
     public void loop() {
-        // robot.update();
+         robot.update();
 //                if (gamepad1.left_trigger > 0.1) {
 //            // TURBO!!!
 //            robot.OrientedDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
@@ -47,6 +47,11 @@ public class Teleop extends OpMode  {
 //            double sign = Math.signum(gamepad1.right_stick_x);
 //            robot.OrientedDrive(-gamepad1.left_stick_y * 0.6, gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x * 0.8 * gamepad1.right_stick_x * sign);
 //        }
-        robot.OrientedDrive(-gamepad1.left_stick_y * 0.6, gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
+        if(gamepad1.y) {
+            robot.imu.resetYaw();
+        } else {
+            robot.orientedDrive(-gamepad1.left_stick_y * 0.6, -gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
+        }
+
     }
 }

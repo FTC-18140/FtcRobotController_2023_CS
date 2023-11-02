@@ -21,8 +21,10 @@ public class FCDOpmode extends OpMode {
                 driverOp.getLeftX(),
                 driverOp.getLeftY(),
                 driverOp.getRightX(),
-                robot.updateHeading()
+                robot.heading
         );
+
+        robot.update();
     }
 }
 

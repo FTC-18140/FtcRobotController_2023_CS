@@ -53,5 +53,8 @@ public class Teleop extends OpMode  {
             robot.orientedDrive(-gamepad1.left_stick_y * 0.6, -gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
         }
 
+        telemetry.addData("Left Linear Slide Position", robot.lift.leftLinear.getCurrentPosition());
+        telemetry.addData("Right Linear Slide Position", robot.lift.rightLinear.getCurrentPosition());
+
     }
 }

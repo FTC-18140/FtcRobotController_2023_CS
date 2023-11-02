@@ -239,6 +239,21 @@ public class Thunderbot2023
         rightRear.setPower(rearRightSpeed);
     }
 
+    public void drive(double distance, double power) {
+
+
+        joystickDrive(distance, 0, 0);
+    }
+    public void strafe(double distance, double power) {
+
+
+        joystickDrive(0, distance, 0);
+    }
+    public void turn(double degree, double power) {
+
+
+        joystickDrive(0, 0, degree);
+    }
     /**
      * Get the heading angle from the imu and convert it to degrees.
      * @return the heading angle

@@ -8,6 +8,12 @@ public class Teleop extends OpMode  {
 
     Thunderbot2023 robot = new Thunderbot2023();
 
+    double INIT_WRIST_POS = 0;
+    double INIT_ARM_POS = 0;
+    double INIT_DELIVERY_POS = 0;
+    double INIT_INTAKE_POS = 0;
+    double WRIST_INCREMENT = 0.001;
+    double WRIST_POSITION;
     @Override
     public void init() {
         telemetry.addData("Init", "Start");
@@ -15,6 +21,13 @@ public class Teleop extends OpMode  {
         robot.init(hardwareMap, telemetry, false);
 
         telemetry.addData("Init", "Done");
+
+        robot.delivery.wrist.setPosition(INIT_WRIST_POS);
+        robot.delivery.deliver.setPosition(INIT_DELIVERY_POS);
+        robot.intake.rightIntake.setPosition(INIT_INTAKE_POS);
+        robot.intake.leftIntake.setPosition(INIT_INTAKE_POS);
+        robot.lift.leftArm.setPosition(INIT_ARM_POS);
+        robot.lift.rightArm.setPosition(INIT_ARM_POS);
     }
 
     @Override
@@ -43,24 +56,27 @@ public class Teleop extends OpMode  {
         telemetry.addData("Left Linear Slide Position", robot.lift.leftLinear.getCurrentPosition());
         telemetry.addData("Right Linear Slide Position", robot.lift.rightLinear.getCurrentPosition());
 
+
         //////////////
         // INTAKE UP & DOWN
         //////////////
 
         // TODO: presets
         if (gamepad1.left_bumper) {
-            robot.intake.leftIntake.setPosition(0.3);
-            robot.intake.rightIntake.setPosition(0.3);
+            robot.intake.leftIntake.setPosition(0);
+            robot.intake.rightIntake.setPosition(0);
         } else if (gamepad1.right_bumper) {
-            robot.intake.leftIntake.setPosition(0.5);
-            robot.intake.rightIntake.setPosition(0.5);
+            robot.intake.leftIntake.setPosition(1);
+            robot.intake.rightIntake.setPosition(1);
         }
+
 
         //////////////
         // LAUNCHER
         //////////////
 
         if (gamepad1.dpad_left && gamepad1.b) {robot.delivery.shooter.setPower(1);}
+
 
         //////////////
         // INTAKE
@@ -82,10 +98,24 @@ public class Teleop extends OpMode  {
 
         // TODO: presets
         if (gamepad2.dpad_up) {
-            robot.delivery.wrist.setPosition(0.3);
+            robot.delivery.wrist.setPosition(0);
         } else if (gamepad2.dpad_down) {
-            robot.delivery.wrist.setPosition(0.5);
+            robot.delivery.wrist.setPosition(1);
         }
+
+
+        ////////////////////
+        // WRIST INCREMENT
+        ////////////////////
+
+        if (gamepad2.left_trigger > 0.2) {
+            WRIST_POSITION += WRIST_INCREMENT;
+            robot.delivery.wrist.setPosition(WRIST_POSITION);
+        } else if (gamepad2.right_trigger > 0.2) {
+            WRIST_POSITION -= WRIST_INCREMENT;
+            robot.delivery.wrist.setPosition(WRIST_POSITION);
+        }
+
 
         /////////////
         // ARM
@@ -93,8 +123,10 @@ public class Teleop extends OpMode  {
 
         // TODO: presets
         if (gamepad2.left_bumper) {
-            robot.lift.armMove(0.3);
+            robot.lift.armMove(0);
         } else if (gamepad2.right_bumper) {
+            robot.lift.armMove(1);
+        } else if (gamepad2.dpad_left) {
             robot.lift.armMove(0.5);
         }
 
@@ -103,10 +135,10 @@ public class Teleop extends OpMode  {
         //////////////
 
         // TODO: presets
-        if (gamepad2.left_bumper) {
-            robot.lift.linearUp(0.5);
-        } else if (gamepad2.right_bumper) {
-            robot.lift.linearDown(0.3);
+        if (gamepad2.b) {
+            robot.lift.linearMove(0.3);
+        } else if (gamepad2.a) {
+            robot.lift.linearMove(-0.3);
         }
 
         //////////////

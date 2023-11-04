@@ -216,6 +216,7 @@ public class Thunderbot2023
         leftRear.setPower(backLeft);
         rightRear.setPower(backRight);
     }
+
     public void orientedDrive(double forward, double right, double clockwise) {
         double gyroAngle = updateHeading();
         double theta = Math.toRadians(gyroAngle);
@@ -239,21 +240,85 @@ public class Thunderbot2023
         rightRear.setPower(rearRightSpeed);
     }
 
-    public void drive(double distance, double power) {
+    // Autonomous Opmodes
+    public void drive(int distance, double power) {
+        leftFrontPosition = leftFront.getCurrentPosition();
+        rightFrontPosition = rightFront.getCurrentPosition();
+        leftRearPosition = leftRear.getCurrentPosition();
+        rightRearPosition = rightRear.getCurrentPosition();
 
+        double targetPosition = distance * COUNTS_PER_CM;
 
-        joystickDrive(distance, 0, 0);
+        if (leftFrontPosition < targetPosition) {
+            leftFront.setPower(power);
+            rightFront.setPower(power);
+            leftRear.setPower(power);
+            rightRear.setPower(power);
+        } else {
+            stop();
+        }
+
     }
-    public void strafe(double distance, double power) {
 
-
-        joystickDrive(0, distance, 0);
-    }
     public void turn(double degree, double power) {
+        imu.resetYaw();
+
+        leftFrontPosition = leftFront.getCurrentPosition();
+        rightFrontPosition = rightFront.getCurrentPosition();
+        leftRearPosition = leftRear.getCurrentPosition();
+        rightRearPosition = rightRear.getCurrentPosition();
+
+        imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        if (updateHeading() <= 180) {
+            leftFront.setPower(-power);
+            rightFront.setPower(power);
+            leftRear.setPower(-power);
+            rightRear.setPower(power);
+        } else if (updateHeading() >= 181) {
+            leftFront.setPower(power);
+            rightFront.setPower(-power);
+            leftRear.setPower(power);
+            rightRear.setPower(-power);
+        } else {
+            stop();
+        }
 
 
-        joystickDrive(0, 0, degree);
     }
+
+    public void strafe(double distance, double power) {
+        leftFrontPosition = leftFront.getCurrentPosition();
+        rightFrontPosition = rightFront.getCurrentPosition();
+        leftRearPosition = leftRear.getCurrentPosition();
+        rightRearPosition = rightRear.getCurrentPosition();
+
+        double targetPosition = distance * COUNTS_PER_CM;
+
+        if (distance > 0) {
+            if (leftFrontPosition < targetPosition) {
+                leftFront.setPower(power);
+                rightFront.setPower(-power);
+                leftRear.setPower(-power);
+                rightRear.setPower(power);
+            } else {
+                stop();
+            }
+        }
+        if (distance < 0) {
+            if (leftFrontPosition > targetPosition) {
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
+                leftRear.setPower(power);
+                rightRear.setPower(-power);
+            } else {
+                stop();
+            }
+        }
+
+    }
+
+    // updatin heading
     /**
      * Get the heading angle from the imu and convert it to degrees.
      * @return the heading angle
@@ -284,6 +349,13 @@ public class Thunderbot2023
     }
 
     public void start(){}
+
+    public void stop() {
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
+    }
 
     /**
      * Stop all the motors.

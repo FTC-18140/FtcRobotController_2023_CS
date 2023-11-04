@@ -42,10 +42,15 @@ public class Delivery {
         shooter.setPower(power);
     }
 
+<<<<<<< HEAD
     public void update() {
         wrist.getPosition();
         deliver.getPosition();
         shooter.getPower();
     }
+=======
+
+
+>>>>>>> 089357f0613ab1f10d6a1831721238f65f32baf7
 }
 

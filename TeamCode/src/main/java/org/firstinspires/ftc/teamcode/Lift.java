@@ -48,4 +48,11 @@ public class Lift {
         leftArm.setPosition(position);
         rightArm.setPosition(position);
     }
+    public void update() {
+        leftLinear.getCurrentPosition();
+        rightLinear.getCurrentPosition();
+        leftArm.getPosition();
+        rightArm.getPosition();
+
+    }
 }

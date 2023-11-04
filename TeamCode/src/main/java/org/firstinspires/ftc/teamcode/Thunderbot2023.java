@@ -52,6 +52,7 @@ public class Thunderbot2023
     double allMotors = 0;
     double heading = 0;
     double initRotation = 0;
+    double lastAngle = 0;
 
     List<LynxModule> allHubs;
     //Eyes vision = new Eyes();
@@ -217,27 +218,15 @@ public class Thunderbot2023
         rightRear.setPower(backRight);
     }
 
-    public void orientedDrive(double forward, double right, double clockwise) {
-        double gyroAngle = updateHeading();
-        double theta = Math.toRadians(gyroAngle);
-        double vx = (forward * cos(-theta)) - (right * sin(-theta));
-        double vy = (forward * sin(-theta)) + (right * cos(-theta));
-        double omega = clockwise;
+    public void orientedDrive(double forward, double right, double clockwise)
+    {
+        double theta = Math.toRadians(heading);
+        double vx = (forward * cos(theta)) - (right * sin(theta));
+        double vy = (forward * sin(theta)) + (right * cos(theta));
 
-        double y = forward;
-        double x = right * 1.1;
-        double rx = clockwise;
+        vx *= 1.1;
 
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftSpeed = (vx - vy + omega) / denominator;
-        double frontRightSpeed = (vx + vy + omega) / denominator;
-        double rearLeftSpeed = (vx + vy - omega) / denominator;
-        double rearRightSpeed = (vx - vy - omega) / denominator;
-
-        leftFront.setPower(frontLeftSpeed);
-        rightFront.setPower(frontRightSpeed);
-        leftRear.setPower(rearLeftSpeed);
-        rightRear.setPower(rearRightSpeed);
+        joystickDrive(vy, vx, clockwise);
     }
 
     // Autonomous Opmodes
@@ -270,12 +259,12 @@ public class Thunderbot2023
 
         imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        if (updateHeading() <= 180) {
+        if (getHeading() <= 180) {
             leftFront.setPower(-power);
             rightFront.setPower(power);
             leftRear.setPower(-power);
             rightRear.setPower(power);
-        } else if (updateHeading() >= 181) {
+        } else if (getHeading() >= 181) {
             leftFront.setPower(power);
             rightFront.setPower(-power);
             leftRear.setPower(power);
@@ -323,11 +312,29 @@ public class Thunderbot2023
      * Get the heading angle from the imu and convert it to degrees.
      * @return the heading angle
      */
-    public double updateHeading()
+    /**
+     * Read the Z axis angle, accounting for the transition from +180 <-> -180.
+     * Store the current angle in globalHeading.
+     * Positive angles (+) are counterclockwise/CCW, negative angles (-) are clockwise/CW.
+     * @return the current heading of the robot.
+     */
+    public double getHeading()
     {
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-        return orientation.getYaw(AngleUnit.DEGREES);
+        double rawImuAngle =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double delta = rawImuAngle - lastAngle;
+
+        // An illustrative example: assume the robot is facing +179 degrees (last angle) and makes a +2 degree turn.
+        // The raw IMU value will roll over from +180 to -180, so the final raw angle will be -179.
+        // So delta = -179 - (+179) = -358.
+        // Since delta is less than -180, add 360 to it: -358 + 360 = +2 (the amount we turned!)
+        // This works the same way in the other direction.
+
+        if(delta > 180) delta -= 360;
+        else if(delta < -180) delta += 360;
+
+        heading += delta; // change the global state
+        lastAngle = rawImuAngle; // save the current raw Z state
+        return heading;
     }
     public void update() {
         for (LynxModule module : allHubs) {
@@ -343,9 +350,13 @@ public class Thunderbot2023
 
         telemetry.addData("Motor Position", allMotors);
 
-        heading = updateHeading();
+        heading = getHeading();
 
         telemetry.addData("Heading: ", heading);
+
+        lift.update();
+        intake.update();
+        delivery.update();
     }
 
     public void start(){}

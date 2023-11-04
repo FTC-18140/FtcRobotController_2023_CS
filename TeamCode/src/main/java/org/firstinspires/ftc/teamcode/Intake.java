@@ -23,7 +23,7 @@ public class Intake {
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         leftIntake = hwMap.servo.get("lintake");
         rightIntake = hwMap.servo.get("rintake");
@@ -41,5 +41,12 @@ public class Intake {
     public void rampMove(double power) {
         ramp.setPower(power);
     }
+
+    public void update() {
+        intake.getCurrentPosition();
+        leftIntake.getPosition();
+        rightIntake.getPosition();
+    }
+
 
 }

@@ -31,11 +31,12 @@ public class Teleop extends OpMode  {
     }
 
     @Override
-    public void start() {
-    }
+    public void start() {}
 
     public void loop() {
+
         robot.update();
+
 
         //////////////
         // DRIVING
@@ -88,9 +89,11 @@ public class Teleop extends OpMode  {
             robot.intake.intake.setPower(-1);
         }
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////// GAMEPAD 2 //////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         /////////////
         // WRIST
@@ -130,6 +133,7 @@ public class Teleop extends OpMode  {
             robot.lift.armMove(0.5);
         }
 
+
         //////////////
         // LIFT
         //////////////
@@ -140,6 +144,7 @@ public class Teleop extends OpMode  {
         } else if (gamepad2.a) {
             robot.lift.linearMove(-0.3);
         }
+
 
         //////////////
         // DELIVERY

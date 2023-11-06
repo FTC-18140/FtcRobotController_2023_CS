@@ -9,9 +9,9 @@ public class Teleop extends OpMode  {
     Thunderbot2023 robot = new Thunderbot2023();
 
     double INIT_WRIST_POS = 0;
-    double INIT_ARM_POS = 0;
+    double INIT_ARM_POS = 0.9;
     double INIT_DELIVERY_POS = 0;
-    double INIT_INTAKE_POS = 0;
+    double INIT_INTAKE_POS = 0.9;
     double WRIST_INCREMENT = 0.001;
     double WRIST_POSITION;
     @Override
@@ -22,12 +22,16 @@ public class Teleop extends OpMode  {
 
         telemetry.addData("Init", "Done");
 
-        robot.delivery.wrist.setPosition(INIT_WRIST_POS);
-        robot.delivery.deliver.setPosition(INIT_DELIVERY_POS);
         robot.intake.rightIntake.setPosition(INIT_INTAKE_POS);
         robot.intake.leftIntake.setPosition(INIT_INTAKE_POS);
         robot.lift.leftArm.setPosition(INIT_ARM_POS);
         robot.lift.rightArm.setPosition(INIT_ARM_POS);
+        try {
+            robot.delivery.wrist.setPosition(INIT_WRIST_POS);
+            robot.delivery.deliver.setPosition(INIT_DELIVERY_POS);
+        } catch(Exception e) {
+            telemetry.addData("Positions for attachments not found", 0);
+        }
     }
 
     @Override
@@ -37,44 +41,72 @@ public class Teleop extends OpMode  {
 
         robot.update();
 
-<<<<<<< HEAD
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////// GAMEPAD 1 //////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-=======
->>>>>>> 089357f0613ab1f10d6a1831721238f65f32baf7
+
 
         //////////////
         // DRIVING
         //////////////
-        if(gamepad1.a) {
+        if(gamepad1.left_stick_button && gamepad1.right_stick_button) {
             robot.imu.resetYaw();
-        } else if (gamepad1.right_trigger > 0.5) {
-            //TURBO
-            robot.orientedDrive(-gamepad1.left_stick_y * 0.9, -gamepad1.left_stick_x * 0.9, gamepad1.right_stick_x);
-        } else if (gamepad1.left_trigger > 0.5) {
-            //ACCURATE
-            robot.orientedDrive(-gamepad1.left_stick_y * 0.2, -gamepad1.left_stick_x * 0.2, gamepad1.right_stick_x);
-        } else {
-            //NORMAL
-            robot.orientedDrive(-gamepad1.left_stick_y * 0.6, -gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
+            telemetry.addData("imu: ", "reset");
         }
-
+        if (gamepad1.left_trigger > 0.5) {
+            if (gamepad1.right_trigger > 0.5) {
+                //TURBO
+                robot.orientedDrive(-gamepad1.left_stick_y * 0.9, -gamepad1.left_stick_x * 0.9, gamepad1.right_stick_x);
+            } else if (gamepad1.left_trigger > 0.5) {
+                //ACCURATE
+                robot.orientedDrive(-gamepad1.left_stick_y * 0.2, -gamepad1.left_stick_x * 0.2, gamepad1.right_stick_x);
+            } else {
+                //NORMAL
+                robot.orientedDrive(-gamepad1.left_stick_y * 0.6, -gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
+            }
+        } else {
+            robot.joystickDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        }
         telemetry.addData("Left Linear Slide Position", robot.lift.leftLinear.getCurrentPosition());
         telemetry.addData("Right Linear Slide Position", robot.lift.rightLinear.getCurrentPosition());
+        telemetry.addData("intake lift position", robot.intake.leftIntake.getPosition());
+        telemetry.addData("intake right position", robot.intake.rightIntake.getPosition());
 
 
         //////////////
         // INTAKE UP & DOWN
         //////////////
 
-        // TODO: presets
+//         TODO: presets
         if (gamepad1.left_bumper) {
-            robot.intake.leftIntake.setPosition(0);
-            robot.intake.rightIntake.setPosition(0);
-        } else if (gamepad1.right_bumper) {
             robot.intake.leftIntake.setPosition(1);
             robot.intake.rightIntake.setPosition(1);
+        } else if (gamepad1.right_bumper) {
+            robot.intake.leftIntake.setPosition(0.7);
+            robot.intake.rightIntake.setPosition(0.7);
+        }
+
+        //////////////
+        // INTAKE
+        //////////////
+
+        if (gamepad1.x) {
+            robot.intake.intake.setPower(-1);
+        } else if (gamepad1.y) {
+            robot.intake.intake.setPower(1);
+        } else {
+            robot.intake.intake.setPower(0);
+        }
+
+        //////////////
+        // RAMP
+        //////////////
+        if (gamepad1.a) {
+            robot.intake.rampMove(1);
+        } else if(gamepad1.b) {
+            robot.intake.rampMove(-1);
+        } else {
+            robot.intake.rampMove(0);
         }
 
 
@@ -84,17 +116,6 @@ public class Teleop extends OpMode  {
 
         if (gamepad1.dpad_left && gamepad1.b) {
             robot.delivery.shooter.setPower(1);
-        }
-
-
-        //////////////
-        // INTAKE
-        //////////////
-
-        if (gamepad1.x) {
-            robot.intake.intake.setPower(1);
-        } else if (gamepad1.y) {
-            robot.intake.intake.setPower(-1);
         }
 
 
@@ -136,9 +157,7 @@ public class Teleop extends OpMode  {
         if (gamepad2.left_bumper) {
             robot.lift.armMove(0);
         } else if (gamepad2.right_bumper) {
-            robot.lift.armMove(1);
-        } else if (gamepad2.dpad_left) {
-            robot.lift.armMove(0.5);
+            robot.lift.armMove(0.9);
         }
 
 
@@ -147,10 +166,12 @@ public class Teleop extends OpMode  {
         //////////////
 
         // TODO: presets
-        if (gamepad2.b) {
-            robot.lift.linearMove(0.3);
+        if (gamepad2.y) {
+            robot.lift.linearMove(1);
         } else if (gamepad2.a) {
-            robot.lift.linearMove(-0.3);
+            robot.lift.linearMove(-1);
+        } else {
+            robot.lift.linearMove(0);
         }
 
 

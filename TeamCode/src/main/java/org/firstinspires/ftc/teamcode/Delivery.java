@@ -21,11 +21,15 @@ public class Delivery {
 
 
     public void init(HardwareMap hwMap, Telemetry telem) {
-        wrist = hwMap.servo.get("wrist");
+        try {
+            wrist = hwMap.servo.get("wrist");
 
-        deliver = hwMap.servo.get("drop");
+            deliver = hwMap.servo.get("drop");
 
-        shooter = hwMap.crservo.get("launcher");
+            shooter = hwMap.crservo.get("launcher");
+        } catch (Exception e) {
+            telemetry.addData("wrist, drop, or launcher not found", 0);
+        }
     }
 
 
@@ -42,15 +46,11 @@ public class Delivery {
         shooter.setPower(power);
     }
 
-<<<<<<< HEAD
     public void update() {
         wrist.getPosition();
         deliver.getPosition();
         shooter.getPower();
     }
-=======
 
-
->>>>>>> 089357f0613ab1f10d6a1831721238f65f32baf7
 }
 

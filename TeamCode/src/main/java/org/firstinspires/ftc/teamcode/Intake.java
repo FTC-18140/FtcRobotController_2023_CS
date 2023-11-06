@@ -19,16 +19,28 @@ public class Intake {
     CRServo ramp = null;
 
     public void init(HardwareMap hwMap, Telemetry telem) {
-        intake = hwMap.dcMotor.get("intake");
-        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        leftIntake = hwMap.servo.get("lintake");
-        rightIntake = hwMap.servo.get("rintake");
-
-        ramp = hwMap.crservo.get("ramp");
+        try {
+            intake = hwMap.dcMotor.get("intake");
+            intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            intake.setDirection(DcMotorSimple.Direction.FORWARD);
+            intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        } catch (Exception e) {
+            telemetry.addData("intake not found", 0);
+        }
+        try {
+            leftIntake = hwMap.servo.get("lintake");
+            rightIntake = hwMap.servo.get("rintake");
+            leftIntake.setDirection(Servo.Direction.FORWARD);
+            rightIntake.setDirection(Servo.Direction.REVERSE);
+        } catch(Exception e) {
+            telemetry.addData("Intake lifters not found", 0);
+        }
+        try {
+            ramp = hwMap.crservo.get("ramp");
+        } catch(Exception e) {
+            telemetry.addData("ramp not found", 0);
+        }
     }
 
     public void intakeMove(double power) {

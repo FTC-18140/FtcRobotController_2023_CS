@@ -170,11 +170,15 @@ public class Thunderbot2023
             telemetry.addData("leftRear not found in config file", 0);
         }
 
-        delivery.init(ahwMap, telem);
+        try {
+            delivery.init(ahwMap, telem);
 
-        lift.init(ahwMap, telem);
+            lift.init(ahwMap, telem);
 
-        intake.init(ahwMap, telem);
+            intake.init(ahwMap, telem);
+        } catch(Exception e) {
+            telemetry.addData("Attachments not found", 0);
+        }
 
     }
 
@@ -230,7 +234,7 @@ public class Thunderbot2023
     }
 
     // Autonomous Opmodes
-    public void drive(int distance, double power) {
+    public boolean drive(int distance, double power) {
         leftFrontPosition = leftFront.getCurrentPosition();
         rightFrontPosition = rightFront.getCurrentPosition();
         leftRearPosition = leftRear.getCurrentPosition();
@@ -246,10 +250,11 @@ public class Thunderbot2023
         } else {
             stop();
         }
+        return true;
 
     }
 
-    public void turn(double degree, double power) {
+    public boolean turn(double degree, double power) {
         imu.resetYaw();
 
         leftFrontPosition = leftFront.getCurrentPosition();
@@ -272,11 +277,11 @@ public class Thunderbot2023
         } else {
             stop();
         }
-
+        return true;
 
     }
 
-    public void strafe(double distance, double power) {
+    public boolean strafe(double distance, double power) {
         leftFrontPosition = leftFront.getCurrentPosition();
         rightFrontPosition = rightFront.getCurrentPosition();
         leftRearPosition = leftRear.getCurrentPosition();
@@ -304,7 +309,7 @@ public class Thunderbot2023
                 stop();
             }
         }
-
+        return true;
     }
 
     // updatin heading
@@ -354,9 +359,13 @@ public class Thunderbot2023
 
         telemetry.addData("Heading: ", heading);
 
-        lift.update();
-        intake.update();
-        delivery.update();
+        try {
+            lift.update();
+            intake.update();
+            delivery.update();
+        } catch (Exception e) {
+            telemetry.addData("Attachment values not found", 0);
+        }
     }
 
     public void start(){}

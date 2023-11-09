@@ -17,6 +17,15 @@ public class Lift {
     DcMotor rightLinear = null;
     Servo leftArm = null;
     Servo rightArm = null;
+    private final double ARM_MAX = 0.98;
+    private final double ARM_MIN = 0.6;
+
+    public double getARM_MIN() {
+        return ARM_MIN;
+    }
+    public double getARM_MAX() {
+        return ARM_MAX;
+    }
 
 
 
@@ -67,25 +76,30 @@ public class Lift {
 
     // Uses
     public void linearMove(double power) {
-        double y = (getLiftPosition() / 50) + 0.25;
-        double yHigh = ((50 - getLiftPosition()) / 60) + 0.02;
-
-        if (getLiftPosition() > 47) {
-            linearPower(power * yHigh);
-        } else if (getLiftPosition() < 3) {
-            linearPower(power * y);
-        } else if (getLiftPosition() > 50) {
-            linearPower( power * 0.05);
-        } else if (getLiftPosition() < 0) {
-            linearPower(0.2);
-        } else {
+        if (getLiftPosition() > 7.5) {
             linearPower(power);
+        } else if (getLiftPosition() <= 7.5 &&  getLiftPosition() >= 0) {
+            linearPower(power * 0.5);
+        } else if (getLiftPosition() >= 25) {
+            linearPower(-power * 0.25);
+        } else if (getLiftPosition() < 0){
+            linearPower(0.25);
+        } else {
+            linearPower(0);
         }
     }
 
     public void armMove(double position) {
-        leftArm.setPosition(position);
-        rightArm.setPosition(position);
+//        if (leftArm.getPosition() < ARM_MIN) {
+//            leftArm.setPosition(0.5);
+//            rightArm.setPosition(0.5);
+//        } else if (leftArm.getPosition() > ARM_MAX) {
+//            leftArm.setPosition(1);
+//            rightArm.setPosition(1);
+//        } else {
+            leftArm.setPosition(position);
+            rightArm.setPosition(position);
+   //     }
     }
 
     public void update() {

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Delivery {
@@ -15,14 +16,25 @@ public class Delivery {
     // All the Attachment Defining
 
 
-    Servo wrist = null;
+    CRServo wrist = null;
     Servo deliver = null;
     CRServo shooter = null;
+    ElapsedTime matchTime;
 
+//    private final double WRIST_MIN = 0;
+//    private final double WRIST_MAX = 1;
+//
+//    public double getWRIST_MIN() {
+//        return WRIST_MIN;
+//    }
+//    public double getWRIST_MAX() {
+//        return WRIST_MAX;
+//    }
+//
 
     public void init(HardwareMap hwMap, Telemetry telem) {
         try {
-            wrist = hwMap.servo.get("wrist");
+            wrist = hwMap.crservo.get("wrist");
 
             deliver = hwMap.servo.get("drop");
 
@@ -34,20 +46,21 @@ public class Delivery {
 
 
 
-    public void wristMove(double position) {
-        wrist.setPosition(position);
+    public void wristMove(double power) {
+        wrist.setPower(power);
     }
 
     public void drop(double position) {
         deliver.setPosition(position);
     }
 
+
     public void launch(double power) {
         shooter.setPower(power);
     }
 
     public void update() {
-        wrist.getPosition();
+        wrist.getPower();
         deliver.getPosition();
         shooter.getPower();
     }

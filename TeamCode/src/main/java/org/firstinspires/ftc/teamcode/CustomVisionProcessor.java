@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 
 import org.checkerframework.framework.qual.ImplicitFor;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
@@ -18,6 +20,10 @@ import org.opencv.imgproc.Moments;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.graphics.Color.rgb;
+import static android.graphics.Typeface.BOLD;
+import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_SIMPLEX;
+
 public class CustomVisionProcessor implements VisionProcessor
 {
 
@@ -30,6 +36,12 @@ public class CustomVisionProcessor implements VisionProcessor
     private Mat cvDilate1Output = new Mat();
     private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
     private String spikePos = "LEFT";
+
+    Scalar blue = new Scalar(7,197,235,255);
+    Scalar red = new Scalar(255,0,0,255);
+    Scalar green = new Scalar(0,255,0,255);
+    Scalar white = new Scalar(255,255,255,255);
+    Scalar yellow = new Scalar(255, 255, 0);
 
     @Override
     public void init(int width, int height, CameraCalibration calibration)
@@ -138,7 +150,10 @@ public class CustomVisionProcessor implements VisionProcessor
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
     {
-
+        Paint yellowPaint = new Paint();
+        yellowPaint.setColor( rgb( 255, 255, 0));
+        yellowPaint.setTypeface( Typeface.create( "Arial", BOLD );
+        canvas.drawText( spikePos, 10, 450, yellowPaint );
     }
 
     /**

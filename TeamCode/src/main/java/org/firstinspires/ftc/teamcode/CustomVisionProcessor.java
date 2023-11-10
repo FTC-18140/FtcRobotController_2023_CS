@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
@@ -151,8 +152,9 @@ public class CustomVisionProcessor implements VisionProcessor
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
     {
         Paint yellowPaint = new Paint();
-        yellowPaint.setColor( rgb( 255, 255, 0));
-        yellowPaint.setTypeface( Typeface.create( "Arial", BOLD );
+        yellowPaint.setColor(Color.YELLOW);
+        yellowPaint.setAntiAlias(true);
+        yellowPaint.setTypeface(Typeface.DEFAULT_BOLD);
         canvas.drawText( spikePos, 10, 450, yellowPaint );
     }
 

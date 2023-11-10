@@ -44,6 +44,9 @@ public class CustomVisionProcessor implements VisionProcessor
     Scalar white = new Scalar(255,255,255,255);
     Scalar yellow = new Scalar(255, 255, 0);
 
+    double xPos = 300;
+    double yPos = 0;
+
     @Override
     public void init(int width, int height, CameraCalibration calibration)
     {
@@ -118,8 +121,8 @@ public class CustomVisionProcessor implements VisionProcessor
             }
             Moments moments = Imgproc.moments(findContoursOutput.get(maxIndex));
 
-            double xPos = moments.m10/moments.m00;
-            double yPos = moments.m01/moments.m00;
+            xPos = moments.m10/moments.m00;
+            yPos = moments.m01/moments.m00;
 
             if (xPos < 200 )
             {
@@ -156,6 +159,12 @@ public class CustomVisionProcessor implements VisionProcessor
         yellowPaint.setAntiAlias(true);
         yellowPaint.setTypeface(Typeface.DEFAULT_BOLD);
         canvas.drawText( spikePos, 10, 450, yellowPaint );
+
+        Paint cyanPaint = new Paint();
+        cyanPaint.setColor(Color.CYAN);
+        cyanPaint.setStrokeWidth(5);
+        canvas.drawCircle( (float) xPos, (float) yPos, 25, cyanPaint);
+
     }
 
     /**

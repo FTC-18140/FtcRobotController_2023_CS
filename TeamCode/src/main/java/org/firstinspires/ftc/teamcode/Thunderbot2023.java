@@ -41,6 +41,9 @@ public class Thunderbot2023
 
     List<LynxModule> allHubs;
 
+    CustomVision eyes = new CustomVision();
+
+
 
     // converts inches to motor ticks
     static final double COUNTS_PER_MOTOR_REV = 28; // REV HD Hex motor
@@ -149,6 +152,8 @@ public class Thunderbot2023
         {
             telemetry.addData("leftRear not found in config file", 0);
         }
+
+        eyes.init( ahwMap, telemetry );
 
     }
 

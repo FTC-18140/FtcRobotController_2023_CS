@@ -29,8 +29,7 @@ public class CustomVisionProcessor implements VisionProcessor
     private Mat cvErodeOutput = new Mat();
     private Mat cvDilate1Output = new Mat();
     private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
-
-
+    private String spikePos = "LEFT";
 
     @Override
     public void init(int width, int height, CameraCalibration calibration)
@@ -111,24 +110,29 @@ public class CustomVisionProcessor implements VisionProcessor
 
             if (xPos < 200 )
             {
-                // LEFT
+                spikePos = "LEFT";// LEFT
             }
             else if ( xPos > 300)
             {
-                // RIGHT
+                spikePos = "RIGHT";   // RIGHT
             }
             else
             {
-                // CENTER
+                spikePos = "CENTER";// CENTER
             }
 
         }
         else
         {
-            // CENTER
+            spikePos = "CENTER";// CENTER
         }
 
         return frame;
+    }
+
+    public String getSpikePos()
+    {
+        return spikePos;
     }
 
     @Override

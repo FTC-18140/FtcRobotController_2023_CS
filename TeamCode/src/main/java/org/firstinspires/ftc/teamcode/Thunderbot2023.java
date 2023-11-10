@@ -45,10 +45,10 @@ public class Thunderbot2023
     Intake intake = new Intake();
 
     // Position Variables
-    long leftFrontPosition = 0;
-    long rightFrontPosition = 0;
-    long leftRearPosition = 0;
-    long rightRearPosition = 0;
+    double leftFrontPosition = 0;
+    double rightFrontPosition = 0;
+    double leftRearPosition = 0;
+    double rightRearPosition = 0;
     double allMotors = 0;
     double heading = 0;
     double initRotation = 0;
@@ -170,15 +170,13 @@ public class Thunderbot2023
             telemetry.addData("leftRear not found in config file", 0);
         }
 
-        try {
+
             delivery.init(ahwMap, telem);
 
             lift.init(ahwMap, telem);
 
             intake.init(ahwMap, telem);
-        } catch(Exception e) {
-            telemetry.addData("Attachments not found", 0);
-        }
+
 
     }
 
@@ -240,13 +238,17 @@ public class Thunderbot2023
         leftRearPosition = leftRear.getCurrentPosition();
         rightRearPosition = rightRear.getCurrentPosition();
 
+        allMotors = (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
+        double allMotorsInCM = allMotors / COUNTS_PER_CM;
+
         double targetPosition = distance * COUNTS_PER_CM;
 
-        if (leftFrontPosition < targetPosition) {
+        if (allMotorsInCM < targetPosition) {
             leftFront.setPower(power);
             rightFront.setPower(power);
             leftRear.setPower(power);
             rightRear.setPower(power);
+
         } else {
             stop();
         }

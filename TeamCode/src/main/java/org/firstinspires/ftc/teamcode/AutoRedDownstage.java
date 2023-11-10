@@ -2,59 +2,64 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous
+@Autonomous(name = "AutoDown", group = "Autonomous")
 public class AutoRedDownstage extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
-    Telemetry telemetry;
-    HardwareMap hwMap = null;
     int state = 0;
     boolean done = false;
-
+    double INIT_WRIST_POS = 1;
+    double INIT_ARM_POS = 0.6;
+    double INIT_DELIVERY_POS = 0;
+    double INIT_INTAKE_POS = 0;
     @Override
     public void init() {
-        robot.init(hwMap, telemetry, false);
+        robot.init(hardwareMap, telemetry, false);
+//        telemetry.addData("Init", "Start");
+        try {
+            robot.intake.intakeLift(INIT_INTAKE_POS);
 
+            robot.delivery.deliver.setPosition(INIT_DELIVERY_POS);
+
+            robot.lift.rightArm.setPosition(INIT_ARM_POS);
+            robot.lift.leftArm.setPosition(INIT_ARM_POS);
+
+            robot.delivery.wristMove(INIT_WRIST_POS);
+        } catch(Exception e) {
+            telemetry.addData("Positions for attachments not found", 0);
+        }
+        telemetry.addData("Init", "Done");
     }
+
     @Override
     public void start() {
-
     }
-    @Override
-    public void loop() {
-        switch (state) {
-            case 0:
-            if (!done) {
-                done = robot.drive(80, 0.5);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
+
+        @Override
+        public void loop () {
+
+        robot.update();
+
+            switch (state) {
+                case 0:
+                    if (!done) {
+                            done = robot.drive(80, 0.5);
+                    } else {
+                        robot.stop();
+                        done = false;
+                        state++;
+                    }
+                    break;
+                default:
+                    break;
+                    // TODO test code then add other steps from notebook
             }
-
-            // TODO Add the drop pixel command
-
-            if (!done) {
-                done = robot.turn(90, 0.5);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
-                if (!done) {
-                    done = robot.drive(75, 0.5);
-                } else {
-                    robot.stop();
-                    done = false;
-                    state++;
-                }
-                // TODO test code then add other steps from notebook
-
+            telemetry.addData("step: ", state);
         }
-        telemetry.addData("step: ", state);
-    }
+
 }

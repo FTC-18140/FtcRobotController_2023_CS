@@ -32,7 +32,7 @@ public class Intake {
             leftIntake = hwMap.servo.get("lintake");
             rightIntake = hwMap.servo.get("rintake");
             leftIntake.setDirection(Servo.Direction.REVERSE);
-            rightIntake.setDirection(Servo.Direction.REVERSE);
+            rightIntake.setDirection(Servo.Direction.FORWARD);
         } catch(Exception e) {
             telemetry.addData("Intake lifters not found", 0);
         }

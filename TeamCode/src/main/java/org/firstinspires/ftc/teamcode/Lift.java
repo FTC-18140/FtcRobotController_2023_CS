@@ -17,7 +17,7 @@ public class Lift {
     DcMotor rightLinear = null;
     Servo leftArm = null;
     Servo rightArm = null;
-    private final double ARM_MAX = 0.98;
+    private final double ARM_MAX = 0.9625;
     private final double ARM_MIN = 0.6;
 
     public double getARM_MIN() {
@@ -74,14 +74,14 @@ public class Lift {
         rightLinear.setPower(power);
     }
 
-    // Uses
+    // Math behind the positions of the linear slides and seeing where it needs to stop and start
     public void linearMove(double power) {
         if (getLiftPosition() > 7.5) {
             linearPower(power);
         } else if (getLiftPosition() <= 7.5 &&  getLiftPosition() >= 0) {
             linearPower(power * 0.5);
-        } else if (getLiftPosition() >= 25) {
-            linearPower(-power * 0.25);
+        } else if (getLiftPosition() > 36) {
+            linearPower(-0.25);
         } else if (getLiftPosition() < 0){
             linearPower(0.25);
         } else {
@@ -90,16 +90,8 @@ public class Lift {
     }
 
     public void armMove(double position) {
-//        if (leftArm.getPosition() < ARM_MIN) {
-//            leftArm.setPosition(0.5);
-//            rightArm.setPosition(0.5);
-//        } else if (leftArm.getPosition() > ARM_MAX) {
-//            leftArm.setPosition(1);
-//            rightArm.setPosition(1);
-//        } else {
             leftArm.setPosition(position);
             rightArm.setPosition(position);
-   //     }
     }
 
     public void update() {
@@ -110,13 +102,8 @@ public class Lift {
     }
 
         public double getLiftPosition() {
-            return 0.5 * (leftSlidePosition + rightSlidePosition) / COUNTS_PER_CM;
-        }
-
-        public void liftPresetTape1 () {
-            if (getLiftPosition() < 5) {
-                linearMove(0.1);
-            }
-        }
+            return (0.5 * (leftSlidePosition + rightSlidePosition)) / COUNTS_PER_CM;
     }
+
+}
 

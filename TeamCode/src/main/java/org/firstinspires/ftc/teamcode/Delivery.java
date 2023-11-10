@@ -16,38 +16,35 @@ public class Delivery {
     // All the Attachment Defining
 
 
-    CRServo wrist = null;
+    Servo wrist = null;
     Servo deliver = null;
     CRServo shooter = null;
     ElapsedTime matchTime;
 
-//    private final double WRIST_MIN = 0;
-//    private final double WRIST_MAX = 1;
-//
-//    public double getWRIST_MIN() {
-//        return WRIST_MIN;
-//    }
-//    public double getWRIST_MAX() {
-//        return WRIST_MAX;
-//    }
-//
+    private final double WRIST_MIN = 0;
+    private final double WRIST_MAX = 1;
+
+    public double getWRIST_MIN() {
+        return WRIST_MIN;
+    }
+    public double getWRIST_MAX() {
+        return WRIST_MAX;
+    }
 
     public void init(HardwareMap hwMap, Telemetry telem) {
-        try {
-            wrist = hwMap.crservo.get("wrist");
+
+            wrist = hwMap.servo.get("wrist");
 
             deliver = hwMap.servo.get("drop");
 
             shooter = hwMap.crservo.get("launcher");
-        } catch (Exception e) {
-            telemetry.addData("wrist, drop, or launcher not found", 0);
-        }
+
     }
 
 
 
-    public void wristMove(double power) {
-        wrist.setPower(power);
+    public void wristMove(double position) {
+        wrist.setPosition(position);
     }
 
     public void drop(double position) {
@@ -60,7 +57,7 @@ public class Delivery {
     }
 
     public void update() {
-        wrist.getPower();
+        wrist.getPosition();
         deliver.getPosition();
         shooter.getPower();
     }

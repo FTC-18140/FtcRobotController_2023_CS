@@ -13,16 +13,15 @@ public class Teleop extends OpMode  {
 
     Thunderbot2023 robot = new Thunderbot2023();
 
-    double INIT_WRIST_POS = 0.93;
+    double INIT_WRIST_POS = 1;
     double INIT_ARM_POS = 0.6;
     double ARM_INCREMENT = 0.0025;
-    double  WRIST_INCREMENT = 0.0075;
+    double  WRIST_INCREMENT = 0.01;
     double ARM_POS = 0.6;
-    double WRIST_POS = 0.93;
+    double WRIST_POS = 1;
 
     double INIT_DELIVERY_POS = 0;
     double INIT_INTAKE_POS = 0;
-    double WRIST_POSITION = 0;
     @Override
     public void init() {
         telemetry.addData("Init", "Start");
@@ -39,8 +38,8 @@ public class Teleop extends OpMode  {
         robot.lift.rightArm.setPosition(INIT_ARM_POS);
         robot.lift.leftArm.setPosition(INIT_ARM_POS);
 
-//        robot.delivery.wristMove(INIT_WRIST_POS);
-      //  telemetry.addData("Wrist Position", robot.delivery.wrist.getPosition());
+        robot.delivery.wristMove(INIT_WRIST_POS);
+        telemetry.addData("Wrist Position", robot.delivery.wrist.getPosition());
         try {
             robot.intake.intakeLift(INIT_INTAKE_POS);
             robot.delivery.deliver.setPosition(INIT_DELIVERY_POS);
@@ -67,6 +66,8 @@ public class Teleop extends OpMode  {
         //////////////
         // DRIVING
         //////////////
+
+        // TODO: FINSIH ORIENTEDDRIVE CODE FOR MEET2
 //        if(gamepad1.left_stick_button && gamepad1.right_stick_button) {
 //            robot.imu.resetYaw();
 //            telemetry.addData("imu: ", "reset");
@@ -82,6 +83,7 @@ public class Teleop extends OpMode  {
 //                //NORMAL
 //                robot.orientedDrive(-gamepad1.left_stick_y * 0.6, -gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
 //            }
+
         if (gamepad1.right_trigger > 0.2) {
             robot.joystickDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         } else if (gamepad1.left_trigger > 0.2) {
@@ -90,8 +92,8 @@ public class Teleop extends OpMode  {
             robot.joystickDrive(-gamepad1.left_stick_y * 0.75, gamepad1.left_stick_x * 0.75, gamepad1.right_stick_x * 0.75);
         }
         telemetry.addData("Left Linear Slide Position", robot.lift.getLiftPosition());
-//        telemetry.addData("intake lift position", robot.intake.leftIntake.getPosition());
-//        telemetry.addData("intake right position", robot.intake.rightIntake.getPosition());
+        telemetry.addData("intake lift position", robot.intake.leftIntake.getPosition());
+        telemetry.addData("intake right position", robot.intake.rightIntake.getPosition());
         telemetry.addData("leftArm Position", robot.lift.leftArm.getPosition());
         telemetry.addData("rightArm Position", robot.lift.rightArm.getPosition());
 
@@ -103,10 +105,10 @@ public class Teleop extends OpMode  {
 //         TODO: presets
         if (gamepad1.left_bumper) {
             robot.intake.leftIntake.setPosition(0);
-            robot.intake.rightIntake.setPosition(0);
+            robot.intake.rightIntake.setPosition(0.145);
         } else if (gamepad1.right_bumper) {
             robot.intake.leftIntake.setPosition(0.08);
-            robot.intake.rightIntake.setPosition(0.08);
+            robot.intake.rightIntake.setPosition(0.225);
         }
 
         //////////////
@@ -156,31 +158,17 @@ public class Teleop extends OpMode  {
         // WRIST INCREMENT
         ////////////////////
 
-//        if (gamepad2.left_trigger > 0.2) {
-//            robot.delivery.wristMove(0.93);
-//        } else if (gamepad2.right_trigger > 0.2) {
-//            robot.delivery.wristMove(0.5);
-//        }
-//
-
         //Todo: Uncomment this
-//        if (gamepad2.left_trigger > 0.2) {
-//            WRIST_POS += WRIST_INCREMENT;
-//        } else if (gamepad2.right_trigger > 0.2) {
-//            WRIST_POS -= WRIST_INCREMENT;
-//        }
-//        WRIST_POS = Range.clip(WRIST_POS, robot.delivery.getWRIST_MIN(), robot.delivery.getWRIST_MAX());
-//        robot.delivery.wristMove(WRIST_POS);
-//
-//    telemetry.addData("wrist pos", robot.delivery.wrist.getPosition());
-
-        if (gamepad2.left_trigger >0.2) {
-            robot.delivery.wristMove(0.5);
-        } else if (gamepad2.right_trigger > 0.2) {
-            robot.delivery.wristMove(-0.5);
-        } else  {
-            robot.delivery.wristMove(0);
+        if (gamepad2.dpad_down) {
+            WRIST_POS += WRIST_INCREMENT;
+        } else if (gamepad2.dpad_up) {
+            WRIST_POS -= WRIST_INCREMENT;
         }
+        WRIST_POS = Range.clip(WRIST_POS, robot.delivery.getWRIST_MIN(), robot.delivery.getWRIST_MAX());
+        robot.delivery.wristMove(WRIST_POS);
+
+    telemetry.addData("wrist pos", robot.delivery.wrist.getPosition());
+
         /////////////
         // ARM
         /////////////
@@ -218,7 +206,7 @@ public class Teleop extends OpMode  {
         // DELIVERY
         //////////////
 
-        if (gamepad2.dpad_down) {
+        if (gamepad2.right_trigger > 0.2) {
             robot.delivery.drop(1);
         } else {
             robot.delivery.drop(0);

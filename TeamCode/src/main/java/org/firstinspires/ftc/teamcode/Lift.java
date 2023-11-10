@@ -90,6 +90,7 @@ public class Lift {
     }
     public void linearNoFatherFig(double power) {
         leftLinear.setPower(power);
+        rightLinear.setPower(power);
     }
 
     public void armMove(double position) {

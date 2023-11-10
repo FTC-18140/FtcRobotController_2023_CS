@@ -66,7 +66,7 @@ public class AutoRedDownstage extends OpMode {
                     break;
                 case 2:
                     if (!done) {
-                        robot.intake.intakeMove(0.2);
+                        robot.intake.intakeMove(0.175);
                         done = getRuntime() > 3;
                     } else {
                         robot.intake.intakeMove(0);

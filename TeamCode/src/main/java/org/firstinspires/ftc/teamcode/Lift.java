@@ -88,6 +88,9 @@ public class Lift {
             linearPower(0);
         }
     }
+    public void linearNoFatherFig(double power) {
+        leftLinear.setPower(power);
+    }
 
     public void armMove(double position) {
             leftArm.setPosition(position);

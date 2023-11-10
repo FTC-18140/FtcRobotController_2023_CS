@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -53,6 +55,11 @@ public class Thunderbot2023
     double heading = 0;
     double initRotation = 0;
     double lastAngle = 0;
+    double initialPosition = 0;
+    boolean moving = false;
+    double startAngle = 0;
+    boolean angleWrap = false;
+
 
     List<LynxModule> allHubs;
     //Eyes vision = new Eyes();
@@ -232,28 +239,111 @@ public class Thunderbot2023
     }
 
     // Autonomous Opmodes
-    public boolean drive(int distance, double power) {
-        leftFrontPosition = leftFront.getCurrentPosition();
-        rightFrontPosition = rightFront.getCurrentPosition();
-        leftRearPosition = leftRear.getCurrentPosition();
-        rightRearPosition = rightRear.getCurrentPosition();
+    public boolean drive(double targetHeading, double distance, double power)
+    {
+        double xValue = Math.sin(toRadians(targetHeading)) * power;
+        double yValue = Math.cos(toRadians(targetHeading)) * power;
 
-        allMotors = (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
-        double allMotorsInCM = allMotors / COUNTS_PER_CM;
+        double currentAngle = updateHeading();
 
-        double targetPosition = distance * COUNTS_PER_CM;
+        telemetry.addData("current angle", currentAngle);
 
-        if (allMotorsInCM < targetPosition) {
-            leftFront.setPower(power);
-            rightFront.setPower(power);
-            leftRear.setPower(power);
-            rightRear.setPower(power);
+        // Set desired angle and initial distanceMoved
+        if (!moving)
+        {
+            startAngle = currentAngle;
+            // Determine if I am in one of the scenarios where my gyro angle might wrap
+            //      Neg start -> neg degrees to turn
+            //      Pos start -> pos degrees to turn
+            if ( startAngle < 0.0 && targetHeading > 0.0  &&
+                    (startAngle+360) - targetHeading < 180.0 )
+            {
+                angleWrap = true;
+            }
+            else if ( startAngle > 0.0 && targetHeading < 0.0 &&
+                    (targetHeading+360) - startAngle  < 180.0 )
+            {
+                angleWrap = true;
+            }
+            else
+            {
+                angleWrap = false;
+            }
 
-        } else {
-            stop();
+            if (startAngle < 0.0 && angleWrap )
+            {
+                startAngle = startAngle + 360;
+            }
+
+            if (targetHeading == 45 || targetHeading == -135)
+            {
+                // the rightFront wheel doesn't move at a desired direction of 45 degrees
+                initialPosition = leftFrontPosition;
+            }
+            else
+            {
+                initialPosition = rightFrontPosition;
+            }
+            moving = true;
         }
-        return true;
 
+        if ( angleWrap && currentAngle < 0.0 )
+        {
+            // Prevent the rollover of the currentAngle
+            currentAngle += 360;
+        }
+
+        if ( angleWrap && targetHeading < 0.0 )
+        {
+            targetHeading += 360;
+        }
+
+        double distanceMoved;
+        if (targetHeading == 45 || targetHeading == -135)
+        {
+            distanceMoved = abs(leftFrontPosition - initialPosition);
+        }
+        else
+        {
+            distanceMoved = abs(rightFrontPosition - initialPosition);
+        }
+        double distanceMovedInCM = distanceMoved / COUNTS_PER_CM;
+        telemetry.addData("distanceMoved", distanceMoved);
+
+        double currentPower = 0.1;
+
+        if (distanceMovedInCM <= 0.1 * distance){
+            currentPower += 0.0001;
+            currentPower = Range.clip(currentPower, 0.1, 1.0);
+        } else if (distanceMovedInCM > 0.9 * distance){
+            currentPower -= 0.0001;
+            currentPower = Range.clip(currentPower, 0.1, 1.0);
+        } else {
+            currentPower=power;
+        }
+
+        // calculates required speed to adjust to gyStartAngle
+        double angleError = (startAngle - currentAngle) / 25;
+        // Setting range of adjustments
+        angleError = Range.clip(angleError, -1, 1);
+
+        if (distanceMovedInCM >= distance)
+        {
+            // Stops when at the specified distance
+            stop();
+            moving = false;
+            return true;
+        }
+        else
+        {
+            // Continues if not at the specified distance
+            telemetry.addData("y value", yValue);
+            telemetry.addData("x value", xValue);
+            telemetry.addData("angle error", angleError);
+
+            joystickDrive(yValue, xValue, angleError);
+            return false;
+        }
     }
 
     public boolean turn(double degree, double power) {
@@ -266,12 +356,12 @@ public class Thunderbot2023
 
         imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        if (getHeading() <= 180) {
+        if (updateHeading() <= 180) {
             leftFront.setPower(-power);
             rightFront.setPower(power);
             leftRear.setPower(-power);
             rightRear.setPower(power);
-        } else if (getHeading() >= 181) {
+        } else if (updateHeading() >= 181) {
             leftFront.setPower(power);
             rightFront.setPower(-power);
             leftRear.setPower(power);
@@ -325,23 +415,30 @@ public class Thunderbot2023
      * Positive angles (+) are counterclockwise/CCW, negative angles (-) are clockwise/CW.
      * @return the current heading of the robot.
      */
-    public double getHeading()
+//    public double getHeading()
+//    {
+//        double rawImuAngle =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+//        double delta = rawImuAngle - lastAngle;
+//
+//        // An illustrative example: assume the robot is facing +179 degrees (last angle) and makes a +2 degree turn.
+//        // The raw IMU value will roll over from +180 to -180, so the final raw angle will be -179.
+//        // So delta = -179 - (+179) = -358.
+//        // Since delta is less than -180, add 360 to it: -358 + 360 = +2 (the amount we turned!)
+//        // This works the same way in the other direction.
+//
+//        if(delta > 180) delta -= 360;
+//        else if(delta < -180) delta += 360;
+//
+//        heading += delta; // change the global state
+//        lastAngle = rawImuAngle; // save the current raw Z state
+//        return heading;
+//    }
+    public double updateHeading()
     {
-        double rawImuAngle =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        double delta = rawImuAngle - lastAngle;
-
-        // An illustrative example: assume the robot is facing +179 degrees (last angle) and makes a +2 degree turn.
-        // The raw IMU value will roll over from +180 to -180, so the final raw angle will be -179.
-        // So delta = -179 - (+179) = -358.
-        // Since delta is less than -180, add 360 to it: -358 + 360 = +2 (the amount we turned!)
-        // This works the same way in the other direction.
-
-        if(delta > 180) delta -= 360;
-        else if(delta < -180) delta += 360;
-
-        heading += delta; // change the global state
-        lastAngle = rawImuAngle; // save the current raw Z state
-        return heading;
+        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES);
+        return -AngleUnit.DEGREES.normalize(
+                AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
     }
     public void update() {
         for (LynxModule module : allHubs) {
@@ -357,17 +454,14 @@ public class Thunderbot2023
 
         telemetry.addData("Motor Position", allMotors);
 
-        heading = getHeading();
+        heading = updateHeading();
 
         telemetry.addData("Heading: ", heading);
 
-        try {
             lift.update();
             intake.update();
             delivery.update();
-        } catch (Exception e) {
-            telemetry.addData("Attachment values not found", 0);
-        }
+
     }
 
     public void start(){}

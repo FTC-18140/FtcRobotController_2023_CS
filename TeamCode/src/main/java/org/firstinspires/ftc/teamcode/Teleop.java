@@ -193,13 +193,24 @@ public class Teleop extends OpMode  {
         //////////////
 
         // TODO: presets
-        if (gamepad2.y) {
-            robot.lift.linearMove(1);
-        } else if (gamepad2.a) {
-            robot.lift.linearMove(-1);
+        if (gamepad2.left_stick_button  && gamepad2.right_stick_button) {
+            if (gamepad2.y) {
+                robot.lift.linearNoFatherFig(1);
+            } else if (gamepad2.a) {
+                robot.lift.linearNoFatherFig(-1);
+            } else {
+                robot.lift.linearNoFatherFig(0);
+            }
         } else {
-            robot.lift.linearMove(0);
+            if (gamepad2.y) {
+                robot.lift.linearMove(1);
+            } else if (gamepad2.a) {
+                robot.lift.linearMove(-1);
+            } else {
+                robot.lift.linearMove(0);
+            }
         }
+
 
 
         //////////////

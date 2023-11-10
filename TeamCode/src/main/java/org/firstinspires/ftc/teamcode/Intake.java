@@ -5,14 +5,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
 
 public class Intake {
 
     Telemetry telemetry;
     HardwareMap hardwaremap = null;
-
     DcMotor intake = null;
     Servo leftIntake = null;
     Servo rightIntake = null;
@@ -46,9 +49,17 @@ public class Intake {
     public void intakeMove(double power) {
         intake.setPower(power);
     }
-    public void intakeLift(double position) {
+//    public void intakeAuto(double power,  double time) {
+//        if (ElapsedTime. ) {
+//            intake.setPower(power);
+//        } else {
+//            intake.setPower(0);
+//        }
+//    }
+    public boolean intakeLift(double position) {
         leftIntake.setPosition(position);
         rightIntake.setPosition(position);
+        return true;
     }
     public void rampMove(double power) {
         ramp.setPower(power);

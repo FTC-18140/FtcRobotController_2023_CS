@@ -42,19 +42,75 @@ public class AutoRedDownstage extends OpMode {
 
         @Override
         public void loop () {
-
         robot.update();
 
             switch (state) {
                 case 0:
                     if (!done) {
-                            done = robot.drive(80, 0.5);
+                            done = robot.drive(0, 89,  0.5);
                     } else {
                         robot.stop();
                         done = false;
                         state++;
                     }
                     break;
+                case 1:
+                    if (!done) {
+                        done = robot.intake.intakeLift(0.175);
+                    } else {
+                        robot.stop();
+                        done = false;
+                        state++;
+                        resetRuntime();
+                    }
+                    break;
+                case 2:
+                    if (!done) {
+                        robot.intake.intakeMove(0.2);
+                        done = getRuntime() > 3;
+                    } else {
+                        robot.intake.intakeMove(0);
+                        done = false;
+                        state++;
+                    }
+                    break;
+                case 3:
+                    if (!done) {
+                        done = robot.intake.intakeLift(0);
+                    } else {
+                        robot.stop();
+                        done = false;
+                        state++;
+                    }
+                    break;
+                case 4:
+                    if (!done) {
+                        done = robot.drive(90, 100, 0.5);
+                    } else {
+                        robot.stop();
+                        done = false;
+                        state++;
+                    }
+                    break;
+                case 5:
+                    if (!done) {
+                        done = robot.drive(0, 100, 0.5);
+                    } else {
+                        robot.stop();
+                        done = false;
+                        state++;
+                    }
+                    break;
+                case 6:
+                    if (!done) {
+                        done = robot.drive(90, 115, 0.5);
+                    } else {
+                        robot.stop();
+                        done = false;
+                        state++;
+                    }
+                    break;
+
                 default:
                     break;
                     // TODO test code then add other steps from notebook

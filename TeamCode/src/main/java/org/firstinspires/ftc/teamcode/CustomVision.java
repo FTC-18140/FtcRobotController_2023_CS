@@ -21,7 +21,7 @@ public class CustomVision
     void init(HardwareMap hardwareMap, Telemetry telem )
     {
         telemetry = telem;
-        theCamera = hardwareMap.get( WebcamName.class, "WebCam 1");
+        theCamera = hardwareMap.get( WebcamName.class, "Webcam 1");
         theAprilProcessor = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
         theProcessor = new CustomVisionProcessor();
         thePortal = VisionPortal.easyCreateWithDefaults( theCamera, theAprilProcessor, theProcessor);

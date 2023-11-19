@@ -226,8 +226,14 @@ public class Thunderbot2023
         // Since delta is less than -180, add 360 to it: -358 + 360 = +2 (the amount we turned!)
         // This works the same way in the other direction.
 
-        if(delta > 180) delta -= 360;
-        else if(delta < -180) delta += 360;
+        if(delta > 180)
+        {
+            delta -= 360;
+        }
+        else if(delta < -180)
+        {
+            delta += 360;
+        }
 
         heading += delta; // change the global state
         lastAngle = rawImuAngle; // save the current raw Z state

@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.Rect;
+import android.os.CountDownTimer;
 
+import org.checkerframework.checker.units.qual.C;
 import org.checkerframework.framework.qual.ImplicitFor;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -20,7 +25,9 @@ import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
+import static android.graphics.Bitmap.createBitmap;
 import static android.graphics.Color.rgb;
 import static android.graphics.Typeface.BOLD;
 import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_SIMPLEX;
@@ -35,6 +42,21 @@ public class CustomVisionProcessor implements VisionProcessor
     private Mat cvDilate0Output = new Mat();
     private Mat cvErodeOutput = new Mat();
     private Mat cvDilate1Output = new Mat();
+
+    Mat cvCvtcolorSrc;
+    Mat cvExtractchannelSrc;
+    Mat cvThresholdSrc;
+    Mat cvDilate0Src;
+    Mat cvErodeSrc;
+    Mat cvDilate1Src;
+    Mat findContoursInput;
+    Bitmap myBitmap;
+    Mat myMat;
+
+    double inittime = 0;
+    int index = -1;
+
+
     private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
     private String spikePos = "LEFT";
 
@@ -44,37 +66,41 @@ public class CustomVisionProcessor implements VisionProcessor
     Scalar white = new Scalar(255,255,255,255);
     Scalar yellow = new Scalar(255, 255, 0);
 
-    double xPos = 300;
-    double yPos = 0;
+    double xPos = 320;
+    double yPos = 240;
+
+    String bitmapText = "";
+
+    int numCountours = 0;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration)
     {
-
+        inittime = System.nanoTime();
     }
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
         // Step CV_cvtColor0:
-        Mat cvCvtcolorSrc = frame;
+        cvCvtcolorSrc = frame;
         int cvCvtcolorCode = Imgproc.COLOR_RGB2YCrCb;
         cvCvtcolor(cvCvtcolorSrc, cvCvtcolorCode, cvCvtcolorOutput);
 
         // Step CV_extractChannel0:
-        Mat cvExtractchannelSrc = cvCvtcolorOutput;
+        cvExtractchannelSrc = cvCvtcolorOutput;
         double cvExtractchannelChannel = 1.0;
         cvExtractchannel(cvExtractchannelSrc, cvExtractchannelChannel, cvExtractchannelOutput);
 
         // Step CV_Threshold0:
-        Mat cvThresholdSrc = cvExtractchannelOutput;
+        cvThresholdSrc = cvExtractchannelOutput;
         double cvThresholdThresh = 140.0;
         double cvThresholdMaxval = 255.0;
         int cvThresholdType = Imgproc.THRESH_BINARY;
         cvThreshold(cvThresholdSrc, cvThresholdThresh, cvThresholdMaxval, cvThresholdType, cvThresholdOutput);
 
         // Step CV_dilate0:
-        Mat cvDilate0Src = cvThresholdOutput;
+        cvDilate0Src = cvThresholdOutput;
         Mat cvDilate0Kernel = new Mat();
         Point cvDilate0Anchor = new Point(-1, -1);
         double cvDilate0Iterations = 10.0;
@@ -83,7 +109,7 @@ public class CustomVisionProcessor implements VisionProcessor
         cvDilate(cvDilate0Src, cvDilate0Kernel, cvDilate0Anchor, cvDilate0Iterations, cvDilate0Bordertype, cvDilate0Bordervalue, cvDilate0Output);
 
         // Step CV_erode0:
-        Mat cvErodeSrc = cvDilate0Output;
+        cvErodeSrc = cvDilate0Output;
         Mat cvErodeKernel = new Mat();
         Point cvErodeAnchor = new Point(-1, -1);
         double cvErodeIterations = 70.0;
@@ -92,7 +118,7 @@ public class CustomVisionProcessor implements VisionProcessor
         cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
 
         // Step CV_dilate1:
-        Mat cvDilate1Src = cvErodeOutput;
+        cvDilate1Src = cvErodeOutput;
         Mat cvDilate1Kernel = new Mat();
         Point cvDilate1Anchor = new Point(-1, -1);
         double cvDilate1Iterations = 70.0;
@@ -101,11 +127,13 @@ public class CustomVisionProcessor implements VisionProcessor
         cvDilate(cvDilate1Src, cvDilate1Kernel, cvDilate1Anchor, cvDilate1Iterations, cvDilate1Bordertype, cvDilate1Bordervalue, cvDilate1Output);
 
         // Step Find_Contours0:
-        Mat findContoursInput = cvDilate1Output;
+        findContoursInput = cvDilate1Output;
         boolean findContoursExternalOnly = false;
         findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
-        if ( findContoursOutput.size() > 0 )
+        numCountours = findContoursOutput.size();
+
+        if ( numCountours > 0 )
         {
             double maxArea = 0;
             int maxIndex = 0;
@@ -123,6 +151,7 @@ public class CustomVisionProcessor implements VisionProcessor
 
             xPos = moments.m10/moments.m00;
             yPos = moments.m01/moments.m00;
+
 
             if (xPos < 200 )
             {
@@ -143,7 +172,7 @@ public class CustomVisionProcessor implements VisionProcessor
             spikePos = "CENTER";// CENTER
         }
 
-        return frame;
+        return cvExtractchannelSrc;
     }
 
     public String getSpikePos()
@@ -151,14 +180,69 @@ public class CustomVisionProcessor implements VisionProcessor
         return spikePos;
     }
 
+
+
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
     {
+
+        if ( System.nanoTime() - inittime > 2)
+        {
+            index++;
+            inittime = System.nanoTime();
+        }
+
+        switch(index)
+        {
+            case 0:
+                myMat = cvCvtcolorOutput;
+                bitmapText = "New Color";
+                break;
+            case 1:
+                myMat = cvExtractchannelOutput;
+                bitmapText = "Extract Channel";
+                break;
+            case 2:
+                myMat = cvThresholdOutput;
+                bitmapText = "Threshold";
+                break;
+            case 3:
+                myMat = cvDilate0Output;
+                bitmapText = "Dilate";
+                break;
+            case 4:
+                myMat = cvErodeOutput;
+                bitmapText = "Erode";
+                break;
+            case 5:
+                myMat = cvDilate1Output;
+                bitmapText = "Dilate Again";
+                break;
+            default:
+                index = 0;
+                break;
+        }
+
+        myBitmap = createBitmap( myMat.width(), myMat.height(), Bitmap.Config.ARGB_8888);
+
+        Utils.matToBitmap(myMat, myBitmap);
+        Rect drawRegion = new Rect(0, 0, onscreenWidth, onscreenHeight);
+        canvas.drawBitmap(myBitmap, null, drawRegion, null);
+
+        Paint bitmapPaint = new Paint();
+        bitmapPaint.setColor(Color.YELLOW);
+        bitmapPaint.setAntiAlias(true);
+        bitmapPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        bitmapPaint.setTextSize(50);
+        canvas.drawText( bitmapText, 400, 450, bitmapPaint );
+
+
         Paint yellowPaint = new Paint();
         yellowPaint.setColor(Color.YELLOW);
         yellowPaint.setAntiAlias(true);
         yellowPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        canvas.drawText( spikePos, 10, 450, yellowPaint );
+        yellowPaint.setTextSize(50);
+        canvas.drawText( spikePos, 100, 450, yellowPaint );
 
         Paint cyanPaint = new Paint();
         cyanPaint.setColor(Color.CYAN);

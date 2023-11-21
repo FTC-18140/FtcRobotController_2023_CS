@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name = "AutoDown", group = "Autonomous")
+@Autonomous(name = "AutoRedDown", group = "Autonomous")
 public class AutoRedDownstage extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
@@ -47,7 +47,7 @@ public class AutoRedDownstage extends OpMode {
             switch (state) {
                 case 0:
                     if (!done) {
-                            done = robot.drive(0, 89,  0.5);
+                            done = robot.drive(0, 75,  0.5);
                     } else {
                         robot.stop();
                         done = false;
@@ -66,8 +66,8 @@ public class AutoRedDownstage extends OpMode {
                     break;
                 case 2:
                     if (!done) {
-                        robot.intake.intakeMove(0.175);
-                        done = getRuntime() > 3;
+                        robot.intake.intakeMove(0.18);
+                        done = getRuntime() > 5;
                     } else {
                         robot.intake.intakeMove(0);
                         done = false;
@@ -85,31 +85,31 @@ public class AutoRedDownstage extends OpMode {
                     break;
                 case 4:
                     if (!done) {
-                        done = robot.drive(90, 100, 0.5);
+                        done = robot.drive(90, 155, 0.5);
                     } else {
                         robot.stop();
                         done = false;
                         state++;
                     }
                     break;
-                case 5:
-                    if (!done) {
-                        done = robot.drive(0, 100, 0.5);
-                    } else {
-                        robot.stop();
-                        done = false;
-                        state++;
-                    }
-                    break;
-                case 6:
-                    if (!done) {
-                        done = robot.drive(90, 115, 0.5);
-                    } else {
-                        robot.stop();
-                        done = false;
-                        state++;
-                    }
-                    break;
+//                case 5:
+//                    if (!done) {
+//                        done = robot.drive(0, 105, 0.5);
+//                    } else {
+//                        robot.stop();
+//                        done = false;
+//                        state++;
+//                    }
+//                    break;
+//                case 6:
+//                    if (!done) {
+//                        done = robot.drive(90, 115, 0.5);
+//                    } else {
+//                        robot.stop();
+//                        done = false;
+//                        state++;
+//                    }
+//                    break;
 
                 default:
                     break;

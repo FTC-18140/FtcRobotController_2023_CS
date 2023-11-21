@@ -84,9 +84,9 @@ public class Teleop extends OpMode  {
 //                robot.orientedDrive(-gamepad1.left_stick_y * 0.6, -gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
 //            }
 
-        if (gamepad1.right_trigger > 0.2) {
+        if (gamepad1.left_stick_button) {
             robot.joystickDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        } else if (gamepad1.left_trigger > 0.2) {
+        } else if (gamepad1.right_stick_button) {
             robot.joystickDrive(-gamepad1.left_stick_y * 0.25, gamepad1.left_stick_x * 0.25, gamepad1.right_stick_x * 0.25);
         } else {
             robot.joystickDrive(-gamepad1.left_stick_y * 0.75, gamepad1.left_stick_x * 0.75, gamepad1.right_stick_x * 0.75);
@@ -116,7 +116,7 @@ public class Teleop extends OpMode  {
         //////////////
 
         if (gamepad1.x) {
-            robot.intake.intake.setPower(-0.85);
+            robot.intake.intake.setPower(-0.4);
         } else if (gamepad1.y) {
             robot.intake.intake.setPower(0.85);
         } else {

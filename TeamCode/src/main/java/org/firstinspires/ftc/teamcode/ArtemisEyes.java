@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -10,11 +12,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-public class CustomVision
+public class ArtemisEyes
 {
     WebcamName theCamera;
-    CustomVisionProcessor theProcessor;
-    AprilTagProcessor theAprilProcessor;
+    TGEVisionProcessor tgeFinder;
+    AprilTagProcessor aprilTagFinder;
     VisionPortal thePortal;
     Telemetry telemetry;
 
@@ -22,19 +24,20 @@ public class CustomVision
     {
         telemetry = telem;
         theCamera = hardwareMap.get( WebcamName.class, "Webcam 1");
-        theAprilProcessor = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
-        theProcessor = new CustomVisionProcessor();
-        thePortal = VisionPortal.easyCreateWithDefaults( theCamera, theAprilProcessor, theProcessor);
+        aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+        tgeFinder = new TGEVisionProcessor();
+        thePortal = VisionPortal.easyCreateWithDefaults(theCamera, aprilTagFinder, tgeFinder);
     }
 
     public String getSpikePos()
     {
-        return theProcessor.getSpikePos();
+        return tgeFinder.getSpikePos();
     }
 
+    @SuppressLint("DefaultLocale")
     public int getTagPos()
     {
-        List<AprilTagDetection> currentDetections = theAprilProcessor.getDetections();
+        List<AprilTagDetection> currentDetections = aprilTagFinder.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
         int tagPos = -1;
 

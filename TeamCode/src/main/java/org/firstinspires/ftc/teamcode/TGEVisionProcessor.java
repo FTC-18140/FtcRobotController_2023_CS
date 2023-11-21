@@ -6,10 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Rect;
-import android.os.CountDownTimer;
 
-import org.checkerframework.checker.units.qual.C;
-import org.checkerframework.framework.qual.ImplicitFor;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
@@ -17,7 +14,6 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Moments;
@@ -25,23 +21,19 @@ import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 import static android.graphics.Bitmap.createBitmap;
-import static android.graphics.Color.rgb;
-import static android.graphics.Typeface.BOLD;
-import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_SIMPLEX;
 
-public class CustomVisionProcessor implements VisionProcessor
+public class TGEVisionProcessor implements VisionProcessor
 {
 
     //Outputs
-    private Mat cvCvtcolorOutput = new Mat();
-    private Mat cvExtractchannelOutput = new Mat();
-    private Mat cvThresholdOutput = new Mat();
-    private Mat cvDilate0Output = new Mat();
-    private Mat cvErodeOutput = new Mat();
-    private Mat cvDilate1Output = new Mat();
+    private final Mat cvCvtcolorOutput = new Mat();
+    private final Mat cvExtractchannelOutput = new Mat();
+    private final Mat cvThresholdOutput = new Mat();
+    private final Mat cvDilate0Output = new Mat();
+    private final Mat cvErodeOutput = new Mat();
+    private final Mat cvDilate1Output = new Mat();
 
     Mat cvCvtcolorSrc;
     Mat cvExtractchannelSrc;
@@ -57,14 +49,14 @@ public class CustomVisionProcessor implements VisionProcessor
     int index = -1;
 
 
-    private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
+    private final ArrayList<MatOfPoint> findContoursOutput = new ArrayList<>();
     private String spikePos = "LEFT";
-
-    Scalar blue = new Scalar(7,197,235,255);
-    Scalar red = new Scalar(255,0,0,255);
-    Scalar green = new Scalar(0,255,0,255);
-    Scalar white = new Scalar(255,255,255,255);
-    Scalar yellow = new Scalar(255, 255, 0);
+//
+//    Scalar blue = new Scalar(7,197,235,255);
+//    Scalar red = new Scalar(255,0,0,255);
+//    Scalar green = new Scalar(0,255,0,255);
+//    Scalar white = new Scalar(255,255,255,255);
+//    Scalar yellow = new Scalar(255, 255, 0);
 
     double xPos = 320;
     double yPos = 240;
@@ -147,11 +139,12 @@ public class CustomVisionProcessor implements VisionProcessor
                     maxIndex = i;
                 }
             }
+            // Calculate moments of the contour
             Moments moments = Imgproc.moments(findContoursOutput.get(maxIndex));
 
+            // find X and Y of the centroid of the contour
             xPos = moments.m10/moments.m00;
             yPos = moments.m01/moments.m00;
-
 
             if (xPos < 200 )
             {
@@ -165,14 +158,12 @@ public class CustomVisionProcessor implements VisionProcessor
             {
                 spikePos = "CENTER";// CENTER
             }
-
         }
         else
         {
-            spikePos = "CENTER";// CENTER
+            spikePos = "NOT FOUND";// CENTER
         }
-
-        return cvExtractchannelSrc;
+        return frame;
     }
 
     public String getSpikePos()
@@ -195,27 +186,27 @@ public class CustomVisionProcessor implements VisionProcessor
         switch(index)
         {
             case 0:
-                myMat = cvCvtcolorOutput;
+                myMat = cvCvtcolorOutput();
                 bitmapText = "New Color";
                 break;
             case 1:
-                myMat = cvExtractchannelOutput;
+                myMat = cvExtractchannelOutput();
                 bitmapText = "Extract Channel";
                 break;
             case 2:
-                myMat = cvThresholdOutput;
+                myMat = cvThresholdOutput();
                 bitmapText = "Threshold";
                 break;
             case 3:
-                myMat = cvDilate0Output;
+                myMat = cvDilate0Output();
                 bitmapText = "Dilate";
                 break;
             case 4:
-                myMat = cvErodeOutput;
+                myMat = cvErodeOutput();
                 bitmapText = "Erode";
                 break;
             case 5:
-                myMat = cvDilate1Output;
+                myMat = cvDilate1Output();
                 bitmapText = "Dilate Again";
                 break;
             default:
@@ -229,25 +220,24 @@ public class CustomVisionProcessor implements VisionProcessor
         Rect drawRegion = new Rect(0, 0, onscreenWidth, onscreenHeight);
         canvas.drawBitmap(myBitmap, null, drawRegion, null);
 
-        Paint bitmapPaint = new Paint();
-        bitmapPaint.setColor(Color.YELLOW);
-        bitmapPaint.setAntiAlias(true);
-        bitmapPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        bitmapPaint.setTextSize(50);
-        canvas.drawText( bitmapText, 400, 450, bitmapPaint );
+        Paint bitmapTextPaint = new Paint();
+        bitmapTextPaint.setColor(Color.YELLOW);
+        bitmapTextPaint.setAntiAlias(true);
+        bitmapTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        bitmapTextPaint.setTextSize(50);
+        canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
 
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.YELLOW);
+        textPaint.setAntiAlias(true);
+        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        textPaint.setTextSize(50);
+        canvas.drawText( spikePos, 100, 450, textPaint );
 
-        Paint yellowPaint = new Paint();
-        yellowPaint.setColor(Color.YELLOW);
-        yellowPaint.setAntiAlias(true);
-        yellowPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        yellowPaint.setTextSize(50);
-        canvas.drawText( spikePos, 100, 450, yellowPaint );
-
-        Paint cyanPaint = new Paint();
-        cyanPaint.setColor(Color.CYAN);
-        cyanPaint.setStrokeWidth(5);
-        canvas.drawCircle( (float) xPos, (float) yPos, 25, cyanPaint);
+        Paint circlePaint = new Paint();
+        circlePaint.setColor(Color.CYAN);
+        circlePaint.setStrokeWidth(5);
+        canvas.drawCircle( (float) xPos, (float) yPos, 25, circlePaint);
 
     }
 
@@ -405,10 +395,4 @@ public class CustomVisionProcessor implements VisionProcessor
         Imgproc.findContours(input, contours, hierarchy, mode, method);
     }
 
-
-    public static class Builder {
-        public CustomVisionProcessor build() {
-            return new CustomVisionProcessor();
-        }
-    }
 }

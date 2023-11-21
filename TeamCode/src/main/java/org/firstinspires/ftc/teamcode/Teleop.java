@@ -28,9 +28,10 @@ public class Teleop extends OpMode  {
         robot.update();
         robot.orientedDrive(-gamepad1.left_stick_y * 0.6, gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
         String spikePos = robot.eyes.getSpikePos();
-        telemetry.addData("Spile Pos = ", spikePos);
-        telemetry.addData("X:", robot.eyes.theProcessor.xPos);
-        telemetry.addData("Y:",  robot.eyes.theProcessor.yPos);
+        telemetry.addData("Spike Pos = ", spikePos);
+        telemetry.addData("Tag Number: ", robot.eyes.getTagPos() );
+        telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
+        telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 
     }
 }

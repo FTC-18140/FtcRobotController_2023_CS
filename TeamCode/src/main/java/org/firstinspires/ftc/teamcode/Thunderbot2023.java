@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class Thunderbot2023
 
     List<LynxModule> allHubs;
 
-    CustomVision eyes = new CustomVision();
+    ArtemisEyes eyes = new ArtemisEyes();
 
 
 

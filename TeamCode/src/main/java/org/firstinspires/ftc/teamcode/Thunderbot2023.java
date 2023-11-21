@@ -5,7 +5,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
+//import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,10 +37,10 @@ public class Thunderbot2023
     DcMotorEx leftRear = null;
     DcMotorEx rightRear = null;
 
-    Motor rightFront1;
-    Motor rightRear1;
-    Motor leftFront1;
-    Motor leftRear1;
+//    Motor rightFront1;
+//    Motor rightRear1;
+//    Motor leftFront1;
+//    Motor leftRear1;
 
     Delivery delivery = new Delivery();
     Lift lift = new Lift();

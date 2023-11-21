@@ -13,7 +13,7 @@ public class Teleop extends OpMode  {
     {
         telemetry.addData("Init", "Start");
         
-        robot.update();
+
 
         robot.init(hardwareMap, telemetry, false);
 

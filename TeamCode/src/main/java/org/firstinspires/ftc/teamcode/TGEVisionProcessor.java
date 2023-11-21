@@ -68,7 +68,7 @@ public class TGEVisionProcessor implements VisionProcessor
     @Override
     public void init(int width, int height, CameraCalibration calibration)
     {
-        inittime = System.nanoTime();
+        inittime = System.nanoTime() / 1_000_000_000.0;
     }
 
     @Override
@@ -176,8 +176,8 @@ public class TGEVisionProcessor implements VisionProcessor
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
     {
-
-        if ( System.nanoTime() - inittime > 2)
+        //TODO Test if it is using nanoseconds or seconds
+        if ((System.nanoTime() / 1_000_000_000.0) - inittime > 2)
         {
             index++;
             inittime = System.nanoTime();

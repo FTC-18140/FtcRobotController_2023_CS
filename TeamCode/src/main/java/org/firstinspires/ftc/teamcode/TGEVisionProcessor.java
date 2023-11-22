@@ -143,8 +143,8 @@ public class TGEVisionProcessor implements VisionProcessor
             Moments moments = Imgproc.moments(findContoursOutput.get(maxIndex));
 
             // find X and Y of the centroid of the contour
-            xPos = moments.m10/moments.m00;
-            yPos = moments.m01/moments.m00;
+                xPos = moments.m10 / moments.m00;
+                yPos = moments.m01 / moments.m00;
 
             if (xPos < 200 )
             {
@@ -180,7 +180,7 @@ public class TGEVisionProcessor implements VisionProcessor
         if ((System.nanoTime() / 1_000_000_000.0) - inittime > 2)
         {
             index++;
-            inittime = System.nanoTime();
+            inittime = System.nanoTime() / 1_000_000_000.0;
         }
 
         switch(index)
@@ -238,7 +238,7 @@ public class TGEVisionProcessor implements VisionProcessor
         circlePaint.setColor(Color.CYAN);
         circlePaint.setStrokeWidth(5);
         canvas.drawCircle( (float) xPos, (float) yPos, 25, circlePaint);
-
+        
     }
 
     /**

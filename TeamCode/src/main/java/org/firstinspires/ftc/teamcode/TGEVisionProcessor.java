@@ -48,15 +48,11 @@ public class TGEVisionProcessor implements VisionProcessor
     double inittime = 0;
     int index = -1;
 
+    Point [] contourPts;
+    long numPts = 0;
 
     private final ArrayList<MatOfPoint> findContoursOutput = new ArrayList<>();
     private String spikePos = "LEFT";
-//
-//    Scalar blue = new Scalar(7,197,235,255);
-//    Scalar red = new Scalar(255,0,0,255);
-//    Scalar green = new Scalar(0,255,0,255);
-//    Scalar white = new Scalar(255,255,255,255);
-//    Scalar yellow = new Scalar(255, 255, 0);
 
     double xPos = 320;
     double yPos = 240;
@@ -139,6 +135,9 @@ public class TGEVisionProcessor implements VisionProcessor
                     maxIndex = i;
                 }
             }
+            contourPts = findContoursOutput.get(maxIndex).toArray();
+            numPts = findContoursOutput.get(maxIndex).total();
+
             // Calculate moments of the contour
             Moments moments = Imgproc.moments(findContoursOutput.get(maxIndex));
 
@@ -150,7 +149,7 @@ public class TGEVisionProcessor implements VisionProcessor
             {
                 spikePos = "LEFT";// LEFT
             }
-            else if ( xPos > 300)
+            else if ( xPos > 500)
             {
                 spikePos = "RIGHT";   // RIGHT
             }
@@ -180,7 +179,7 @@ public class TGEVisionProcessor implements VisionProcessor
         if ((System.nanoTime() / 1_000_000_000.0) - inittime > 2)
         {
             index++;
-            inittime = System.nanoTime();
+            inittime = System.nanoTime() / 1_000_000_000.0;
         }
 
         switch(index)
@@ -218,14 +217,14 @@ public class TGEVisionProcessor implements VisionProcessor
 
         Utils.matToBitmap(myMat, myBitmap);
         Rect drawRegion = new Rect(0, 0, onscreenWidth, onscreenHeight);
-        canvas.drawBitmap(myBitmap, null, drawRegion, null);
+//        canvas.drawBitmap(myBitmap, null, drawRegion, null);
 
         Paint bitmapTextPaint = new Paint();
         bitmapTextPaint.setColor(Color.YELLOW);
         bitmapTextPaint.setAntiAlias(true);
         bitmapTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         bitmapTextPaint.setTextSize(50);
-        canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
+//        canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
 
         Paint textPaint = new Paint();
         textPaint.setColor(Color.YELLOW);
@@ -238,6 +237,24 @@ public class TGEVisionProcessor implements VisionProcessor
         circlePaint.setColor(Color.CYAN);
         circlePaint.setStrokeWidth(5);
         canvas.drawCircle( (float) xPos, (float) yPos, 25, circlePaint);
+
+        Paint contourPaint = new Paint();
+        contourPaint.setColor(Color.MAGENTA);
+        contourPaint.setStrokeWidth(10);
+
+        if ( contourPts != null )
+        {
+            for (int j = 0; j < numPts; j++)
+            {
+                canvas.drawPoint((float) contourPts[j].x, (float) contourPts[j].y,
+                                 contourPaint);
+            }
+        }
+
+
+//        canvas.drawText( Integer.toString(cvCvtcolorOutput.width()), 300, 300, textPaint );
+//        canvas.drawText( Integer.toString(cvCvtcolorOutput.height()), 500, 300, textPaint );
+
 
     }
 

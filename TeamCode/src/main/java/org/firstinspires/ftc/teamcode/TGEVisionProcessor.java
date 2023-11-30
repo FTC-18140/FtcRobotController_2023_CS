@@ -24,6 +24,9 @@ import java.util.List;
 
 import static android.graphics.Bitmap.createBitmap;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class TGEVisionProcessor implements VisionProcessor
 {
 
@@ -61,6 +64,14 @@ public class TGEVisionProcessor implements VisionProcessor
 
     int numCountours = 0;
 
+    public static int minThreshold = 140;
+    public static int maxThreshold = 255;
+
+    public static int erodeSize = 10;
+
+    public static String theColor = "RED";
+    public static int extractChannel = 1;
+
     @Override
     public void init(int width, int height, CameraCalibration calibration)
     {
@@ -70,6 +81,15 @@ public class TGEVisionProcessor implements VisionProcessor
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
+        if (theColor.equalsIgnoreCase("RED"))
+        {
+            minThreshold = 140;
+        }
+        else
+        {
+            minThreshold = 170;
+        }
+
         // Step CV_cvtColor0:
         cvCvtcolorSrc = frame;
         int cvCvtcolorCode = Imgproc.COLOR_RGB2YCrCb;
@@ -77,13 +97,13 @@ public class TGEVisionProcessor implements VisionProcessor
 
         // Step CV_extractChannel0:
         cvExtractchannelSrc = cvCvtcolorOutput;
-        double cvExtractchannelChannel = 1.0;
+        double cvExtractchannelChannel = extractChannel;
         cvExtractchannel(cvExtractchannelSrc, cvExtractchannelChannel, cvExtractchannelOutput);
 
         // Step CV_Threshold0:
         cvThresholdSrc = cvExtractchannelOutput;
-        double cvThresholdThresh = 140.0;
-        double cvThresholdMaxval = 255.0;
+        double cvThresholdThresh = minThreshold;
+        double cvThresholdMaxval = maxThreshold;
         int cvThresholdType = Imgproc.THRESH_BINARY;
         cvThreshold(cvThresholdSrc, cvThresholdThresh, cvThresholdMaxval, cvThresholdType, cvThresholdOutput);
 
@@ -91,7 +111,7 @@ public class TGEVisionProcessor implements VisionProcessor
         cvDilate0Src = cvThresholdOutput;
         Mat cvDilate0Kernel = new Mat();
         Point cvDilate0Anchor = new Point(-1, -1);
-        double cvDilate0Iterations = 10.0;
+        double cvDilate0Iterations = 1.0;
         int cvDilate0Bordertype = Core.BORDER_CONSTANT;
         Scalar cvDilate0Bordervalue = new Scalar(-1);
         cvDilate(cvDilate0Src, cvDilate0Kernel, cvDilate0Anchor, cvDilate0Iterations, cvDilate0Bordertype, cvDilate0Bordervalue, cvDilate0Output);
@@ -100,7 +120,7 @@ public class TGEVisionProcessor implements VisionProcessor
         cvErodeSrc = cvDilate0Output;
         Mat cvErodeKernel = new Mat();
         Point cvErodeAnchor = new Point(-1, -1);
-        double cvErodeIterations = 70.0;
+        double cvErodeIterations = erodeSize;
         int cvErodeBordertype = Core.BORDER_CONSTANT;
         Scalar cvErodeBordervalue = new Scalar(-1);
         cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
@@ -109,7 +129,7 @@ public class TGEVisionProcessor implements VisionProcessor
         cvDilate1Src = cvErodeOutput;
         Mat cvDilate1Kernel = new Mat();
         Point cvDilate1Anchor = new Point(-1, -1);
-        double cvDilate1Iterations = 70.0;
+        double cvDilate1Iterations = erodeSize;
         int cvDilate1Bordertype = Core.BORDER_CONSTANT;
         Scalar cvDilate1Bordervalue = new Scalar(-1);
         cvDilate(cvDilate1Src, cvDilate1Kernel, cvDilate1Anchor, cvDilate1Iterations, cvDilate1Bordertype, cvDilate1Bordervalue, cvDilate1Output);
@@ -217,14 +237,14 @@ public class TGEVisionProcessor implements VisionProcessor
 
         Utils.matToBitmap(myMat, myBitmap);
         Rect drawRegion = new Rect(0, 0, onscreenWidth, onscreenHeight);
-//        canvas.drawBitmap(myBitmap, null, drawRegion, null);
+        canvas.drawBitmap(myBitmap, null, drawRegion, null);
 
         Paint bitmapTextPaint = new Paint();
         bitmapTextPaint.setColor(Color.YELLOW);
         bitmapTextPaint.setAntiAlias(true);
         bitmapTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         bitmapTextPaint.setTextSize(50);
-//        canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
+        canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
 
         Paint textPaint = new Paint();
         textPaint.setColor(Color.YELLOW);

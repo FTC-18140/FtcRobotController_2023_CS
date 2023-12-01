@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.TBDGamepad.Stick.LEFT_X;
+import static org.firstinspires.ftc.teamcode.TBDGamepad.Stick.LEFT_Y;
+import static org.firstinspires.ftc.teamcode.TBDGamepad.Stick.RIGHT_X;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Teleop extends OpMode  {
 
     Thunderbot2023 robot = new Thunderbot2023();
+    TBDGamepad thegamepad1 = new TBDGamepad(gamepad1);
 
     @Override
     public void init()
@@ -31,7 +36,7 @@ public class Teleop extends OpMode  {
         super.init_loop();
         String spikePos = robot.eyes.getSpikePos();
         telemetry.addData("Spike Pos = ", spikePos);
-        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber() );
+        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber(4) );
         telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
         telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 
@@ -45,10 +50,11 @@ public class Teleop extends OpMode  {
     public void loop()
     {
         robot.update();
-        robot.orientedDrive(-gamepad1.left_stick_y * 0.6, gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
+        robot.orientedDrive(thegamepad1.getExpo(LEFT_Y), thegamepad1.getExpo(LEFT_X), thegamepad1.getExpo(RIGHT_X));
+
         String spikePos = robot.eyes.getSpikePos();
         telemetry.addData("Spike Pos = ", spikePos);
-        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber() );
+        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber(4) );
         telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
         telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 

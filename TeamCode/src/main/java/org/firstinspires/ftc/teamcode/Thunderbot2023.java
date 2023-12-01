@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -38,10 +39,18 @@ public class Thunderbot2023
 
     double lastAngle = 0;
 
+    boolean moving = false;
+
     List<LynxModule> allHubs;
 
     ArtemisEyes eyes = new ArtemisEyes();
 
+    public static double SPEED_GAIN = 0.02;
+    public static double STRAFE_GAIN = 0.015;
+    public static double  TURN_GAIN = 0.01;
+    public static double MAX_SPEED = 0.5;
+    public static double MAX_STRAFE = 0.5;
+    public static double MAX_TURN = 0.3;
 
 
     // converts inches to motor ticks
@@ -206,6 +215,37 @@ public class Thunderbot2023
 
         joystickDrive(vy, vx, clockwise);
     }
+    public boolean driveToTag(int tagID, double speed, double distanceAway) {
+        if (!moving) {
+            moving = true;
+        }
+
+        int tagNumber = eyes.getTagNumber(tagID);
+        double rangeError = (eyes.rangeError - distanceAway);
+        double headingError = eyes.headingError;
+        double yawError = eyes.yawError;
+
+        if (tagNumber == tagID) {
+
+            if (rangeError < 0.5 && headingError < 5 && yawError < 5) {
+                stop();
+                moving = false;
+                return true;
+            }
+            else {
+                double y = Range.clip(rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
+                double turn = Range.clip(headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+
+                joystickDrive(y, x, turn);
+                return false;
+            }
+        }
+        else {
+            stop();
+            return true;
+        }
+    }
 
 
     /**
@@ -262,6 +302,14 @@ public class Thunderbot2023
     }
 
     public void start(){}
+
+    public void stop() {
+        leftFront.setPower(0);
+        leftRear.setPower(0);
+        rightFront.setPower(0);
+        rightRear.setPower(0);
+
+    }
 
 
 }

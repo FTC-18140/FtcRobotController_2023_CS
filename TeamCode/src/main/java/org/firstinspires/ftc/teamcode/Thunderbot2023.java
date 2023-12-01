@@ -34,11 +34,6 @@ public class Thunderbot2023
     DcMotorEx leftRear = null;
     DcMotorEx rightRear = null;
 
-    Delivery delivery = new Delivery();
-    Lift lift = new Lift();
-    Intake intake = new Intake();
-
-    // Position Variables
     long leftFrontPosition = 0;
     long rightFrontPosition = 0;
     long leftRearPosition = 0;
@@ -164,16 +159,6 @@ public class Thunderbot2023
             telemetry.addData("leftRear not found in config file", 0);
         }
 
-        try {
-            delivery.init(ahwMap, telem);
-
-            lift.init(ahwMap, telem);
-
-            intake.init(ahwMap, telem);
-        } catch(Exception e) {
-            telemetry.addData("Attachments not found", 0);
-        }
-
     }
 
     /**
@@ -227,86 +212,7 @@ public class Thunderbot2023
         joystickDrive(vy, vx, clockwise);
     }
 
-    // Autonomous Opmodes
-    public boolean drive(int distance, double power) {
-        leftFrontPosition = leftFront.getCurrentPosition();
-        rightFrontPosition = rightFront.getCurrentPosition();
-        leftRearPosition = leftRear.getCurrentPosition();
-        rightRearPosition = rightRear.getCurrentPosition();
-
-        double targetPosition = distance * COUNTS_PER_CM;
-
-        if (leftFrontPosition < targetPosition) {
-            leftFront.setPower(power);
-            rightFront.setPower(power);
-            leftRear.setPower(power);
-            rightRear.setPower(power);
-        } else {
-            stop();
-        }
-        return true;
-
-    }
-
-    public boolean turn(double degree, double power) {
-        imu.resetYaw();
-
-        leftFrontPosition = leftFront.getCurrentPosition();
-        rightFrontPosition = rightFront.getCurrentPosition();
-        leftRearPosition = leftRear.getCurrentPosition();
-        rightRearPosition = rightRear.getCurrentPosition();
-
-        imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        if (getHeading() <= 180) {
-            leftFront.setPower(-power);
-            rightFront.setPower(power);
-            leftRear.setPower(-power);
-            rightRear.setPower(power);
-        } else if (getHeading() >= 181) {
-            leftFront.setPower(power);
-            rightFront.setPower(-power);
-            leftRear.setPower(power);
-            rightRear.setPower(-power);
-        } else {
-            stop();
-        }
-        return true;
-
-    }
-
-    public boolean strafe(double distance, double power) {
-        leftFrontPosition = leftFront.getCurrentPosition();
-        rightFrontPosition = rightFront.getCurrentPosition();
-        leftRearPosition = leftRear.getCurrentPosition();
-        rightRearPosition = rightRear.getCurrentPosition();
-
-        double targetPosition = distance * COUNTS_PER_CM;
-
-        if (distance > 0) {
-            if (leftFrontPosition < targetPosition) {
-                leftFront.setPower(power);
-                rightFront.setPower(-power);
-                leftRear.setPower(-power);
-                rightRear.setPower(power);
-            } else {
-                stop();
-            }
-        }
-        if (distance < 0) {
-            if (leftFrontPosition > targetPosition) {
-                leftFront.setPower(-power);
-                rightFront.setPower(power);
-                leftRear.setPower(power);
-                rightRear.setPower(-power);
-            } else {
-                stop();
-            }
-        }
-        return true;
-    }
-
-    // updatin heading
+    // updating heading
     /**
      * Get the heading angle from the imu and convert it to degrees.
      * @return the heading angle
@@ -352,14 +258,6 @@ public class Thunderbot2023
         heading = getHeading();
 
         telemetry.addData("Heading: ", heading);
-
-        try {
-            lift.update();
-            intake.update();
-            delivery.update();
-        } catch (Exception e) {
-            telemetry.addData("Attachment values not found", 0);
-        }
     }
 
     public void start(){}
@@ -370,17 +268,5 @@ public class Thunderbot2023
         leftRear.setPower(0);
         rightRear.setPower(0);
     }
-
-    /**
-     * Stop all the motors.
-     */
-//    public void stop()
-//    {
-//        leftFront.set(0);
-//        rightFront.set(0);
-//        leftRear.set(0);
-//        rightRear.set(0);
-//      }
-
 }
 

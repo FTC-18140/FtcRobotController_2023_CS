@@ -10,17 +10,20 @@ public class TBDGamepad
     public static double expoYValue = 2.5;
     public static double expoXValue = 2.5;
 
-    public enum Button {
+    public enum Button
+    {
         Y, X, A, B, LEFT_BUMPER, RIGHT_BUMPER, BACK,
         START, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT,
         LEFT_STICK_BUTTON, RIGHT_STICK_BUTTON
     }
 
-    public enum Trigger {
+    public enum Trigger
+    {
         LEFT_TRIGGER, RIGHT_TRIGGER
     }
 
-    public enum Stick {
+    public enum Stick
+    {
         LEFT_X, LEFT_Y, RIGHT_X, RIGHT_Y
     }
 
@@ -33,7 +36,8 @@ public class TBDGamepad
      * @param button the button object
      * @return the boolean value as to whether the button is active or not
      */
-    public boolean getButton(Button button) {
+    public boolean getButton(Button button)
+    {
         boolean buttonValue = false;
         switch (button) {
             case A:
@@ -89,9 +93,11 @@ public class TBDGamepad
      * @param trigger the trigger object
      * @return the value returned by the trigger in question
      */
-    public double getTrigger(Trigger trigger) {
+    public double getTrigger(Trigger trigger)
+    {
         double triggerValue = 0;
-        switch (trigger) {
+        switch (trigger)
+        {
             case LEFT_TRIGGER:
                 triggerValue = gamepad.left_trigger;
                 break;

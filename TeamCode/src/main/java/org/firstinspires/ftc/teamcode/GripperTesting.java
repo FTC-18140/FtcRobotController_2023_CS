@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -51,68 +50,81 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 @TeleOp(name = "Concept: Scan Servo", group = "Teleop")
 @Config
-public class ConceptScanServo extends LinearOpMode {
+public class GripperTesting extends LinearOpMode
+{
 
    public static  double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    public static  int    CYCLE_MS    =   50;     // period of each cycle
+    public static  int    CYCLE_MS    =   25;     // period of each cycle
     public static  double MAX_POS     =  0.5;     // Maximum rotational position
     public static  double MIN_POS     =  0.0;     // Minimum rotational position
 
     // Define class members
-    Servo   servo;
-    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-    public static  boolean rampUp = true;
+    Servo   gripper;
+    Servo elbow;
 
+    public static  boolean rampUp = true;
     public  static  boolean go = false;
 
+    public static double gripperPos = 0.25;
+    public static double elbowPos = 0.5;
+
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
 
         // Connect to servo (Assume Robot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "servo");
+        gripper = hardwareMap.get(Servo.class, "gripper");
+        elbow = hardwareMap.get(Servo.class, "elbow");
 
-        // Wait for the start button
-        telemetry.addData(">", "Press Start to scan Servo." );
+        elbow.setPosition(elbowPos);
+        gripper.setPosition(gripperPos);
+
+        telemetry.addData("Gripper Position", "%5.2f", gripperPos);
+        telemetry.addData("Elbow Position", "%5.2f", elbowPos);
         telemetry.update();
+
         waitForStart();
 
-
         // Scan servo till stop pressed.
-        while(opModeIsActive()){
+        while(opModeIsActive())
+        {
 
             // slew the servo, according to the rampUp (direction) variable.
-            if (rampUp && go ) {
+            if ( rampUp && go )
+            {
                 // Keep stepping up until we hit the max value.
-                position += INCREMENT ;
-                if (position >= MAX_POS ) {
-                    position = MAX_POS;
+                gripperPos += INCREMENT ;
+                if (gripperPos >= MAX_POS )
+                {
+                    gripperPos = MAX_POS;
                     rampUp = !rampUp;   // Switch ramp direction
                     go = false;
                 }
             }
-            else if ( go && !rampUp ) {
+            else if ( go && !rampUp )
+            {
                 // Keep stepping down until we hit the min value.
-                position -= INCREMENT ;
-                if (position <= MIN_POS ) {
-                    position = MIN_POS;
+                gripperPos -= INCREMENT ;
+                if (gripperPos <= MIN_POS )
+                {
+                    gripperPos = MIN_POS;
                     rampUp = !rampUp;  // Switch ramp direction
                     go = false;
                 }
-
             }
 
             // Display the current value
-            telemetry.addData("Servo Position", "%5.2f", position);
-            telemetry.addData(">", "Press Stop to end test." );
+            telemetry.addData("Gripper Position", "%5.2f", gripperPos);
+            telemetry.addData("Elbow Position", "%5.2f", elbowPos);
             telemetry.update();
 
             // Set the servo to the new position and pause;
-            servo.setPosition(position);
+            gripper.setPosition(gripperPos);
+            elbow.setPosition(elbowPos);
             sleep(CYCLE_MS);
             idle();
         }
-
         // Signal done;
         telemetry.addData(">", "Done");
         telemetry.update();

@@ -115,7 +115,7 @@ public class Teleop extends OpMode  {
         //////////////
 
         if (gamepad1.dpad_left && gamepad1.b) {
-            robot.delivery.shooter.setPower(1);
+            robot.delivery.launch(1);
         }
 
 

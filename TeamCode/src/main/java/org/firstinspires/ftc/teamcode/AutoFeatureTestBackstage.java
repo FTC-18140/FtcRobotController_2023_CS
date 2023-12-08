@@ -39,7 +39,7 @@ public class AutoFeatureTestBackstage extends OpMode {
         switch (state) {
             case 0:
                 if (!done) {
-                    done = robot.drive(12, 0.6);
+                    done = robot.drive(80, 0.6);
                 } else {
                     robot.stop();
                     state++;
@@ -52,6 +52,13 @@ public class AutoFeatureTestBackstage extends OpMode {
                     state++;
                 }
             case 2:
+                if (!done) {
+                    done = robot.drive(40,0.6);
+                } else {
+                    robot.stop();
+                    state++;
+                }
+            case 3:
                 if (!done) {
                     done = robot.driveToTag(4, 0.25, 10);
                 } else {

@@ -39,7 +39,7 @@ public class AutoFeatureTestNotBackstage {
             switch (state) {
                 case 0:
                     if (!done) {
-                        done = robot.drive(12, 0.6);
+                        done = robot.drive(80, 0.6);
                     } else {
                         robot.stop();
                         state++;
@@ -53,7 +53,7 @@ public class AutoFeatureTestNotBackstage {
                     }
                 case 2:
                     if (!done) {
-                        done = robot.drive(60, 0.6);
+                        done = robot.drive(160, 0.6);
                     } else {
                         robot.stop();
                         state++;

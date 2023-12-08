@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import java.util.List;
 
@@ -245,6 +247,86 @@ public class Thunderbot2023
             stop();
             return true;
         }
+    }
+
+
+    // Autonomous Opmodes
+    public boolean drive (int distance, double power) {
+        leftFrontPosition = leftFront.getCurrentPosition();
+        rightFrontPosition = rightFront.getCurrentPosition();
+        leftRearPosition = leftRear.getCurrentPosition();
+        rightRearPosition = rightRear.getCurrentPosition();
+
+        double targetPosition = distance * COUNTS_PER_CM;
+
+        if (leftFrontPosition < targetPosition) {
+            leftFront.setPower(power);
+            rightFront.setPower(power);
+            leftRear.setPower(power);
+            rightRear.setPower(power);
+        } else {
+            stop();
+        }
+        return true;
+
+    }
+
+    public boolean turn (double degree, double power) {
+        imu.resetYaw();
+
+        leftFrontPosition = leftFront.getCurrentPosition();
+        rightFrontPosition = rightFront.getCurrentPosition();
+        leftRearPosition = leftRear.getCurrentPosition();
+        rightRearPosition = rightRear.getCurrentPosition();
+
+        imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        if (getHeading() <= 180) {
+            leftFront.setPower(-power);
+            rightFront.setPower(power);
+            leftRear.setPower(-power);
+            rightRear.setPower(power);
+        } else if (getHeading() >= 181) {
+            leftFront.setPower(power);
+            rightFront.setPower(-power);
+            leftRear.setPower(power);
+            rightRear.setPower(-power);
+        } else {
+            stop();
+        }
+        return true;
+
+    }
+
+    public boolean strafe(double distance, double power) {
+        leftFrontPosition = leftFront.getCurrentPosition();
+        rightFrontPosition = rightFront.getCurrentPosition();
+        leftRearPosition = leftRear.getCurrentPosition();
+        rightRearPosition = rightRear.getCurrentPosition();
+
+        double targetPosition = distance * COUNTS_PER_CM;
+
+        if (distance > 0) {
+            if (leftFrontPosition < targetPosition) {
+                leftFront.setPower(power);
+                rightFront.setPower(-power);
+                leftRear.setPower(-power);
+                rightRear.setPower(power);
+            } else {
+                stop();
+            }
+        }
+        if (distance < 0) {
+            if (leftFrontPosition > targetPosition) {
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
+                leftRear.setPower(power);
+                rightRear.setPower(-power);
+            } else {
+                stop();
+            }
+        }
+        return true;
     }
 
 

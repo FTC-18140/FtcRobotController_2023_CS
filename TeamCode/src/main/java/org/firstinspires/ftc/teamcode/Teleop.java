@@ -31,7 +31,7 @@ public class Teleop extends OpMode  {
         super.init_loop();
         String spikePos = robot.eyes.getSpikePos();
         telemetry.addData("Spike Pos = ", spikePos);
-        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber() );
+        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber(4) );
         telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
         telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 
@@ -48,7 +48,7 @@ public class Teleop extends OpMode  {
         robot.orientedDrive(-gamepad1.left_stick_y * 0.6, gamepad1.left_stick_x * 0.6, gamepad1.right_stick_x);
         String spikePos = robot.eyes.getSpikePos();
         telemetry.addData("Spike Pos = ", spikePos);
-        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber() );
+        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber(4) );
         telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
         telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 

@@ -45,12 +45,12 @@ public class Thunderbot2023
 
     ArtemisEyes eyes = new ArtemisEyes();
 
-    public static double SPEED_GAIN = 0.02;
-    public static double STRAFE_GAIN = 0.015;
-    public static double  TURN_GAIN = 0.01;
-    public static double MAX_SPEED = 0.5;
-    public static double MAX_STRAFE = 0.5;
-    public static double MAX_TURN = 0.3;
+    public static double SPEED_GAIN = 0.0075;
+    public static double STRAFE_GAIN = 0.0075;
+    public static double  TURN_GAIN = 0.001;
+    public static double MAX_SPEED = 0.25;
+    public static double MAX_STRAFE = 0.1;
+    public static double MAX_TURN = 0.15;
 
 
     // converts inches to motor ticks
@@ -90,7 +90,7 @@ public class Thunderbot2023
             imu.resetYaw();
 
         }
-        catch (Exception p_exeception)
+        catch (Exception e)
         {
             telemetry.addData("imu not found in config file", 0);
             imu = null;
@@ -227,15 +227,15 @@ public class Thunderbot2023
 
         if (tagNumber == tagID) {
 
-            if (rangeError < 0.5 && headingError < 5 && yawError < 5) {
+            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
                 stop();
                 moving = false;
                 return true;
             }
             else {
-                double y = Range.clip(rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
                 double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
-                double turn = Range.clip(headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
 
                 joystickDrive(y, x, turn);
                 return false;

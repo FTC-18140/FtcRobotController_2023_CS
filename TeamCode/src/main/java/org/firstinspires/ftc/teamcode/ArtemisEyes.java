@@ -29,6 +29,7 @@ public class ArtemisEyes
         aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
         tgeFinder = new TGEVisionProcessor();
         thePortal = VisionPortal.easyCreateWithDefaults(theCamera, aprilTagFinder, tgeFinder);
+        aprilTagFinder.setDecimation(2);
     }
 
     public String getSpikePos()

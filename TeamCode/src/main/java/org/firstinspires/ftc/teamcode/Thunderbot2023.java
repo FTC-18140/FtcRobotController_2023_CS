@@ -14,11 +14,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 import java.util.List;
 
@@ -35,8 +33,9 @@ public class Thunderbot2023
     DcMotorEx rightRear = null;
 
     Delivery delivery = new Delivery();
-    Lift lift = new Lift();
-    Intake intake = new Intake();
+    Attachments attachments = new Attachments();
+    fourBar fBar = new fourBar();
+    Sensors sensors = new Sensors();
 
     // Position Variables
     long leftFrontPosition = 0;
@@ -167,9 +166,11 @@ public class Thunderbot2023
         try {
             delivery.init(ahwMap, telem);
 
-            lift.init(ahwMap, telem);
+            attachments.init(ahwMap, telem);
 
-            intake.init(ahwMap, telem);
+            fBar.init(ahwMap, telem);
+
+            sensors.init(ahwMap, telem);
         } catch(Exception e) {
             telemetry.addData("Attachments not found", 0);
         }
@@ -355,7 +356,7 @@ public class Thunderbot2023
 
         try {
             lift.update();
-            intake.update();
+           // fBar.update();
             delivery.update();
         } catch (Exception e) {
             telemetry.addData("Attachment values not found", 0);

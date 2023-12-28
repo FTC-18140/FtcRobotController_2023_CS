@@ -33,8 +33,8 @@ public class Thunderbot2023
     DcMotorEx rightRear = null;
 
     Delivery delivery = new Delivery();
-    Attachments attachments = new Attachments();
-    fourBar fBar = new fourBar();
+    DroneLauncher attachments = new DroneLauncher();
+    Intake intake = new Intake();
     Sensors sensors = new Sensors();
 
     // Position Variables
@@ -168,7 +168,7 @@ public class Thunderbot2023
 
             attachments.init(ahwMap, telem);
 
-            fBar.init(ahwMap, telem);
+            intake.init(ahwMap, telem);
 
             sensors.init(ahwMap, telem);
         } catch(Exception e) {
@@ -307,7 +307,6 @@ public class Thunderbot2023
         return true;
     }
 
-    // updatin heading
     /**
      * Get the heading angle from the imu and convert it to degrees.
      * @return the heading angle
@@ -355,7 +354,7 @@ public class Thunderbot2023
         telemetry.addData("Heading: ", heading);
 
         try {
-            lift.update();
+//            lift.update();
            // fBar.update();
             delivery.update();
         } catch (Exception e) {
@@ -371,17 +370,6 @@ public class Thunderbot2023
         leftRear.setPower(0);
         rightRear.setPower(0);
     }
-
-    /**
-     * Stop all the motors.
-     */
-//    public void stop()
-//    {
-//        leftFront.set(0);
-//        rightFront.set(0);
-//        leftRear.set(0);
-//        rightRear.set(0);
-//      }
 
 }
 

@@ -26,7 +26,7 @@ public class Teleop extends OpMode  {
 
         try {
             robot.delivery.wrist.setPosition(INIT_WRIST_POS);
-            robot.delivery.deliver.setPosition(INIT_DELIVERY_POS);
+            robot.delivery.leftGripper.setPosition(INIT_DELIVERY_POS);
         } catch(Exception e) {
             telemetry.addData("Positions for attachments not found", 0);
         }
@@ -80,7 +80,7 @@ public class Teleop extends OpMode  {
         //////////////
 
         if (gamepad1.dpad_left && gamepad1.b) {
-            robot.delivery.launch(1);
+//            robot.delivery.launch(1);
         }
 
 
@@ -119,9 +119,9 @@ public class Teleop extends OpMode  {
         //////////////
 
         if (gamepad2.x) {
-            robot.delivery.deliver.setPosition(1);
+            robot.delivery.leftGripper.setPosition(1);
         } else if (gamepad2.y) {
-            robot.delivery.deliver.setPosition(0);
+            robot.delivery.leftGripper.setPosition(0);
         }
     }
 }

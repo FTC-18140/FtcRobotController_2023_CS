@@ -10,44 +10,49 @@ public class Teleop extends OpMode  {
 
     Thunderbot2023 robot = new Thunderbot2023();
 
-    double INIT_WRIST_POS = 0;
-    double INIT_ARM_POS = 0.9;
-    double INIT_DELIVERY_POS = 0;
-    double INIT_INTAKE_POS = 0.9;
-    double WRIST_INCREMENT = 0.001;
-    double WRIST_POSITION;
     @Override
-    public void init() {
+    public void init()
+    {
         telemetry.addData("Init", "Start");
-
+(??)
         robot.init(hardwareMap, telemetry, false);
-
+(??)
         telemetry.addData("Init", "Done");
+    }
+    /**
+     * User-defined init_loop method
+     * <p>
+     * This method will be called repeatedly during the period between when
+     * the init button is pressed and when the play button is pressed (or the
+     * OpMode is stopped).
+     * <p>
+     * This method is optional. By default, this method takes no action.
+     */
+    @Override
+    public void init_loop()
+    {
+        super.init_loop();
+        String spikePos = robot.eyes.getSpikePos();
+        telemetry.addData("Spike Pos = ", spikePos);
+        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber(4) );
+        telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
+        telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 
-        try {
-            robot.delivery.wrist.setPosition(INIT_WRIST_POS);
-            robot.delivery.leftGripper.setPosition(INIT_DELIVERY_POS);
-        } catch(Exception e) {
-            telemetry.addData("Positions for attachments not found", 0);
-        }
     }
 
     @Override
     public void start() {}
 
-    public void loop() {
-
+    public void loop()
+    {
         robot.update();
+        robot.orientedDrive(thegamepad1.getExpo(LEFT_Y), thegamepad1.getExpo(LEFT_X), thegamepad1.getExpo(RIGHT_X));
 
-        //////////////
-        // DRIVING
-        //////////////
-        if (gamepad1.dpad_up && robot.sensors.dSensor.getDistance(DistanceUnit.CM) < 10) {
-            robot.stop();
-        }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////// GAMEPAD 1 //////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        String spikePos = robot.eyes.getSpikePos();
+        telemetry.addData("Spike Pos = ", spikePos);
+        telemetry.addData("Tag Number: ", robot.eyes.getTagNumber(4) );
+        telemetry.addData("Tag X:", robot.eyes.tgeFinder.xPos);
+        telemetry.addData("Tag Y:",  robot.eyes.tgeFinder.yPos);
 
 
         //////////////

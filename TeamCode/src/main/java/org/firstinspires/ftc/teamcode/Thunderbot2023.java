@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -47,8 +48,18 @@ public class Thunderbot2023
     double initRotation = 0;
     double lastAngle = 0;
 
+    boolean moving = false;
+
     List<LynxModule> allHubs;
-    //Eyes vision = new Eyes();
+
+    ArtemisEyes eyes = new ArtemisEyes();
+
+    public static double SPEED_GAIN = 0.0075;
+    public static double STRAFE_GAIN = 0.0075;
+    public static double  TURN_GAIN = 0.001;
+    public static double MAX_SPEED = 0.25;
+    public static double MAX_STRAFE = 0.1;
+    public static double MAX_TURN = 0.15;
 
 
     // converts inches to motor ticks
@@ -73,6 +84,7 @@ public class Thunderbot2023
      */
     public void init(HardwareMap ahwMap, Telemetry telem, boolean withVision)
     {
+(??)
         try
         {
             imu = ahwMap.get(IMU.class, "imu");
@@ -110,6 +122,7 @@ public class Thunderbot2023
         catch (Exception e) {
             telemetry.addData("Lynx Module not found", 0);
         }
+        // Define & Initialize Motors
 
         try
         {
@@ -185,7 +198,8 @@ public class Thunderbot2023
      * @param right     - Any movement from left to right
      * @param clockwise ffb - Any turning movements
      */
-    public void joystickDrive(double foward, double right, double clockwise) {
+    public void joystickDrive(double foward, double right, double clockwise)
+    {
         double frontLeft = foward + clockwise + right;
         double frontRight = foward - clockwise - right;
         double backLeft = foward + clockwise - right;
@@ -216,7 +230,7 @@ public class Thunderbot2023
         leftRear.setPower(backLeft);
         rightRear.setPower(backRight);
     }
-
+(??)
     public void orientedDrive(double forward, double right, double clockwise)
     {
         double theta = Math.toRadians(heading);
@@ -227,6 +241,38 @@ public class Thunderbot2023
 
         joystickDrive(vy, vx, clockwise);
     }
+    public boolean driveToTag(int tagID, double speed, double distanceAway) {
+        if (!moving) {
+            moving = true;
+        }
+
+        int tagNumber = eyes.getTagNumber(tagID);
+        double rangeError = (eyes.rangeError - distanceAway);
+        double headingError = eyes.headingError;
+        double yawError = eyes.yawError;
+
+        if (tagNumber == tagID) {
+
+            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
+                stop();
+                moving = false;
+                return true;
+            }
+            else {
+                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
+                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+
+                joystickDrive(y, x, turn);
+                return false;
+            }
+        }
+        else {
+            stop();
+            return true;
+        }
+    }
+
 
     // Autonomous Opmodes
     public boolean drive(int distance, double power) {
@@ -328,15 +374,25 @@ public class Thunderbot2023
         // Since delta is less than -180, add 360 to it: -358 + 360 = +2 (the amount we turned!)
         // This works the same way in the other direction.
 
-        if(delta > 180) delta -= 360;
-        else if(delta < -180) delta += 360;
+        if(delta > 180)
+        {
+            delta -= 360;
+        }
+        else if(delta < -180)
+        {
+            delta += 360;
+        }
 
         heading += delta; // change the global state
         lastAngle = rawImuAngle; // save the current raw Z state
         return heading;
     }
-    public void update() {
-        for (LynxModule module : allHubs) {
+
+
+    public void update()
+    {
+        for (LynxModule module : allHubs)
+        {
             module.clearBulkCache();
         }
 
@@ -366,10 +422,13 @@ public class Thunderbot2023
 
     public void stop() {
         leftFront.setPower(0);
+(??)
         rightFront.setPower(0);
         leftRear.setPower(0);
         rightRear.setPower(0);
+(??)
     }
+(??)
 
 }
 

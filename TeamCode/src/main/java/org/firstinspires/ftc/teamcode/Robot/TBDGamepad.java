@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -116,7 +116,7 @@ public class TBDGamepad
      * @return the y-value on the right analog stick
      */
     public double getRightY() {
-        return gamepad.right_stick_y;
+        return -gamepad.right_stick_y;
     }
 
     /**

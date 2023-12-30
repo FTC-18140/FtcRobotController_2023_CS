@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Robot;
 
 import android.annotation.SuppressLint;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class ArtemisEyes
 {
     WebcamName theCamera;
-    TGEVisionProcessor tgeFinder;
+    public TGEVisionProcessor tgeFinder;
     AprilTagProcessor aprilTagFinder;
     VisionPortal thePortal;
     Telemetry telemetry;
@@ -74,5 +74,8 @@ public class ArtemisEyes
 
         return tagPos;
     }
+
+    public double getPropX() { return tgeFinder.xPos;}
+    public double getPropY() { return tgeFinder.yPos;}
 
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,12 +11,12 @@ public class Delivery
     Telemetry telemetry;
 
     // All the Attachment Defining
-    Servo wrist = null;
-    Servo leftGripper = null;
-    Servo rightGripper = null;
-    Servo twist = null;
-    Servo lElbow = null;
-    Servo rElbow = null;
+    public Servo wrist = null;
+    public Servo leftGripper = null;
+    public Servo rightGripper = null;
+    public Servo twist = null;
+    public Servo lElbow = null;
+    public Servo rElbow = null;
 
 
     public double wristPos = 0;
@@ -30,13 +30,12 @@ public class Delivery
     static public double LEFTGRIP_INIT = 0;
     static public double RIGHTGRIP_INIT = 0;
     static public double TWIST_INIT = 0;
-    static public double LELBOW_INIT = 0;
-    static public double RELBOW_INIT = 0;
+    static public double ELBOW_INIT = 0.6;
 
     public enum DepositorPositions
     {
         HOME(0, 0, 0),
-        INIT( LELBOW_INIT, WRIST_INIT, TWIST_INIT),
+        INIT(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
         DROP(90, 90, 90);
 
         public final double elbowPos;
@@ -53,6 +52,8 @@ public class Delivery
 
     public void init(HardwareMap hwMap, Telemetry telem)
     {
+        telemetry = telem;
+
         try {
             wrist = hwMap.servo.get("wrist");
             wrist.setPosition(WRIST_INIT);
@@ -63,7 +64,6 @@ public class Delivery
         try {
             leftGripper = hwMap.servo.get("leftGrip");
             leftGripper.setPosition(LEFTGRIP_INIT);
-
         } catch (Exception e) {
             telemetry.addData("leftGrip did not initialize", 0);
         }
@@ -71,7 +71,6 @@ public class Delivery
         try {
             rightGripper = hwMap.servo.get("rightGrip");
             rightGripper.setPosition(RIGHTGRIP_INIT);
-
         } catch (Exception e) {
             telemetry.addData("rightGrip did not initialize", 0);
         }
@@ -79,58 +78,59 @@ public class Delivery
         try {
             twist = hwMap.servo.get("twist");
             twist.setPosition(TWIST_INIT);
-
         } catch (Exception e) {
             telemetry.addData("twist did not initialize", 0);
         }
 
         try {
             lElbow = hwMap.servo.get("lElbow");
-            lElbow.setPosition(LELBOW_INIT);
-
+            lElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("lElbow did not initialize", 0);
         }
 
         try {
             rElbow = hwMap.servo.get("rElbow");
-            rElbow.setPosition(RELBOW_INIT);
-
+            rElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("rElbow did not initialize", 0);
         }
-
-        telemetry = telem;
     }
 
     public void setWristPos(double wristPos)
     {
         if ( wrist != null ) { wrist.setPosition( wristPos); }
+        else { telemetry.addData("delivery wrist not initialized.", 0); }
     }
 
     public void setLeftGripPos(double leftGripPos)
     {
         if ( leftGripper != null) { leftGripper.setPosition(leftGripPos); }
+        else { telemetry.addData("delivery left gripper not initialized.", 0); }
     }
 
     public void setRightGripPos(double rightGripPos)
     {
         if ( rightGripper != null) { rightGripper.setPosition(rightGripPos); }
+        else { telemetry.addData("delivery right gripper not initialized.", 0); }
     }
 
     public void setTwistPos(double twistPos)
     {
         if ( twist != null ) { twist.setPosition( twistPos); }
+        else { telemetry.addData("delivery twist not initialized.", 0); }
     }
 
     public void setlElbowPos(double lElbowPos)
     {
         if (lElbow != null ) { lElbow.setPosition( lElbowPos); }
+        else { telemetry.addData("delivery left elbow not initialized.", 0); }
     }
 
     public void setrElbowPos(double rElbowPos)
     {
         if ( rElbow != null ) { rElbow.setPosition(rElbowPos); }
+        else { telemetry.addData("delivery right elbow not initialized.", 0); }
     }
 
     public void dropBoth() {
@@ -138,10 +138,24 @@ public class Delivery
         dropRight();
     }
     public void dropLeft() {
-        leftGripper.setPosition(90);
+        setLeftGripPos(1);
     }
     public void dropRight() {
-        rightGripper.setPosition(90);
+        setRightGripPos(1);
+    }
+
+    public void resetGripperBoth() {
+        resetLeftGripper();
+        resetRightGripper();
+    }
+
+    public void resetLeftGripper()
+    {
+        setLeftGripPos(0);
+    }
+
+    public void resetRightGripper() {
+        setRightGripPos(0);
     }
 
     public void goTo( DepositorPositions thePos )

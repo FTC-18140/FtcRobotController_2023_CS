@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -38,7 +38,10 @@ public class Intake
         }
     }
 
-    public void init(HardwareMap hwMap, Telemetry telem) {
+    public void init(HardwareMap hwMap, Telemetry telem)
+    {
+        telemetry = telem;
+
         try {
             leftGripper = hwMap.servo.get("gLintake");
         } catch (Exception e) {
@@ -56,23 +59,24 @@ public class Intake
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }
-
-        telemetry = telem;
     }
 
     public void setElbowPos(double elbow)
     {
         if ( intakeElbow != null ) { intakeElbow.setPosition( elbow); }
+        else { telemetry.addData("intake elbow not initialized.", 0); }
     }
 
     public void setLeftGripPos(double leftGripPos)
     {
         if ( leftGripper != null) { leftGripper.setPosition(leftGripPos); }
+        else { telemetry.addData("intake left gripper not initialized.", 0); }
     }
 
     public void setRightGripPos(double rightGripPos)
     {
-        this.rightGripPos = rightGripPos;
+        if ( rightGripper != null) { rightGripper.setPosition(rightGripPos); }
+        else { telemetry.addData("intake right gripper not initialized.", 0); }
     }
 
     public void dropBoth() {
@@ -80,17 +84,30 @@ public class Intake
         dropRight();
     }
     public void dropLeft() {
-        leftGripper.setPosition(90);
+        setLeftGripPos(1);
     }
     public void dropRight() {
-        rightGripper.setPosition(90);
+        setRightGripPos(1);
     }
 
+    public void resetGripperBoth() {
+        resetLeftGripper();
+        resetRightGripper();
+    }
+
+    public void resetLeftGripper()
+    {
+        setLeftGripPos(0);
+    }
+
+    public void resetRightGripper() {
+        setRightGripPos(0);
+    }
     public void goTo( IntakePositions pos)
     {
-        intakeElbow.setPosition(pos.elbowPos);
-        leftGripper.setPosition(pos.gripPos);
-        rightGripper.setPosition(pos.gripPos);
+        setElbowPos(pos.elbowPos);
+        setLeftGripPos(pos.gripPos);
+        setRightGripPos(pos.gripPos);
     }
 
     public void update()
@@ -98,6 +115,5 @@ public class Intake
         if (intakeElbow != null) { intakeElbowPos = intakeElbow.getPosition(); }
         if (leftGripper != null) { leftGripPos = leftGripper.getPosition(); }
         if (rightGripper != null) { rightGripPos = rightGripper.getPosition(); }
-
     }
 }

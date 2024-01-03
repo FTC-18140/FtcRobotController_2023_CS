@@ -25,16 +25,19 @@ public class Intake
 
     public enum IntakePositions
     {
-        HOME(0, 0),
-        INIT( INTAKEELBOW_INIT, LEFTGRIP_INIT),
-        TRANSFER(90, 90);
+        HOME(0, 0, 0),
+        INIT( INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
+        STANDBY(0.25, 0.25, 0.25 ),
+        TRANSFER(1, 1, 1);
 
         public final double elbowPos;
-        public final double gripPos;
-        IntakePositions( double elbow, double grip)
+        public final double leftGripPos;
+        public final double rightGripPos;
+        IntakePositions( double elbow, double leftGrip, double rightGrip)
         {
             elbowPos = elbow;
-            gripPos = grip;
+            leftGripPos = leftGrip;
+            rightGripPos = rightGrip;
         }
     }
 
@@ -106,8 +109,8 @@ public class Intake
     public void goTo( IntakePositions pos)
     {
         setElbowPos(pos.elbowPos);
-        setLeftGripPos(pos.gripPos);
-        setRightGripPos(pos.gripPos);
+        setLeftGripPos(pos.leftGripPos);
+        setRightGripPos(pos.rightGripPos);
     }
 
     public void update()

@@ -50,6 +50,22 @@ public class Delivery
         }
     }
 
+    public enum GripperPositions
+    {
+        CLOSED( 0,0 ),
+        OPEN( 1, 1),
+        INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
+
+        public final double leftGripPos;
+        public final double rightGripPos;
+
+        GripperPositions( double leftGrip, double rightGrip)
+        {
+            leftGripPos = leftGrip;
+            rightGripPos = rightGrip;
+        }
+    }
+
     public void init(HardwareMap hwMap, Telemetry telem)
     {
         telemetry = telem;
@@ -138,10 +154,10 @@ public class Delivery
         dropRight();
     }
     public void dropLeft() {
-        setLeftGripPos(1);
+        setLeftGripPos(GripperPositions.OPEN.leftGripPos);
     }
     public void dropRight() {
-        setRightGripPos(1);
+        setRightGripPos(GripperPositions.OPEN.rightGripPos);
     }
 
     public void resetGripperBoth() {
@@ -151,11 +167,11 @@ public class Delivery
 
     public void resetLeftGripper()
     {
-        setLeftGripPos(0);
+        setLeftGripPos(GripperPositions.CLOSED.leftGripPos);
     }
 
     public void resetRightGripper() {
-        setRightGripPos(0);
+        setRightGripPos(GripperPositions.CLOSED.rightGripPos);
     }
 
     public void goTo( DepositorPositions thePos )

@@ -56,11 +56,11 @@ public class Teleop extends OpMode  {
     @Override
     public void init_loop()
     {
-        super.init_loop();
-        String spikePos = robot.eyes.getSpikePos();
-        telemetry.addData("Spike Pos = ", spikePos);
-        telemetry.addData("Prop X:", robot.eyes.getPropX());
-        telemetry.addData("Prop Y:",  robot.eyes.getPropY());
+//        super.init_loop();
+//        String spikePos = robot.eyes.getSpikePos();
+//        telemetry.addData("Spike Pos = ", spikePos);
+//        telemetry.addData("Prop X:", robot.eyes.getPropX());
+//        telemetry.addData("Prop Y:",  robot.eyes.getPropY());
 
     }
 

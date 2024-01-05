@@ -17,15 +17,15 @@ public class Intake
     public double rightGripPos = 0;
     public double intakeElbowPos = 0;
 
-
-    static public double LEFTGRIP_INIT = 0;
-    static public double RIGHTGRIP_INIT = 0;
+    // 0.225 is the position to get ready to pick up
+    static public double LEFTGRIP_INIT = 0.5;
+    static public double RIGHTGRIP_INIT = 0.5;
     static public double INTAKEELBOW_INIT = 0;
 
 
     public enum IntakePositions
     {
-        HOME(0, 0, 0),
+        HOME(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
         INIT( INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
         STANDBY(0.25, 0.25, 0.25 ),
         TRANSFER(1, 1, 1);
@@ -62,6 +62,9 @@ public class Intake
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }
+
+        // Send the Intake to its INIT position.
+        goTo(IntakePositions.INIT);
     }
 
     public void setElbowPos(double elbow)

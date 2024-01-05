@@ -14,12 +14,10 @@ public class Delivery
     public Servo wrist = null;
     public Servo leftGripper = null;
     public Servo rightGripper = null;
-    public Servo fLeftGripper = null;
-    public Servo fRightGripper = null;
     public Servo twist = null;
     public Servo lElbow = null;
     public Servo rElbow = null;
-    public Servo intakeLift =  null;
+
 
 
     public double wristPos = 0;
@@ -32,18 +30,15 @@ public class Delivery
     static public double WRIST_INIT = 1;
     static public double LEFTGRIP_INIT = 0.5;
     static public double RIGHTGRIP_INIT = 0.5;
-    static public double FLEFTGRIP_INIT = 0.5;
-    static public double FRIGHTGRIP_INIT = 0.5;
     static public double TWIST_INIT = 0.8;
     static public double ELBOW_INIT = 0.04;
-    static public double INTAKE_INIT = 0;
-    // 0.225 is the position to get ready to pick up
+
 
     public enum DepositorPositions
     {
-        HOME(0, 0, 0),
+        HOME(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
         INIT(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
-        DROP(90, 90, 90);
+        DROP(1, 1, 1);
 
         public final double elbowPos;
         public final double wristPos;
@@ -79,7 +74,7 @@ public class Delivery
 
         try {
             wrist = hwMap.servo.get("wrist");
-            wrist.setPosition(WRIST_INIT);
+//            wrist.setPosition(WRIST_INIT);
         } catch (Exception e) {
             telemetry.addData("wrist did not initialize", 0);
         }
@@ -93,25 +88,13 @@ public class Delivery
 
         try {
             rightGripper = hwMap.servo.get("rightGrip");
-            rightGripper.setPosition(RIGHTGRIP_INIT);
+//            rightGripper.setPosition(RIGHTGRIP_INIT);
         } catch (Exception e) {
             telemetry.addData("rightGrip did not initialize", 0);
         }
         try {
-            fLeftGripper = hwMap.servo.get("fLeftGrip");
-            fLeftGripper.setPosition(FLEFTGRIP_INIT);
-        } catch (Exception e) {
-            telemetry.addData("Front Left Gripper not found", 0);
-        }
-        try {
-            fRightGripper = hwMap.servo.get("fRightGrip");
-            fRightGripper.setPosition(FRIGHTGRIP_INIT);
-        } catch (Exception e) {
-            telemetry.addData("Front Right Gripper Not Found", 0);
-        }
-        try {
             twist = hwMap.servo.get("twist");
-            twist.setPosition(TWIST_INIT);
+//            twist.setPosition(TWIST_INIT);
         } catch (Exception e) {
             telemetry.addData("twist did not initialize", 0);
         }
@@ -119,7 +102,7 @@ public class Delivery
         try {
             lElbow = hwMap.servo.get("lElbow");
             lElbow.setDirection(Servo.Direction.REVERSE);
-            lElbow.setPosition(ELBOW_INIT);
+//            lElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("lElbow did not initialize", 0);
         }
@@ -127,16 +110,13 @@ public class Delivery
         try {
             rElbow = hwMap.servo.get("rElbow");
             rElbow.setDirection(Servo.Direction.FORWARD);
-            rElbow.setPosition(ELBOW_INIT);
+//            rElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("rElbow did not initialize", 0);
         }
-        try {
-            intakeLift = hwMap.servo.get("intakeLift");
-            intakeLift.setPosition(INTAKE_INIT);
-        } catch(Exception e ) {
-            telemetry.addData("IntakeLift Not Found", 0);
-    }
+
+        // Send the Delivery to its INIT position.
+        goTo(DepositorPositions.INIT);
     }
 
     public void setWristPos(double wristPos)

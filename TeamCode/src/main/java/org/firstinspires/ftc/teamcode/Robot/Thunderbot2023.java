@@ -104,7 +104,6 @@ public class Thunderbot2023
             imu = null;
         }
 
-        // Define & Initialize Motors
         try {
             allHubs = ahwMap.getAll(LynxModule.class);
 
@@ -113,9 +112,21 @@ public class Thunderbot2023
             }
         }
         catch (Exception e) {
-            telemetry.addData("Lynx Module not found", 0);
+            telemetry.addData("Lynx Module not initialized", 0);
         }
 
+        if ( withVision )
+        {
+            try
+            {
+                eyes.init(ahwMap, telem);
+            }
+            catch (Exception e)
+            {
+                telemetry.addData("Vision Processor not initialized.", 0);
+            }
+        }
+        // Define & Initialize Motors
         try
         {
             rightFront = ahwMap.get(DcMotorEx.class, "rightFront");
@@ -589,24 +600,20 @@ public class Thunderbot2023
         leftRearPosition = leftRear.getCurrentPosition();
         rightRearPosition = rightRear.getCurrentPosition();
 
-
-
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
         telemetry.addData("Motor Position", allMotors);
-
         telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();
-
         telemetry.addData("Heading: ", heading);
 
         try {
-            intake.update();
-            delivery.update();
-            droneLauncher.update();
+            if ( intake != null ) { intake.update(); }
+            if ( delivery != null ) { delivery.update(); }
+            if ( droneLauncher != null ) { droneLauncher.update();}
 
         } catch (Exception e) {
-            telemetry.addData("Exception in update() in Thunderbot class.", 0);
+            telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);
         }
     }
 
@@ -623,5 +630,22 @@ public class Thunderbot2023
     {
         imu.resetYaw();
     }
+
+    public String getSpikePos()
+    {
+        if ( eyes != null ) { return eyes.getSpikePos(); }
+        else { return "No Vision System Initialized."; }
+    }
+    public double getPropX()
+    {
+        if (eyes != null) {  return eyes.getPropX(); }
+        else { return -1; }
+    }
+    public double getPropY()
+    {
+        if (eyes != null) { return eyes.getPropY(); }
+        else  { return -1; }
+    }
+
 }
 

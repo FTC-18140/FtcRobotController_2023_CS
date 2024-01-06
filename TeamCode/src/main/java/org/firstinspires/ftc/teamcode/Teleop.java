@@ -4,6 +4,8 @@ import static com.qualcomm.robotcore.util.Range.clip;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.A;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.B;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_DOWN;
+import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_LEFT;
+import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_RIGHT;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.LEFT_BUMPER;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.RIGHT_BUMPER;
@@ -27,11 +29,11 @@ import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 @TeleOp(name = "Teleop", group = "Teleop")
 public class Teleop extends OpMode  {
 
-    public static double WRIST_INCREMENT = 0.01;
+    public static double WRIST_INCREMENT = 0.001;
     public static double WRIST_POSITION = 0;
-    public static double TWIST_INCREMENT = 0.01;
+    public static double TWIST_INCREMENT = 0.001;
     public static double TWIST_POSITION = 0.8;
-    public static double ELBOW_INCREMENT = 0.01;
+    public static double ELBOW_INCREMENT = 0.0025;
     public static double ELBOW_POSITION = 0.04;
     public static double INTAKE_INCREMENT = 0.01;
     public static double INTAKE_POSITION = 0;
@@ -87,7 +89,7 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad1.getButton(B)) {
             toggle = false;
         }
-        
+
         telemetry.addData("test toggle = ", toggle);
 
         // Resets the measured angle of the robot
@@ -183,30 +185,55 @@ public class Teleop extends OpMode  {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////
+        // DELIVERY ELBOW
+        //////////////////
+        if (tbdGamepad2.getButton(B)) {
+            ELBOW_POSITION += ELBOW_INCREMENT;
+            ELBOW_POSITION = clip(ELBOW_POSITION, 0, 1);
+            robot.delivery.setElbowPosition(ELBOW_POSITION);
+        } else if (tbdGamepad2.getButton(X)) {
+            ELBOW_POSITION -= ELBOW_INCREMENT;
+            ELBOW_POSITION = clip(ELBOW_POSITION, 0, 1);
+            robot.delivery.setElbowPosition(ELBOW_POSITION);
+//            robot.delivery.setlElbowPos(0.04);
+//            robot.delivery.setrElbowPos(0.04);
+        }
+
+        //////////////////
         // DELIVERY WRIST
         //////////////////
 
         // TODO: Use Presets and possibly goTo method
-        if (tbdGamepad2.getButton(DPAD_UP)) {
-            robot.delivery.setWristPos(0);
-        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
-            robot.delivery.setWristPos(1);
-        }
+//        if (tbdGamepad2.getButton(DPAD_UP)) {
+//            robot.delivery.setWristPos(0);
+//        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
+//            robot.delivery.setWristPos(1);
+//        }
 
-        if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0.2) {
+        if (tbdGamepad2.getButton(DPAD_UP)) {
             WRIST_POSITION += WRIST_INCREMENT;
             WRIST_POSITION = clip( WRIST_POSITION, 0, 1);
             robot.delivery.setWristPos(WRIST_POSITION);
-        } else if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0.2) {
+        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
             WRIST_POSITION -= WRIST_INCREMENT;
             WRIST_POSITION = clip(WRIST_POSITION, 0, 1);
             robot.delivery.setWristPos(WRIST_POSITION);
         }
 
+        //////////////////
+        // TWIST
+        //////////////////
+
+        if (tbdGamepad2.getButton(DPAD_RIGHT)) {
+            robot.delivery.setTwistPos(0);
+        } else if (tbdGamepad2.getButton(DPAD_LEFT)) {
+            robot.delivery.setTwistPos(1);
+        }
+
         //////////////
         // LIFT
         //////////////
-
+        // One needs to be reversed
         if (tbdGamepad2.getButton(Y)) {
             robot.linearSlide.linearMove(1);
         } else if (tbdGamepad2.getButton(A)) {

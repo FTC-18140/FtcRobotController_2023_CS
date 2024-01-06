@@ -28,15 +28,15 @@ public class Delivery
     public double lElbowPos = 0;
     public double rElbowPos = 0;
 
-    static public double ELBOW_MIN = 0.04;
-    static public double ELBOW_MAX = 0.5;
+    static public double ELBOW_MIN = 0.065;
+    static public double ELBOW_MAX = 0.3;
 
 
     static public double WRIST_INIT = 1;
     static public double LEFTGRIP_INIT = 0.5;
     static public double RIGHTGRIP_INIT = 0.5;
-    static public double TWIST_INIT = 0.8;
-    static public double ELBOW_INIT = 0.04;
+    static public double TWIST_INIT = 0;
+    static public double ELBOW_INIT = 0.065;
     // 0.225 is the position to get ready to pick up
 
     public enum DepositorPositions
@@ -59,7 +59,7 @@ public class Delivery
 
     public enum GripperPositions
     {
-        CLOSED( 0,0 ),
+        CLOSED( 0.5,0.5 ),
         OPEN( 1, 1),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
@@ -145,6 +145,20 @@ public class Delivery
         else { telemetry.addData("delivery twist not initialized.", 0); }
     }
 
+    public void setElbowPosition(double position) {
+        lElbowPos = lElbow.getPosition();
+        rElbowPos = rElbow.getPosition();
+        if (lElbow.getPosition() > ELBOW_MAX) {
+            setlElbowPos(ELBOW_MAX - 0.0025);
+            setrElbowPos(ELBOW_MAX - 0.0025);
+        } else if (lElbow.getPosition() < ELBOW_MIN){
+            setlElbowPos(ELBOW_MIN + 0.0025);
+            setlElbowPos(ELBOW_MIN + 0.0025);
+        } else {
+            setlElbowPos(position);
+            setrElbowPos(position);
+        }
+    }
     public void setlElbowPos(double lElbowPos)
     {
         if (lElbow != null ) { lElbow.setPosition( lElbowPos); }
@@ -198,6 +212,12 @@ public class Delivery
         if (twist != null) { twistPos = twist.getPosition(); }
         if (lElbow != null) { lElbowPos = lElbow.getPosition(); }
         if (rElbow != null) {  rElbowPos = rElbow.getPosition(); }
+        telemetry.addData("wrist position", wrist.getPosition());
+        telemetry.addData("leftGrip Position", leftGripper.getPosition());
+        telemetry.addData("rightGrip Position", rightGripper.getPosition());
+        telemetry.addData("twist position", twist.getPosition());
+        telemetry.addData("lElbow position", lElbow.getPosition());
+        telemetry.addData("rElbow Position", rElbow.getPosition());
     }
 
 }

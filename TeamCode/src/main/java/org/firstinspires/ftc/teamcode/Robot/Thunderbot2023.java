@@ -66,7 +66,7 @@ public class Thunderbot2023
     static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (WHEEL_DIAMETER_CM * Math.PI);
 
-    public static double MAX_VELOCITY_CM = 30;
+    public static double MAX_VELOCITY_CM = 200;
     static final double MAX_VELOCITY_TICKS = MAX_VELOCITY_CM * COUNTS_PER_CM;
 
     private Telemetry telemetry = null;
@@ -589,10 +589,13 @@ public class Thunderbot2023
         leftRearPosition = leftRear.getCurrentPosition();
         rightRearPosition = rightRear.getCurrentPosition();
 
+
+
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
         telemetry.addData("Motor Position", allMotors);
 
+        telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();
 
         telemetry.addData("Heading: ", heading);

@@ -18,8 +18,8 @@ public class Intake
     public double intakeElbowPos = 0;
 
 
-    static public double LEFTGRIP_INIT = 0;
-    static public double RIGHTGRIP_INIT = 0;
+    static public double LEFTGRIP_INIT = 0.5;
+    static public double RIGHTGRIP_INIT = 0.5;
     static public double INTAKEELBOW_INIT = 0;
 
 
@@ -58,7 +58,7 @@ public class Intake
         }
 
         try {
-            intakeElbow = hwMap.servo.get("iArm");
+            intakeElbow = hwMap.servo.get("iElbow");
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }

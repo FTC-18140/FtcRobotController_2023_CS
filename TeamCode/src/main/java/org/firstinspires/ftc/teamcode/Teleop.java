@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Trigger.RIGHT_TRIG
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.TBDGamepad;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
@@ -66,11 +67,12 @@ public class Teleop extends OpMode  {
     @Override
     public void init_loop()
     {
-//        super.init_loop();
-//        String spikePos = robot.eyes.getSpikePos();
-//        telemetry.addData("Spike Pos = ", spikePos);
-//        telemetry.addData("Prop X:", robot.eyes.getPropX());
-//        telemetry.addData("Prop Y:",  robot.eyes.getPropY());
+        super.init_loop();
+        // TODO: test the ability to detect the team prop and find the LEFT/CENTER/RIGHT
+        String spikePos = robot.getSpikePos();
+        telemetry.addData("Spike Pos = ", spikePos);
+        telemetry.addData("Prop X:", robot.getPropX());
+        telemetry.addData("Prop Y:",  robot.getPropY());
 
     }
 
@@ -103,6 +105,7 @@ public class Teleop extends OpMode  {
         // Each part of the if then statement
         if (tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.5)
         {
+            // TODO: Test Field Centric Drive
             if ( tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.5)
             {
                 robot.orientedDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.25, tbdGamepad1.getExpo(LEFT_X) * 0.25,
@@ -115,10 +118,12 @@ public class Teleop extends OpMode  {
             }
         }
 
-        else
+        else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
         {
-            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
-                                tbdGamepad1.getLeftX() * 0.9);
+            robot.joystickDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.9, tbdGamepad1.getExpo(LEFT_X) * 0.9,
+                                tbdGamepad1.getExpo(RIGHT_X) * 0.9);
+//            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
+//                                tbdGamepad1.getLeftX() * 0.9);
         }
 
 //        if (gamepad1.left_trigger > 0.5) {
@@ -142,9 +147,11 @@ public class Teleop extends OpMode  {
 
 //         TODO: presets or use goTo method
         if (tbdGamepad1.getButton(LEFT_BUMPER) ) {
-           robot.intake.setElbowPos(0);
+//           robot.intake.setElbowPos(0);
+           robot.intake.goTo(Intake.Positions.INIT);
         } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
-            robot.intake.setElbowPos(0.45);
+//            robot.intake.setElbowPos(0.45);
+            robot.intake.goTo(Intake.Positions.READY_TO_TRANSFER);
         }
 //        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
 //            robot.intake.setElbowPos(0);
@@ -161,11 +168,11 @@ public class Teleop extends OpMode  {
         if (tbdGamepad1.getButton(X)) {
             robot.intake.dropBoth();
         } else if (tbdGamepad1.getButton(Y)) {
-            robot.intake.resetGripperBoth();
+            robot.intake.holdPixelsBoth();
         }
 
         ////////////////////
-        // DRONE LAUNCHer
+        // DRONE LAUNCHER
         ////////////////////
 
         // TODO: Add a timer so that this cannot be activated before End Game
@@ -249,7 +256,7 @@ public class Teleop extends OpMode  {
         if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0) {
             robot.delivery.dropBoth();
         } else if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0) {
-            robot.delivery.resetGripperBoth();
+            robot.delivery.holdPixelsBoth();
         }
 
     }

@@ -39,17 +39,18 @@ public class Delivery
     static public double ELBOW_INIT = 0.065;
     // 0.225 is the position to get ready to pick up
 
-    public enum DepositorPositions
+    // TODO: Define these positions to help with positioning the Depositor
+    public enum Positions
     {
         HOME(0, 0, 0),
         INIT(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
-        DROP(90, 90, 90);
+        DROP(0.5, 1, 1);
 
         public final double elbowPos;
         public final double wristPos;
         public final double twisterPos;
 
-        DepositorPositions( double elbow, double wrist, double twist)
+        Positions(double elbow, double wrist, double twist)
         {
             elbowPos = elbow;
             wristPos = wrist;
@@ -57,6 +58,7 @@ public class Delivery
         }
     }
 
+    // TODO: Define these to help with the gripper positioning
     public enum GripperPositions
     {
         CLOSED( 0.5,0.5 ),
@@ -79,27 +81,27 @@ public class Delivery
 
         try {
             wrist = hwMap.servo.get("wrist");
-            wrist.setPosition(WRIST_INIT);
+//            wrist.setPosition(WRIST_INIT);
         } catch (Exception e) {
             telemetry.addData("wrist did not initialize", 0);
         }
 
         try {
             leftGripper = hwMap.servo.get("leftGrip");
-            leftGripper.setPosition(LEFTGRIP_INIT);
+//            leftGripper.setPosition(LEFTGRIP_INIT);
         } catch (Exception e) {
             telemetry.addData("leftGrip did not initialize", 0);
         }
 
         try {
             rightGripper = hwMap.servo.get("rightGrip");
-            rightGripper.setPosition(RIGHTGRIP_INIT);
+//            rightGripper.setPosition(RIGHTGRIP_INIT);
         } catch (Exception e) {
             telemetry.addData("rightGrip did not initialize", 0);
         }
         try {
             twist = hwMap.servo.get("twist");
-            twist.setPosition(TWIST_INIT);
+//            twist.setPosition(TWIST_INIT);
         } catch (Exception e) {
             telemetry.addData("twist did not initialize", 0);
         }
@@ -107,7 +109,7 @@ public class Delivery
         try {
             lElbow = hwMap.servo.get("lElbow");
             lElbow.setDirection(Servo.Direction.REVERSE);
-            lElbow.setPosition(ELBOW_INIT);
+//            lElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("lElbow did not initialize", 0);
         }
@@ -115,10 +117,12 @@ public class Delivery
         try {
             rElbow = hwMap.servo.get("rElbow");
             rElbow.setDirection(Servo.Direction.FORWARD);
-            rElbow.setPosition(ELBOW_INIT);
+//            rElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("rElbow did not initialize", 0);
         }
+        goTo(Positions.INIT);
+        holdPixelsBoth();
     }
 
     public void setWristPos(double wristPos)
@@ -182,21 +186,21 @@ public class Delivery
         setRightGripPos(GripperPositions.OPEN.rightGripPos);
     }
 
-    public void resetGripperBoth() {
-        resetLeftGripper();
-        resetRightGripper();
+    public void holdPixelsBoth() {
+        holdPixelLeft();
+        holdPixelRight();
     }
 
-    public void resetLeftGripper()
+    public void holdPixelLeft()
     {
         setLeftGripPos(GripperPositions.CLOSED.leftGripPos);
     }
 
-    public void resetRightGripper() {
+    public void holdPixelRight() {
         setRightGripPos(GripperPositions.CLOSED.rightGripPos);
     }
 
-    public void goTo( DepositorPositions thePos )
+    public void goTo( Positions thePos)
     {
         setlElbowPos( thePos.elbowPos);
         setrElbowPos( thePos.elbowPos);

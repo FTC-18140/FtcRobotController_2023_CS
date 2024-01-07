@@ -44,7 +44,7 @@ public class LinearSlide
             rightLinear = hwMap.dcMotor.get("rSlide");
             rightLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightLinear.setDirection(DcMotorSimple.Direction.FORWARD);
+            rightLinear.setDirection(DcMotorSimple.Direction.REVERSE);
             rightLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         } catch(Exception e) {
             telemetry.addData("rSlide not found", 0);

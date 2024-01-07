@@ -14,10 +14,11 @@ public class Delivery
     public Servo wrist = null;
     public Servo leftGripper = null;
     public Servo rightGripper = null;
+    public Servo fLeftGripper = null;
+    public Servo fRightGripper = null;
     public Servo twist = null;
     public Servo lElbow = null;
     public Servo rElbow = null;
-
 
 
     public double wristPos = 0;
@@ -27,24 +28,29 @@ public class Delivery
     public double lElbowPos = 0;
     public double rElbowPos = 0;
 
+    static public double ELBOW_MIN = 0.065;
+    static public double ELBOW_MAX = 0.3;
+
+
     static public double WRIST_INIT = 1;
     static public double LEFTGRIP_INIT = 0.5;
     static public double RIGHTGRIP_INIT = 0.5;
-    static public double TWIST_INIT = 0.8;
-    static public double ELBOW_INIT = 0.04;
+    static public double TWIST_INIT = 0;
+    static public double ELBOW_INIT = 0.065;
+    // 0.225 is the position to get ready to pick up
 
-
-    public enum DepositorPositions
+    // TODO: Define these positions to help with positioning the Depositor
+    public enum Positions
     {
-        HOME(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
+        HOME(0, 0, 0),
         INIT(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
-        DROP(1, 1, 1);
+        DROP(0.5, 1, 1);
 
         public final double elbowPos;
         public final double wristPos;
         public final double twisterPos;
 
-        DepositorPositions( double elbow, double wrist, double twist)
+        Positions(double elbow, double wrist, double twist)
         {
             elbowPos = elbow;
             wristPos = wrist;
@@ -52,9 +58,10 @@ public class Delivery
         }
     }
 
+    // TODO: Define these to help with the gripper positioning
     public enum GripperPositions
     {
-        CLOSED( 0,0 ),
+        CLOSED( 0.5,0.5 ),
         OPEN( 1, 1),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
@@ -81,7 +88,7 @@ public class Delivery
 
         try {
             leftGripper = hwMap.servo.get("leftGrip");
-            leftGripper.setPosition(LEFTGRIP_INIT);
+//            leftGripper.setPosition(LEFTGRIP_INIT);
         } catch (Exception e) {
             telemetry.addData("leftGrip did not initialize", 0);
         }
@@ -115,8 +122,9 @@ public class Delivery
             telemetry.addData("rElbow did not initialize", 0);
         }
 
-        // Send the Delivery to its INIT position.
-        goTo(DepositorPositions.INIT);
+        // Now that everything is inited, put the Delivery into a good position.
+        goTo(Positions.INIT);
+        holdPixelsBoth();
     }
 
     public void setWristPos(double wristPos)
@@ -143,6 +151,19 @@ public class Delivery
         else { telemetry.addData("delivery twist not initialized.", 0); }
     }
 
+    public void setElbowPosition(double position) {
+
+        if (lElbowPos > ELBOW_MAX) {
+            setlElbowPos(ELBOW_MAX - 0.0025);
+            setrElbowPos(ELBOW_MAX - 0.0025);
+        } else if (lElbowPos < ELBOW_MIN){
+            setlElbowPos(ELBOW_MIN + 0.0025);
+            setlElbowPos(ELBOW_MIN + 0.0025);
+        } else {
+            setlElbowPos(position);
+            setrElbowPos(position);
+        }
+    }
     public void setlElbowPos(double lElbowPos)
     {
         if (lElbow != null ) { lElbow.setPosition( lElbowPos); }
@@ -166,21 +187,21 @@ public class Delivery
         setRightGripPos(GripperPositions.OPEN.rightGripPos);
     }
 
-    public void resetGripperBoth() {
-        resetLeftGripper();
-        resetRightGripper();
+    public void holdPixelsBoth() {
+        holdPixelLeft();
+        holdPixelRight();
     }
 
-    public void resetLeftGripper()
+    public void holdPixelLeft()
     {
         setLeftGripPos(GripperPositions.CLOSED.leftGripPos);
     }
 
-    public void resetRightGripper() {
+    public void holdPixelRight() {
         setRightGripPos(GripperPositions.CLOSED.rightGripPos);
     }
 
-    public void goTo( DepositorPositions thePos )
+    public void goTo( Positions thePos)
     {
         setlElbowPos( thePos.elbowPos);
         setrElbowPos( thePos.elbowPos);
@@ -196,6 +217,12 @@ public class Delivery
         if (twist != null) { twistPos = twist.getPosition(); }
         if (lElbow != null) { lElbowPos = lElbow.getPosition(); }
         if (rElbow != null) {  rElbowPos = rElbow.getPosition(); }
+        telemetry.addData("wrist position", wristPos);
+        telemetry.addData("leftGrip Position", leftGripPos);
+        telemetry.addData("rightGrip Position", rightGripPos);
+        telemetry.addData("twist position", twistPos);
+        telemetry.addData("lElbow position", lElbowPos);
+        telemetry.addData("rElbow Position", rElbowPos);
     }
 
 }

@@ -17,23 +17,28 @@ public class Intake
     public double rightGripPos = 0;
     public double intakeElbowPos = 0;
 
-    // 0.225 is the position to get ready to pick up
-    static public double LEFTGRIP_INIT = 0.5;
-    static public double RIGHTGRIP_INIT = 0.5;
+
+    static public double LEFTGRIP_INIT = 0.1;
+    static public double RIGHTGRIP_INIT = 0.1;
     static public double INTAKEELBOW_INIT = 0;
 
+    static public double GRIP_DROP = 1;
+    static public double GRIP_HOLD = 0;
 
-    public enum IntakePositions
+
+    // TODO: define these Positions to help with intake control
+    public enum Positions
     {
-        HOME(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
-        INIT( INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
-        STANDBY(0.25, 0.25, 0.25 ),
-        TRANSFER(1, 1, 1);
+        INIT(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
+        WAIT_TO_TRANSFER(0.25, GRIP_HOLD, GRIP_HOLD ),
+        READY_TO_TRANSFER(1, GRIP_HOLD, GRIP_HOLD),
+        TRANSFER( 1, GRIP_DROP, GRIP_DROP),
+        WAIT_TO_INTAKE(0.25, GRIP_DROP, GRIP_DROP);
 
         public final double elbowPos;
         public final double leftGripPos;
         public final double rightGripPos;
-        IntakePositions( double elbow, double leftGrip, double rightGrip)
+        Positions(double elbow, double leftGrip, double rightGrip)
         {
             elbowPos = elbow;
             leftGripPos = leftGrip;
@@ -58,13 +63,11 @@ public class Intake
         }
 
         try {
-            intakeElbow = hwMap.servo.get("iArm");
+            intakeElbow = hwMap.servo.get("iElbow");
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }
-
-        // Send the Intake to its INIT position.
-        goTo(IntakePositions.INIT);
+        goTo(Positions.INIT);
     }
 
     public void setElbowPos(double elbow)
@@ -90,26 +93,26 @@ public class Intake
         dropRight();
     }
     public void dropLeft() {
-        setLeftGripPos(1);
+        setLeftGripPos(GRIP_DROP);
     }
     public void dropRight() {
-        setRightGripPos(1);
+        setRightGripPos(GRIP_DROP);
     }
 
-    public void resetGripperBoth() {
-        resetLeftGripper();
-        resetRightGripper();
+    public void holdPixelsBoth() {
+        holdPixelLeft();
+        holdPixelRight();
     }
 
-    public void resetLeftGripper()
+    public void holdPixelLeft()
     {
-        setLeftGripPos(0);
+        setLeftGripPos(GRIP_HOLD);
     }
 
-    public void resetRightGripper() {
-        setRightGripPos(0);
+    public void holdPixelRight() {
+        setRightGripPos(GRIP_HOLD);
     }
-    public void goTo( IntakePositions pos)
+    public void goTo( Positions pos)
     {
         setElbowPos(pos.elbowPos);
         setLeftGripPos(pos.leftGripPos);

@@ -127,8 +127,13 @@ public class Teleop extends OpMode  {
 
         else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
         {
-            robot.joystickDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.9, tbdGamepad1.getExpo(LEFT_X) * 0.9,
-                                tbdGamepad1.getExpo(RIGHT_X) * 0.9);
+            if (robot.intake.intakeElbowPos > 0.185) {
+                robot.joystickDrive(tbdGamepad1.getLeftY() * 0.1, tbdGamepad1.getLeftX() * 0.1,
+                        tbdGamepad1.getRightX() * 0.1);
+            } else {
+                robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
+                        tbdGamepad1.getRightX() * 0.9);
+            }
 //            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
 //                                tbdGamepad1.getLeftX() * 0.9);
         }
@@ -158,6 +163,7 @@ public class Teleop extends OpMode  {
            robot.intake.setElbowPos(0.185);
            // TRY THIS
            // robot.intake.toggleDown();
+           robot.intake.dropBoth();
         } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
 //            robot.intake.setElbowPos(0.45);
             robot.intake.setElbowPos(0);
@@ -185,7 +191,11 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad1.getButton(Y)) {
             robot.intake.holdPixelsBoth();
         }
-
+//        if (robot.intake.intakeElbowPos == 0) {
+//            robot.intake.dropBoth();
+//        } else if (robot.intake.intakeElbowPos > 0.2) {
+//            robot.intake.holdPixelsBoth();
+//        }
         ////////////////////
         // DRONE LAUNCHER
         ////////////////////
@@ -209,11 +219,11 @@ public class Teleop extends OpMode  {
         //////////////////
         // DELIVERY ELBOW
         //////////////////
-        if (tbdGamepad2.getButton(B)) {
+        if (tbdGamepad2.getButton(B) && robot.intake.intakeElbowPos > 0.05) {
             ELBOW_POSITION += ELBOW_INCREMENT;
             ELBOW_POSITION = clip(ELBOW_POSITION, robot.delivery.ELBOW_MIN, robot.delivery.ELBOW_MAX);
             robot.delivery.setElbowPosition(ELBOW_POSITION);
-        } else if (tbdGamepad2.getButton(X)) {
+        } else if (tbdGamepad2.getButton(X) && robot.intake.intakeElbowPos > 0.05) {
             ELBOW_POSITION -= ELBOW_INCREMENT;
             ELBOW_POSITION = clip(ELBOW_POSITION, robot.delivery.ELBOW_MIN, robot.delivery.ELBOW_MAX);
             robot.delivery.setElbowPosition(ELBOW_POSITION);
@@ -232,11 +242,11 @@ public class Teleop extends OpMode  {
 //            robot.delivery.setWristPos(1);
 //        }
 
-        if (tbdGamepad2.getButton(DPAD_UP)) {
+        if (tbdGamepad2.getButton(DPAD_DOWN)) {
             WRIST_POSITION += WRIST_INCREMENT;
             WRIST_POSITION = clip(WRIST_POSITION, 0, 1);
             robot.delivery.setWristPos(WRIST_POSITION);
-        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
+        } else if (tbdGamepad2.getButton(DPAD_UP)) {
             WRIST_POSITION -= WRIST_INCREMENT;
             WRIST_POSITION = clip(WRIST_POSITION, 0, 1);
             robot.delivery.setWristPos(WRIST_POSITION);

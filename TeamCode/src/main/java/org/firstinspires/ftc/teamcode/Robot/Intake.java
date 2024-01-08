@@ -29,16 +29,18 @@ public class Intake
     static public double GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.5;
     static public double RIGHT_GRIP_HOLD = 0.6;
+    private Positions currentPosition = Positions.INIT;
 
 
     // TODO: define these Positions to help with intake control
     public enum Positions
     {
+        TRANSFER( 0, GRIP_DROP, GRIP_DROP),
+        READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         INIT(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
-        WAIT_TO_TRANSFER(0.25, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD ),
-        READY_TO_TRANSFER(1, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
-        TRANSFER( 1, GRIP_DROP, GRIP_DROP),
-        WAIT_TO_INTAKE(0.25, GRIP_DROP, GRIP_DROP);
+        WAIT_TO_INTAKE(0.185, GRIP_DROP, GRIP_DROP),
+        DOWN_TO_PIXEL(0.25, GRIP_DROP, GRIP_DROP ),
+        INTAKE( 0.25, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
         public final double elbowPos;
         public final double leftGripPos;
@@ -120,9 +122,50 @@ public class Intake
     }
     public void goTo( Positions pos)
     {
+        currentPosition = pos;
         setElbowPos(pos.elbowPos);
         setLeftGripPos(pos.leftGripPos);
         setRightGripPos(pos.rightGripPos);
+    }
+
+    public void toggleDown()
+    {
+        switch (currentPosition)
+        {
+            case TRANSFER:
+            case READY_TO_TRANSFER:
+            case INIT:
+                goTo(Positions.WAIT_TO_INTAKE);
+                break;
+            case WAIT_TO_INTAKE:
+                goTo( Positions.DOWN_TO_PIXEL);
+                break;
+            case DOWN_TO_PIXEL:
+                goTo(Positions.INTAKE);
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    public void toggleUp()
+    {
+        switch (currentPosition)
+        {
+            case INTAKE:
+            case DOWN_TO_PIXEL:
+            case WAIT_TO_INTAKE:
+            case INIT:
+                goTo(Positions.READY_TO_TRANSFER);
+                break;
+            case READY_TO_TRANSFER:
+                goTo( Positions.TRANSFER);
+                break;
+            default:
+                break;
+
+        }
     }
 
     public void update()
@@ -131,6 +174,7 @@ public class Intake
         if (leftGripper != null) { leftGripPos = leftGripper.getPosition(); }
         if (rightGripper != null) { rightGripPos = rightGripper.getPosition(); }
         telemetry.addData("Intake Right Gripper Position =", rightGripPos);
-        telemetry.addData("Intakke Left Gripper Position =", leftGripPos);
+        telemetry.addData("Intake Left Gripper Position =", leftGripPos);
+        telemetry.addData("Intake Position: ", currentPosition);
     }
 }

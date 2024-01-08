@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.Range.clip;
+import static org.firstinspires.ftc.teamcode.Robot.Intake.Positions.DOWN_TO_PIXEL;
+import static org.firstinspires.ftc.teamcode.Robot.Intake.Positions.READY_TO_TRANSFER;
+import static org.firstinspires.ftc.teamcode.Robot.Intake.Positions.WAIT_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.A;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.B;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_DOWN;
@@ -84,6 +87,8 @@ public class Teleop extends OpMode  {
     public void loop()
     {
         robot.update();
+        tbdGamepad1.update();
+        tbdGamepad2.update();
 
         //////////////
         // DRIVING
@@ -151,11 +156,17 @@ public class Teleop extends OpMode  {
         if (tbdGamepad1.getButton(LEFT_BUMPER) ) {
 //           robot.intake.setElbowPos(0);
            robot.intake.setElbowPos(0.185);
+           // TRY THIS
+           // robot.intake.toggleDown();
         } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
 //            robot.intake.setElbowPos(0.45);
             robot.intake.setElbowPos(0);
+            // TRY THIS
+//             robot.intake.toggleUp();
         } else if (tbdGamepad1.getButton(DPAD_DOWN)) {
             robot.intake.setElbowPos(0.25);
+            // TRY THIS
+//             robot.intake.goTo( DOWN_TO_PIXEL);
         }
 //        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
 //            robot.intake.setElbowPos(0);

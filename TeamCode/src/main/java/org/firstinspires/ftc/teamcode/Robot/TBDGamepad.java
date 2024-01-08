@@ -12,9 +12,9 @@ public class TBDGamepad
 
     public static double expoYValue = 2.5;
     public static double expoXValue = 2.5;
-    public boolean buttons[] = new boolean[14];
-    public boolean oldButtons[] = new boolean[14];
-    public boolean changed[] = new boolean[14];
+    public boolean[] buttons = new boolean[14];
+    public boolean[] oldButtons = new boolean[14];
+    public boolean[] changed = new boolean[14];
 
 
     public enum Button {
@@ -94,7 +94,6 @@ public class TBDGamepad
                 buttonValue = gamepad.right_stick_button;
                 break;
             default:
-                buttonValue = false;
                 break;
         }
         return buttonValue;
@@ -166,50 +165,23 @@ public class TBDGamepad
     }
 
     public void update() {
-        boolean val_A;
-        boolean val_b;
-        boolean val_X;
-        boolean val_Y;
-        boolean val_leftBumper;
-        boolean val_right_bumper;
-        boolean val_dpadUp;
-        boolean val_dpadDown:
-        boolean val_dpadRight;
-        boolean val_dpadLeft;
-        boolean val_back;
-        boolean val_start;
-        boolean val_leftStick;
-        boolean val_rightStick;
 
         System.arraycopy(buttons, 0, oldButtons, 0, 14);
 
         buttons[Button.A.index] = gamepad.a;
-
         buttons[Button.B.index] = gamepad.b;
-
         buttons[Button.X.index] = gamepad.x;
-
         buttons[Button.Y.index] = gamepad.y;
-
-        buttonValue = gamepad.left_bumper;
-
-        buttonValue = gamepad.right_bumper;
-
-        buttonValue = gamepad.dpad_up;
-
-        buttonValue = gamepad.dpad_down;
-
-        buttonValue = gamepad.dpad_left;
-
-        buttonValue = gamepad.dpad_right;
-
-        buttonValue = gamepad.back;
-
-        buttonValue = gamepad.start;
-
-        buttonValue = gamepad.left_stick_button;
-
-        buttonValue = gamepad.right_stick_button;
+        buttons[Button.LEFT_BUMPER.index] = gamepad.left_bumper;
+        buttons[Button.RIGHT_BUMPER.index] = gamepad.right_bumper;
+        buttons[Button.DPAD_UP.index] = gamepad.dpad_up;
+        buttons[Button.DPAD_DOWN.index] = gamepad.dpad_down;
+        buttons[Button.DPAD_LEFT.index] = gamepad.dpad_left;
+        buttons[Button.DPAD_RIGHT.index] = gamepad.dpad_right;
+        buttons[Button.BACK.index] = gamepad.back;
+        buttons[Button.START.index] = gamepad.start;
+        buttons[Button.LEFT_STICK_BUTTON.index] = gamepad.left_stick_button;
+        buttons[Button.RIGHT_STICK_BUTTON.index] = gamepad.right_stick_button;
 
         for ( int i = 0; i < 14; i++ )
         {

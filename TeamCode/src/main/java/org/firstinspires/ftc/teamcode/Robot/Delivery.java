@@ -14,8 +14,6 @@ public class Delivery
     public Servo wrist = null;
     public Servo leftGripper = null;
     public Servo rightGripper = null;
-    public Servo fLeftGripper = null;
-    public Servo fRightGripper = null;
     public Servo twist = null;
     public Servo lElbow = null;
     public Servo rElbow = null;
@@ -212,6 +210,23 @@ public class Delivery
         setWristPos(thePos.wristPos);
         setTwistPos( thePos.twisterPos);
     }
+
+    public void toggleUp()
+    {
+
+    }
+
+    public void toggleDown()
+    {
+
+    }
+
+    public void toggleTwist()
+    {
+
+    }
+
+
 
     public void update()
     {

@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Trigger.RIGHT_TRIG
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.TBDGamepad;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
@@ -30,14 +31,14 @@ import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 @TeleOp(name = "Teleop", group = "Teleop")
 public class Teleop extends OpMode  {
 
-    public static double WRIST_INCREMENT = 0.001;
-    public static double WRIST_POSITION = 0;
+    public static double WRIST_INCREMENT = 0.01;
+    public static double WRIST_POSITION = Delivery.WRIST_INIT;
     public static double TWIST_INCREMENT = 0.001;
-    public static double TWIST_POSITION = 0.8;
+    public static double TWIST_POSITION = Delivery.TWIST_INIT;
     public static double ELBOW_INCREMENT = 0.0025;
-    public static double ELBOW_POSITION = 0.04;
+    public static double ELBOW_POSITION = Delivery.ELBOW_INIT;
     public static double INTAKE_INCREMENT = 0.01;
-    public static double INTAKE_POSITION = 0;
+    public static double INTAKE_POSITION = Intake.INTAKEELBOW_INIT;
     Thunderbot2023 robot = new Thunderbot2023();
 
     boolean toggle = false;
@@ -69,6 +70,7 @@ public class Teleop extends OpMode  {
     {
         super.init_loop();
         // TODO: test the ability to detect the team prop and find the LEFT/CENTER/RIGHT
+
         String spikePos = robot.getSpikePos();
         telemetry.addData("Spike Pos = ", spikePos);
         telemetry.addData("Prop X:", robot.getPropX());
@@ -148,10 +150,12 @@ public class Teleop extends OpMode  {
 //         TODO: presets or use goTo method
         if (tbdGamepad1.getButton(LEFT_BUMPER) ) {
 //           robot.intake.setElbowPos(0);
-           robot.intake.goTo(Intake.Positions.INIT);
+           robot.intake.setElbowPos(0.185);
         } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
 //            robot.intake.setElbowPos(0.45);
-            robot.intake.goTo(Intake.Positions.READY_TO_TRANSFER);
+            robot.intake.setElbowPos(0);
+        } else if (tbdGamepad1.getButton(DPAD_DOWN)) {
+            robot.intake.setElbowPos(0.25);
         }
 //        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
 //            robot.intake.setElbowPos(0);
@@ -196,11 +200,11 @@ public class Teleop extends OpMode  {
         //////////////////
         if (tbdGamepad2.getButton(B)) {
             ELBOW_POSITION += ELBOW_INCREMENT;
-            ELBOW_POSITION = clip(ELBOW_POSITION, 0, 1);
+            ELBOW_POSITION = clip(ELBOW_POSITION, robot.delivery.ELBOW_MIN, robot.delivery.ELBOW_MAX);
             robot.delivery.setElbowPosition(ELBOW_POSITION);
         } else if (tbdGamepad2.getButton(X)) {
             ELBOW_POSITION -= ELBOW_INCREMENT;
-            ELBOW_POSITION = clip(ELBOW_POSITION, 0, 1);
+            ELBOW_POSITION = clip(ELBOW_POSITION, robot.delivery.ELBOW_MIN, robot.delivery.ELBOW_MAX);
             robot.delivery.setElbowPosition(ELBOW_POSITION);
 //            robot.delivery.setlElbowPos(0.04);
 //            robot.delivery.setrElbowPos(0.04);
@@ -219,7 +223,7 @@ public class Teleop extends OpMode  {
 
         if (tbdGamepad2.getButton(DPAD_UP)) {
             WRIST_POSITION += WRIST_INCREMENT;
-            WRIST_POSITION = clip( WRIST_POSITION, 0, 1);
+            WRIST_POSITION = clip(WRIST_POSITION, 0, 1);
             robot.delivery.setWristPos(WRIST_POSITION);
         } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
             WRIST_POSITION -= WRIST_INCREMENT;

@@ -32,9 +32,12 @@ public class ArtemisEyes
         aprilTagFinder.setDecimation(2);
     }
 
-    public String getSpikePos()
-    {
-        return tgeFinder.getSpikePos();
+    public String getSpikePos() {
+        if (tgeFinder != null) {
+            return tgeFinder.getSpikePos();
+        } else {
+            return "TGEFINDER NOT INITIALIZED";
+        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -75,7 +78,19 @@ public class ArtemisEyes
         return tagPos;
     }
 
-    public double getPropX() { return tgeFinder.xPos;}
-    public double getPropY() { return tgeFinder.yPos;}
+    public double getPropX() {
+        if (tgeFinder != null) {
+            return tgeFinder.xPos;
+        } else {
+            return -1;
+        }
+    }
+    public double getPropY() {
+        if (tgeFinder != null) {
+            return tgeFinder.yPos;
+        } else {
+            return -1;
+        }
+    }
 
 }

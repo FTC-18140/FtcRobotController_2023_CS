@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+@Config
 public class Intake
 {
     Telemetry telemetry;
@@ -13,25 +14,29 @@ public class Intake
 
     Servo intakeElbow = null;
 
-    public double leftGripPos = 0;
-    public double rightGripPos = 0;
+    public double leftGripPos = 0.3;
+    public double rightGripPos = 0.3;
     public double intakeElbowPos = 0;
 
 
-    static public double LEFTGRIP_INIT = 0.1;
-    static public double RIGHTGRIP_INIT = 0.1;
-    static public double INTAKEELBOW_INIT = 0;
-
-    static public double GRIP_DROP = 1;
-    static public double GRIP_HOLD = 0;
+    static public double LEFTGRIP_INIT = 0.3;
+    static public double RIGHTGRIP_INIT = 0.3;
+    static public double INTAKEELBOW_INIT = 0.06;
+    // 0.185 is the down position ready to pick up the pixel
+    // 0.225 is the inside the pixel and ready to activate the grippers
+    // 0 is the drop off point
+    //
+    static public double GRIP_DROP = 0;
+    static public double LEFT_GRIP_HOLD = 0.5;
+    static public double RIGHT_GRIP_HOLD = 0.6;
 
 
     // TODO: define these Positions to help with intake control
     public enum Positions
     {
         INIT(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
-        WAIT_TO_TRANSFER(0.25, GRIP_HOLD, GRIP_HOLD ),
-        READY_TO_TRANSFER(1, GRIP_HOLD, GRIP_HOLD),
+        WAIT_TO_TRANSFER(0.25, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD ),
+        READY_TO_TRANSFER(1, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         TRANSFER( 1, GRIP_DROP, GRIP_DROP),
         WAIT_TO_INTAKE(0.25, GRIP_DROP, GRIP_DROP);
 
@@ -52,6 +57,7 @@ public class Intake
 
         try {
             leftGripper = hwMap.servo.get("gLintake");
+            leftGripper.setDirection(Servo.Direction.REVERSE);
         } catch (Exception e) {
             telemetry.addData("gripperLintake not found", 0);
         }
@@ -106,11 +112,11 @@ public class Intake
 
     public void holdPixelLeft()
     {
-        setLeftGripPos(GRIP_HOLD);
+        setLeftGripPos(LEFT_GRIP_HOLD);
     }
 
     public void holdPixelRight() {
-        setRightGripPos(GRIP_HOLD);
+        setRightGripPos(RIGHT_GRIP_HOLD);
     }
     public void goTo( Positions pos)
     {
@@ -124,5 +130,7 @@ public class Intake
         if (intakeElbow != null) { intakeElbowPos = intakeElbow.getPosition(); }
         if (leftGripper != null) { leftGripPos = leftGripper.getPosition(); }
         if (rightGripper != null) { rightGripPos = rightGripper.getPosition(); }
+        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
+        telemetry.addData("Intakke Left Gripper Position =", leftGripPos);
     }
 }

@@ -28,31 +28,34 @@ public class Delivery
     public double lElbowPos = 0;
     public double rElbowPos = 0;
 
-    static public double ELBOW_MIN = 0.065;
-    static public double ELBOW_MAX = 0.3;
+    static public double ELBOW_MIN = 0;
+    static public double ELBOW_MAX = 0.4975;
 
 
-    static public double WRIST_INIT = 1;
+    static public double WRIST_INIT = 0.7;
     static public double LEFTGRIP_INIT = 0.5;
     static public double RIGHTGRIP_INIT = 0.5;
-    static public double TWIST_INIT = 0;
-    static public double ELBOW_INIT = 0.065;
+    static public double TWIST_INIT = 0.835;
+    static public double ELBOW_INIT = 0.46;
+    //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up
 
     // TODO: Define these positions to help with positioning the Depositor
     public enum Positions
     {
-        HOME(0, 0, 0),
-        INIT(ELBOW_INIT, WRIST_INIT, TWIST_INIT),
-        DROP(0.5, 1, 1);
+        HOME(0, 0, 0, 0),
+        INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT),
+        DROP(0.5, 0.5, 1, 1);
 
-        public final double elbowPos;
+        public final double lElbowPos;
+        public final double rElbowPos;
         public final double wristPos;
         public final double twisterPos;
 
-        Positions(double elbow, double wrist, double twist)
+        Positions(double lElbow, double rElbow, double wrist, double twist)
         {
-            elbowPos = elbow;
+            lElbowPos = lElbow;
+            rElbowPos = rElbow;
             wristPos = wrist;
             twisterPos = twist;
         }
@@ -61,7 +64,7 @@ public class Delivery
     // TODO: Define these to help with the gripper positioning
     public enum GripperPositions
     {
-        CLOSED( 0.5,0.5 ),
+        CLOSED( 0.5,0.5),
         OPEN( 1, 1),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
@@ -89,12 +92,14 @@ public class Delivery
         try {
             leftGripper = hwMap.servo.get("leftGrip");
 //            leftGripper.setPosition(LEFTGRIP_INIT);
+            leftGripper.setDirection(Servo.Direction.FORWARD);
         } catch (Exception e) {
             telemetry.addData("leftGrip did not initialize", 0);
         }
 
         try {
             rightGripper = hwMap.servo.get("rightGrip");
+            rightGripper.setDirection(Servo.Direction.REVERSE);
 //            rightGripper.setPosition(RIGHTGRIP_INIT);
         } catch (Exception e) {
             telemetry.addData("rightGrip did not initialize", 0);
@@ -108,16 +113,16 @@ public class Delivery
 
         try {
             lElbow = hwMap.servo.get("lElbow");
-            lElbow.setDirection(Servo.Direction.REVERSE);
-//            lElbow.setPosition(ELBOW_INIT);
+            lElbow.setDirection(Servo.Direction.FORWARD);
+
         } catch (Exception e) {
             telemetry.addData("lElbow did not initialize", 0);
         }
 
         try {
             rElbow = hwMap.servo.get("rElbow");
-            rElbow.setDirection(Servo.Direction.FORWARD);
-//            rElbow.setPosition(ELBOW_INIT);
+            rElbow.setDirection(Servo.Direction.REVERSE);
+          //  rElbow.setPosition(ELBOW_INIT);
         } catch (Exception e) {
             telemetry.addData("rElbow did not initialize", 0);
         }
@@ -152,13 +157,12 @@ public class Delivery
     }
 
     public void setElbowPosition(double position) {
-
-        if (lElbowPos > ELBOW_MAX) {
-            setlElbowPos(ELBOW_MAX - 0.0025);
-            setrElbowPos(ELBOW_MAX - 0.0025);
-        } else if (lElbowPos < ELBOW_MIN){
-            setlElbowPos(ELBOW_MIN + 0.0025);
-            setlElbowPos(ELBOW_MIN + 0.0025);
+        if (rElbowPos > ELBOW_MAX) {
+            setlElbowPos(ELBOW_MAX);
+            setrElbowPos(ELBOW_MAX);
+        } else if (rElbowPos < ELBOW_MIN){
+            setlElbowPos(ELBOW_MIN);
+            setrElbowPos(ELBOW_MIN);
         } else {
             setlElbowPos(position);
             setrElbowPos(position);
@@ -203,8 +207,8 @@ public class Delivery
 
     public void goTo( Positions thePos)
     {
-        setlElbowPos( thePos.elbowPos);
-        setrElbowPos( thePos.elbowPos);
+        setlElbowPos( thePos.lElbowPos);
+        setrElbowPos( thePos.lElbowPos);
         setWristPos(thePos.wristPos);
         setTwistPos( thePos.twisterPos);
     }

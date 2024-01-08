@@ -14,13 +14,13 @@ public class Intake
 
     Servo intakeElbow = null;
 
-    public double leftGripPos = 0.3;
-    public double rightGripPos = 0.3;
+    public double leftGripPos = 0;
+    public double rightGripPos = 0;
     public double intakeElbowPos = 0;
 
 
-    static public double LEFTGRIP_INIT = 0.3;
-    static public double RIGHTGRIP_INIT = 0.3;
+    static public double LEFTGRIP_INIT = 0.1;
+    static public double RIGHTGRIP_INIT = 0.1;
     static public double INTAKEELBOW_INIT = 0.06;
     // 0.185 is the down position ready to pick up the pixel
     // 0.225 is the inside the pixel and ready to activate the grippers

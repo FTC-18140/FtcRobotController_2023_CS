@@ -25,11 +25,11 @@ public class Delivery
     public double leftGripPos = 0;
     public double rightGripPos = 0;
     public double twistPos = 0;
-    public double lElbowPos = 0;
-    public double rElbowPos = 0;
+    public double lElbowPos = 0.46;
+    public double rElbowPos = 0.46;
 
     static public double ELBOW_MIN = 0;
-    static public double ELBOW_MAX = 0.4975;
+    static public double ELBOW_MAX = 0.5;
 
 
     static public double WRIST_INIT = 0.7;
@@ -157,10 +157,10 @@ public class Delivery
     }
 
     public void setElbowPosition(double position) {
-        if (rElbowPos > ELBOW_MAX) {
+        if (lElbowPos > ELBOW_MAX) {
             setlElbowPos(ELBOW_MAX);
             setrElbowPos(ELBOW_MAX);
-        } else if (rElbowPos < ELBOW_MIN){
+        } else if (lElbowPos < ELBOW_MIN){
             setlElbowPos(ELBOW_MIN);
             setrElbowPos(ELBOW_MIN);
         } else {

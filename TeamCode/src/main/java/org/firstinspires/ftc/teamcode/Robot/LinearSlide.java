@@ -66,9 +66,9 @@ public class LinearSlide
         } else if (getLiftPosition() <= 7.5 &&  getLiftPosition() >= 0) {
             linearPower(power * 0.5);
         } else if (getLiftPosition() > 36) {
-            linearPower(-0.25);
+            linearPower(-0.5);
         } else if (getLiftPosition() < 0){
-            linearPower(0.25);
+            linearPower(0.5);
         } else {
             linearPower(0);
         }
@@ -77,6 +77,7 @@ public class LinearSlide
     public void update() {
         if (leftLinear != null ) { leftSlidePosition = leftLinear.getCurrentPosition(); }
         if (rightLinear != null ) { rightSlidePosition = rightLinear.getCurrentPosition(); }
+        telemetry.addData("Slide Position = ", getLiftPosition());
     }
 
     public double getLiftPosition() {

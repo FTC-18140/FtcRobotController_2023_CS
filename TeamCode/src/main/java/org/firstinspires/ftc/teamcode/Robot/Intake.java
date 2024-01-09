@@ -30,6 +30,8 @@ public class Intake
     static public double LEFT_GRIP_HOLD = 0.5;
     static public double RIGHT_GRIP_HOLD = 0.6;
     private Positions currentPosition = Positions.INIT;
+    private boolean moveSlowly = false;
+    private boolean clearedTransferZone = true;
 
 
     // TODO: define these Positions to help with intake control
@@ -126,6 +128,12 @@ public class Intake
         setElbowPos(pos.elbowPos);
         setLeftGripPos(pos.leftGripPos);
         setRightGripPos(pos.rightGripPos);
+        moveSlowly = pos == Positions.DOWN_TO_PIXEL ||
+                   pos == Positions.INTAKE;
+        clearedTransferZone = pos == Positions.INIT ||
+                              pos == Positions.WAIT_TO_INTAKE ||
+                              pos == Positions.DOWN_TO_PIXEL ||
+                              pos == Positions.INTAKE;
     }
 
     public void toggleDown()
@@ -167,6 +175,8 @@ public class Intake
 
         }
     }
+    public boolean moveSlow() { return moveSlowly; }
+    public boolean clearTransferZone() { return clearedTransferZone; }
 
     public void update()
     {

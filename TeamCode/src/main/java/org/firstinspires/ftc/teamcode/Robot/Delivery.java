@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import static com.qualcomm.robotcore.util.Range.clip;
+
 @Config
 public class Delivery
 {
@@ -29,6 +32,9 @@ public class Delivery
     static public double ELBOW_MIN = 0;
     static public double ELBOW_MAX = 0.5;
 
+    static public double WRIST_MIN = 0;
+    static public double WRIST_MAX = 1;
+
 
     static public double WRIST_INIT = 0.7;
     static public double LEFTGRIP_INIT = 0.5;
@@ -41,21 +47,24 @@ public class Delivery
     // TODO: Define these positions to help with positioning the Depositor
     public enum Positions
     {
-        HOME(0, 0, 0, 0),
-        INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT),
-        DROP(0.5, 0.5, 1, 1);
+        READY_TO_TRANSER(ELBOW_MIN, ELBOW_MIN, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
+        TRANSFER( 0, 0, 0, 0, GripperPositions.CLOSED),
+        INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
+        ALIGN_TO_BACKDROP(0.5, 0.5, 1, 1, GripperPositions.CLOSED);
 
         public final double lElbowPos;
         public final double rElbowPos;
         public final double wristPos;
         public final double twisterPos;
+        public final GripperPositions grip;
 
-        Positions(double lElbow, double rElbow, double wrist, double twist)
+        Positions(double lElbow, double rElbow, double wrist, double twist, GripperPositions pos)
         {
             lElbowPos = lElbow;
             rElbowPos = rElbow;
             wristPos = wrist;
             twisterPos = twist;
+            grip = pos;
         }
     }
 
@@ -127,13 +136,18 @@ public class Delivery
 
         // Now that everything is inited, put the Delivery into a good position.
         goTo(Positions.INIT);
-        holdPixelsBoth();
+//        holdPixelsBoth();
     }
 
-    public void setWristPos(double wristPos)
+    public double setWristPos(double wristPos)
     {
-        if ( wrist != null ) { wrist.setPosition( wristPos); }
+        if ( wrist != null ) {
+            double clippedPos = clip( wristPos, WRIST_MIN, WRIST_MAX);
+            wrist.setPosition( clippedPos);
+            return clippedPos;
+        }
         else { telemetry.addData("delivery wrist not initialized.", 0); }
+        return -1;
     }
 
     public void setLeftGripPos(double leftGripPos)
@@ -154,17 +168,11 @@ public class Delivery
         else { telemetry.addData("delivery twist not initialized.", 0); }
     }
 
-    public void setElbowPosition(double position) {
-        if (lElbowPos > ELBOW_MAX) {
-            setlElbowPos(ELBOW_MAX);
-            setrElbowPos(ELBOW_MAX);
-        } else if (lElbowPos < ELBOW_MIN){
-            setlElbowPos(ELBOW_MIN);
-            setrElbowPos(ELBOW_MIN);
-        } else {
-            setlElbowPos(position);
-            setrElbowPos(position);
-        }
+    public double setElbowPosition(double position) {
+        double clippedPosition = clip(position, ELBOW_MIN, ELBOW_MAX);
+        setlElbowPos(clippedPosition);
+        setrElbowPos(clippedPosition);
+        return clippedPosition;
     }
     public void setlElbowPos(double lElbowPos)
     {
@@ -209,6 +217,8 @@ public class Delivery
         setrElbowPos( thePos.lElbowPos);
         setWristPos(thePos.wristPos);
         setTwistPos( thePos.twisterPos);
+        setRightGripPos(thePos.grip.rightGripPos);
+        setLeftGripPos(thePos.grip.leftGripPos);
     }
 
     public void toggleUp()

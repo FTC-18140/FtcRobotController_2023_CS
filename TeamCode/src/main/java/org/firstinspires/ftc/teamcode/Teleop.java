@@ -189,6 +189,14 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad1.getButton(Y)) {
             robot.intake.holdPixelsBoth();
         }
+
+        // TRY THIS
+        if (tbdGamepad1.getButton(A))
+        {
+            robot.intake.toggleGripper();
+        }
+
+
 //        if (robot.intake.intakeElbowPos == 0) {
 //            robot.intake.dropBoth();
 //        } else if (robot.intake.intakeElbowPos > 0.2) {

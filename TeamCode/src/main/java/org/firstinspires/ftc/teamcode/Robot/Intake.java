@@ -40,8 +40,8 @@ public class Intake
     {
         TRANSFER( 0, GRIP_DROP, GRIP_DROP),
         READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
-        INIT(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
-        WAIT_TO_INTAKE(0.185, GRIP_DROP, GRIP_DROP),
+        INIT(INTAKEELBOW_INIT, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
+        WAIT_TO_INTAKE(0.185, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         DOWN_TO_PIXEL(0.25, GRIP_DROP, GRIP_DROP ),
         INTAKE( 0.25, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
@@ -78,7 +78,7 @@ public class Intake
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }
-        goTo(Positions.INIT);
+        goTo(Positions.INIT, true);
     }
 
     public void setElbowPos(double elbow)
@@ -125,13 +125,16 @@ public class Intake
     public void holdPixelRight() {
         setRightGripPos(RIGHT_GRIP_HOLD);
     }
-    public void goTo( Positions pos)
+    public void goTo(Positions pos, boolean gripperToo)
     {
         previousPosition = currentPosition;
         currentPosition = pos;
         setElbowPos(pos.elbowPos);
-        setLeftGripPos(pos.leftGripPos);
-        setRightGripPos(pos.rightGripPos);
+        if ( gripperToo)
+        {
+            setLeftGripPos(pos.leftGripPos);
+            setRightGripPos(pos.rightGripPos);
+        }
     }
 
     public void toggleDown()
@@ -140,16 +143,16 @@ public class Intake
         {
             case TRANSFER:
             case READY_TO_TRANSFER:
-                goTo( Positions.INIT);
+                goTo(Positions.INIT, false);
                 break;
             case INIT:
-                goTo(Positions.WAIT_TO_INTAKE);
+                goTo(Positions.WAIT_TO_INTAKE, false);
                 break;
             case WAIT_TO_INTAKE:
-                goTo( Positions.DOWN_TO_PIXEL);
+                goTo(Positions.DOWN_TO_PIXEL, false);
                 break;
             case DOWN_TO_PIXEL:
-                goTo(Positions.INTAKE);
+                goTo(Positions.INTAKE, false);
                 break;
             default:
                 break;
@@ -163,20 +166,29 @@ public class Intake
         {
             case INTAKE:
             case DOWN_TO_PIXEL:
-                goTo(Positions.WAIT_TO_INTAKE);
+                goTo(Positions.WAIT_TO_INTAKE, false);
                 break;
             case WAIT_TO_INTAKE:
-                goTo(Positions.INIT);
+                goTo(Positions.INIT, false);
                 break;
             case INIT:
-                goTo(Positions.READY_TO_TRANSFER);
+                goTo(Positions.READY_TO_TRANSFER, false);
                 break;
             case READY_TO_TRANSFER:
-                goTo( Positions.TRANSFER);
+                goTo(Positions.TRANSFER, false);
                 break;
             default:
                 break;
         }
+    }
+
+    public void toggleGripper()
+    {
+        if ( leftGripPos != GRIP_DROP ) { dropLeft(); }
+        else { holdPixelLeft(); }
+
+        if ( rightGripPos != GRIP_DROP ) { dropRight(); }
+        else { holdPixelRight(); }
     }
     public boolean driveSlowly() { return moveSlowly; }
     public boolean clearedTransferZone() { return clearOfTransferZone; }

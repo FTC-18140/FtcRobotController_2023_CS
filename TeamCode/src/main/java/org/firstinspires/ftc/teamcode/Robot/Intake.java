@@ -38,11 +38,17 @@ public class Intake
     // TODO: define these Positions to help with intake control
     public enum Positions
     {
+        // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
         TRANSFER( 0, GRIP_DROP, GRIP_DROP),
+        // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
-        INIT(INTAKEELBOW_INIT, LEFTGRIP_INIT, RIGHTGRIP_INIT),
+        // INIT is where the elbow and grippers initialize to
+        INIT(INTAKEELBOW_INIT, GRIP_DROP, GRIP_DROP),
+        // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
         WAIT_TO_INTAKE(0.185, GRIP_DROP, GRIP_DROP),
+        // DOWN_TO_PIXEL is where the grippers are inside of the pixels and about to open to grab onto the pixels
         DOWN_TO_PIXEL(0.25, GRIP_DROP, GRIP_DROP ),
+        // INTAKE is where the grippers are in the pixels and open and holding onto the pixel
         INTAKE( 0.25, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
         public final double elbowPos;
@@ -149,6 +155,7 @@ public class Intake
                 goTo( Positions.DOWN_TO_PIXEL);
                 break;
             case DOWN_TO_PIXEL:
+                
                 goTo(Positions.INTAKE);
                 break;
             default:

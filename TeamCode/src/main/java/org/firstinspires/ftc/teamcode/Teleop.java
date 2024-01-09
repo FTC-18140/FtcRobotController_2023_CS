@@ -157,29 +157,16 @@ public class Teleop extends OpMode  {
 
 //         TODO: presets or use goTo method
         if (tbdGamepad1.getButton(LEFT_BUMPER) ) {
-//           robot.intake.setElbowPos(0);
            robot.intake.setElbowPos(0.185);
-           // TRY THIS
-           // robot.intake.toggleDown();
+//            robot.intake.toggleDown();
            robot.intake.dropBoth();
         } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
-//            robot.intake.setElbowPos(0.45);
             robot.intake.setElbowPos(0);
-            // TRY THIS
 //             robot.intake.toggleUp();
         } else if (tbdGamepad1.getButton(DPAD_DOWN)) {
             robot.intake.setElbowPos(0.25);
             // TRY THIS
-//             robot.intake.goTo( DOWN_TO_PIXEL);
         }
-//        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
-//            robot.intake.setElbowPos(0);
-//            robot.intake.setElbowPos(0.145);
-//        } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
-//            robot.intake.setElbowPos(0.08);
-//            robot.intake.setElbowPos(0.225);
-//        }
-
         ////////////////////
         // INTAKE GRIPPER
         ////////////////////
@@ -189,11 +176,7 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad1.getButton(Y)) {
             robot.intake.holdPixelsBoth();
         }
-//        if (robot.intake.intakeElbowPos == 0) {
-//            robot.intake.dropBoth();
-//        } else if (robot.intake.intakeElbowPos > 0.2) {
-//            robot.intake.holdPixelsBoth();
-//        }
+
         ////////////////////
         // DRONE LAUNCHER
         ////////////////////
@@ -246,10 +229,10 @@ public class Teleop extends OpMode  {
 //            robot.delivery.setWristPos(1);
 //        }
 
-        if (tbdGamepad2.getButton(DPAD_DOWN)) {
+        if (tbdGamepad2.getButton(DPAD_UP)) {
             WRIST_POSITION += WRIST_INCREMENT;
             WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
-        } else if (tbdGamepad2.getButton(DPAD_UP)) {
+        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
             WRIST_POSITION -= WRIST_INCREMENT;
             WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
         }

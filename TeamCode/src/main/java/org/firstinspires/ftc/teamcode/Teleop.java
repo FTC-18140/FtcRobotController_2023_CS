@@ -124,7 +124,7 @@ public class Teleop extends OpMode  {
 
         else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
         {
-            if ( robot.intake.moveSlow()) {
+            if ( robot.intake.driveSlowly()) {
 //            if (robot.intake.intakeElbowPos > 0.185) {
                 robot.joystickDrive(tbdGamepad1.getLeftY() * 0.1, tbdGamepad1.getLeftX() * 0.1,
                         tbdGamepad1.getRightX() * 0.1);
@@ -217,7 +217,7 @@ public class Teleop extends OpMode  {
         //////////////////
         // DELIVERY ELBOW
         //////////////////
-        if ( robot.intake.clearTransferZone())
+        if ( robot.intake.clearedTransferZone())
         {
             if (tbdGamepad2.getButton(B) )
             {

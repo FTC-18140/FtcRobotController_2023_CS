@@ -30,8 +30,9 @@ public class Intake
     static public double LEFT_GRIP_HOLD = 0.5;
     static public double RIGHT_GRIP_HOLD = 0.6;
     private Positions currentPosition = Positions.INIT;
+    private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
-    private boolean clearedTransferZone = true;
+    private boolean clearOfTransferZone = true;
 
 
     // TODO: define these Positions to help with intake control
@@ -82,7 +83,9 @@ public class Intake
 
     public void setElbowPos(double elbow)
     {
-        if ( intakeElbow != null ) { intakeElbow.setPosition( elbow); }
+        if ( intakeElbow != null ) {
+            intakeElbow.setPosition(elbow);
+        }
         else { telemetry.addData("intake elbow not initialized.", 0); }
     }
 
@@ -124,16 +127,11 @@ public class Intake
     }
     public void goTo( Positions pos)
     {
+        previousPosition = currentPosition;
         currentPosition = pos;
         setElbowPos(pos.elbowPos);
         setLeftGripPos(pos.leftGripPos);
         setRightGripPos(pos.rightGripPos);
-        moveSlowly = pos == Positions.DOWN_TO_PIXEL ||
-                   pos == Positions.INTAKE;
-        clearedTransferZone = pos == Positions.INIT ||
-                              pos == Positions.WAIT_TO_INTAKE ||
-                              pos == Positions.DOWN_TO_PIXEL ||
-                              pos == Positions.INTAKE;
     }
 
     public void toggleDown()
@@ -142,6 +140,8 @@ public class Intake
         {
             case TRANSFER:
             case READY_TO_TRANSFER:
+                goTo( Positions.INIT);
+                break;
             case INIT:
                 goTo(Positions.WAIT_TO_INTAKE);
                 break;
@@ -163,7 +163,11 @@ public class Intake
         {
             case INTAKE:
             case DOWN_TO_PIXEL:
+                goTo(Positions.WAIT_TO_INTAKE);
+                break;
             case WAIT_TO_INTAKE:
+                goTo(Positions.INIT);
+                break;
             case INIT:
                 goTo(Positions.READY_TO_TRANSFER);
                 break;
@@ -172,19 +176,24 @@ public class Intake
                 break;
             default:
                 break;
-
         }
     }
-    public boolean moveSlow() { return moveSlowly; }
-    public boolean clearTransferZone() { return clearedTransferZone; }
+    public boolean driveSlowly() { return moveSlowly; }
+    public boolean clearedTransferZone() { return clearOfTransferZone; }
 
     public void update()
     {
-        if (intakeElbow != null) { intakeElbowPos = intakeElbow.getPosition(); }
+        if (intakeElbow != null) {
+            intakeElbowPos = intakeElbow.getPosition();
+            moveSlowly = (intakeElbowPos >= Positions.WAIT_TO_INTAKE.elbowPos);
+            clearOfTransferZone = (intakeElbowPos >= Positions.INIT.elbowPos);
+        }
         if (leftGripper != null) { leftGripPos = leftGripper.getPosition(); }
         if (rightGripper != null) { rightGripPos = rightGripper.getPosition(); }
         telemetry.addData("Intake Right Gripper Position =", rightGripPos);
         telemetry.addData("Intake Left Gripper Position =", leftGripPos);
         telemetry.addData("Intake Position: ", currentPosition);
+        telemetry.addData("Drive Slowly: ", moveSlowly);
+        telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
     }
 }

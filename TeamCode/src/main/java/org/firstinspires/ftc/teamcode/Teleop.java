@@ -32,9 +32,9 @@ import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 @TeleOp(name = "Teleop", group = "Teleop")
 public class Teleop extends OpMode  {
 
-    public static double WRIST_INCREMENT = 0.01;
+    public static double WRIST_INCREMENT = 0.025;
     public static double WRIST_POSITION = Delivery.WRIST_INIT;
-    public static double TWIST_INCREMENT = 0.001;
+    public static double TWIST_INCREMENT = 0.01;
     public static double TWIST_POSITION = Delivery.TWIST_INIT;
     public static double ELBOW_INCREMENT = 0.0025;
     public static double ELBOW_POSITION = Delivery.ELBOW_INIT;
@@ -158,12 +158,10 @@ public class Teleop extends OpMode  {
 
 //         TODO: presets or use goTo method
         if (tbdGamepad1.getButtonPressed(LEFT_BUMPER) ) {
-//           robot.intake.setElbowPos(0);
 //           robot.intake.setElbowPos(0.185);
            // TRY THIS
             robot.intake.toggleDown();
         } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
-//            robot.intake.setElbowPos(0.45);
 //            robot.intake.setElbowPos(0);
             // TRY THIS
              robot.intake.toggleUp();
@@ -217,13 +215,13 @@ public class Teleop extends OpMode  {
         //////////////////
         if ( robot.intake.clearedTransferZone())
         {
-            if (tbdGamepad2.getButton(B) )
+            if (tbdGamepad2.getButton(X) )
             {
 //        if (tbdGamepad2.getButton(B) && robot.intake.intakeElbowPos > 0.05) {
                 ELBOW_POSITION += ELBOW_INCREMENT;
                 ELBOW_POSITION = robot.delivery.setElbowPosition(ELBOW_POSITION);
             }
-            else if (tbdGamepad2.getButton(X) )
+            else if (tbdGamepad2.getButton(B) )
             {
 //        } else if (tbdGamepad2.getButton(X) && robot.intake.intakeElbowPos > 0.05) {
                 ELBOW_POSITION -= ELBOW_INCREMENT;
@@ -239,10 +237,10 @@ public class Teleop extends OpMode  {
 
         // TODO: Use Presets and possibly goTo method
 
-        if (tbdGamepad2.getButton(DPAD_DOWN)) {
+        if (tbdGamepad2.getButton(DPAD_UP)) {
             WRIST_POSITION += WRIST_INCREMENT;
             WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
-        } else if (tbdGamepad2.getButton(DPAD_UP)) {
+        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
             WRIST_POSITION -= WRIST_INCREMENT;
             WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
         }
@@ -251,10 +249,10 @@ public class Teleop extends OpMode  {
         // TWIST
         //////////////////
 
-        if (tbdGamepad2.getButtonPressed(DPAD_RIGHT)) {
-            robot.delivery.toggleTwistCCW();
-        } else if (tbdGamepad2.getButtonPressed(DPAD_LEFT)) {
-            robot.delivery.toggleTwistCW();
+        if (tbdGamepad2.getButton(DPAD_RIGHT)) {
+            robot.delivery.setTwistPos(0);
+        } else if (tbdGamepad2.getButton(DPAD_LEFT)) {
+            robot.delivery.setTwistPos(0.5);
         }
 
         //////////////

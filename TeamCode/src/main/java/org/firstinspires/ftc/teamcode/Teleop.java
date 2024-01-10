@@ -249,10 +249,12 @@ public class Teleop extends OpMode  {
         // TWIST
         //////////////////
 
-        if (tbdGamepad2.getButton(DPAD_RIGHT)) {
-            robot.delivery.setTwistPos(0);
-        } else if (tbdGamepad2.getButton(DPAD_LEFT)) {
-            robot.delivery.setTwistPos(0.5);
+        if (tbdGamepad2.getButtonPressed(DPAD_RIGHT)) {
+//            robot.delivery.setTwistPos(0);
+            robot.delivery.toggleTwistCCW();
+        } else if (tbdGamepad2.getButtonPressed(DPAD_LEFT)) {
+//            robot.delivery.setTwistPos(0.5);
+            robot.delivery.toggleTwistCW();
         }
 
         //////////////

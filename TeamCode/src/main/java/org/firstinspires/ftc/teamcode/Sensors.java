@@ -22,7 +22,9 @@ public class Sensors extends OpMode {
 
     @Override
     public void init () {
-        //I2C 0
+        // TODO: fix these comments to be the correct i2c busses
+
+        //I2C 2
         distanceLeft = hardwareMap.get(Rev2mDistanceSensor.class, "distanceleft");
         //I2C 1
         distanceRight = hardwareMap.get(Rev2mDistanceSensor.class, "distanceright");
@@ -41,19 +43,19 @@ public class Sensors extends OpMode {
         telemetry.addData("Right Blue ColorV3", colorright.blue());
         telemetry.addData("Left Red ColorV3", colorleft.red());
         telemetry.addData("Right Red ColorV3", colorright.red());
-        telemetry.addData( "Tape Color", TapeLineColor());
+        telemetry.addData("Tape Color", TapeLineColor());
         telemetry.addData("Backdrop distance", GetAverageDistance());
         telemetry.update();
 
-        colorBlue = (colorleft.blue() + colorright.blue()) / 2;
-        colorRed = (colorleft.red() + colorright.red()) / 2;
+        colorBlue = ((colorleft.blue() + colorright.blue()) / 2);
+        colorRed = ((colorleft.red() + colorright.red()) / 2);
 
-        distance = (distanceLeft.getDistance(DistanceUnit.CM) + distanceRight.getDistance(DistanceUnit.CM)) / 2;
+        distance = ((distanceLeft.getDistance(DistanceUnit.CM) + distanceRight.getDistance(DistanceUnit.CM)) / 2);
     }
 
     public int TapeLineColor () {
 
-        // 0 = null
+        // 0 = can't tell
         // 1 = blue
         // 2 = red
 
@@ -69,6 +71,7 @@ public class Sensors extends OpMode {
 
         return tapeColor;
     }
+
 
     public double GetAverageDistance () {
         return distance;

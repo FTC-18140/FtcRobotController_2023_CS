@@ -33,7 +33,8 @@ public class Intake
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
     private boolean clearOfTransferZone = true;
-
+    private boolean leftGripperClosed = false;
+    private boolean rightGripperClosed = false;
 
     // TODO: define these Positions to help with intake control
     public enum Positions
@@ -193,6 +194,8 @@ public class Intake
     public boolean driveSlowly() { return moveSlowly; }
     public boolean clearedTransferZone() { return clearOfTransferZone; }
 
+    public boolean gripperClosed() { return leftGripperClosed || rightGripperClosed; }
+
     public void update()
     {
         if (intakeElbow != null) {
@@ -200,8 +203,16 @@ public class Intake
             moveSlowly = (intakeElbowPos >= Positions.WAIT_TO_INTAKE.elbowPos);
             clearOfTransferZone = (intakeElbowPos >= Positions.INIT.elbowPos);
         }
-        if (leftGripper != null) { leftGripPos = leftGripper.getPosition(); }
-        if (rightGripper != null) { rightGripPos = rightGripper.getPosition(); }
+        if (leftGripper != null) {
+            double tempPos = leftGripper.getPosition();
+            leftGripperClosed = tempPos != leftGripPos && tempPos == LEFT_GRIP_HOLD;
+            leftGripPos = tempPos;
+        }
+        if (rightGripper != null) {
+            double tempPos = rightGripper.getPosition();
+            rightGripperClosed = tempPos != rightGripPos && tempPos == RIGHT_GRIP_HOLD;
+            rightGripPos = tempPos;
+        }
         telemetry.addData("Intake Right Gripper Position =", rightGripPos);
         telemetry.addData("Intake Left Gripper Position =", leftGripPos);
         telemetry.addData("Intake Position: ", currentPosition);

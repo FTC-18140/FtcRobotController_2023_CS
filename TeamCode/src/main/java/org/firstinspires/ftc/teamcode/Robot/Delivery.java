@@ -21,7 +21,8 @@ public class Delivery
     public Servo lElbow = null;
     public Servo rElbow = null;
 
-
+    private boolean leftGripperClosed = false;
+    private boolean rightGripperClosed = false;
     public double wristPos = 0;
     public double leftGripPos = 0;
     public double rightGripPos = 0;
@@ -43,6 +44,7 @@ public class Delivery
     static public double ELBOW_INIT = 0.46;
     //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up
+    static public double TWIST_TOGGLE_INCREMENT = 15;
 
     // TODO: Define these positions to help with positioning the Depositor
     public enum Positions
@@ -164,7 +166,9 @@ public class Delivery
 
     public void setTwistPos(double twistPos)
     {
-        if ( twist != null ) { twist.setPosition( twistPos); }
+        if ( twist != null ) {
+            double clippedPos = clip(twistPos, 0, 1);
+            twist.setPosition( clippedPos); }
         else { telemetry.addData("delivery twist not initialized.", 0); }
     }
 
@@ -231,18 +235,33 @@ public class Delivery
 
     }
 
-    public void toggleTwist()
+    public void toggleTwistCW()
     {
-
+        double newTwistPos = twistPos + (TWIST_TOGGLE_INCREMENT/180.0);
+        setTwistPos( newTwistPos);
     }
 
+    public void toggleTwistCCW()
+    {
+        double newTwistPos = twistPos - (TWIST_TOGGLE_INCREMENT/180.0);
+        setTwistPos(newTwistPos);
+    }
 
+    public boolean gripperClosed() { return leftGripperClosed || rightGripperClosed; }
 
     public void update()
     {
         if (wrist != null) { wristPos = wrist.getPosition(); }
-        if (leftGripper != null) { leftGripPos = leftGripper.getPosition(); }
-        if (rightGripper != null) { rightGripPos = rightGripper.getPosition(); }
+        if (leftGripper != null) {
+            double tempPos = leftGripper.getPosition();
+            leftGripperClosed = tempPos != leftGripPos && tempPos == GripperPositions.CLOSED.leftGripPos;
+            leftGripPos = tempPos;
+        }
+        if (rightGripper != null) {
+            double tempPos = rightGripper.getPosition();
+            rightGripperClosed = tempPos != rightGripPos && tempPos == GripperPositions.CLOSED.rightGripPos;
+            rightGripPos = tempPos;
+        }
         if (twist != null) { twistPos = twist.getPosition(); }
         if (lElbow != null) { lElbowPos = lElbow.getPosition(); }
         if (rElbow != null) {  rElbowPos = rElbow.getPosition(); }

@@ -18,7 +18,7 @@ public class TBDGamepad
 
 
     public enum Button {
-        Y(0), X(1), A(2), B(3), LEFT_BUMPER(4), RIGHT_BUMPER(5), BACK(6),
+        A(0), B(1), X(2), Y(3), LEFT_BUMPER(4), RIGHT_BUMPER(5), BACK(6),
         START(7), DPAD_UP(8), DPAD_DOWN(9), DPAD_LEFT(10), DPAD_RIGHT(11),
         LEFT_STICK_BUTTON(12), RIGHT_STICK_BUTTON(13);
         final int index;
@@ -163,6 +163,18 @@ public class TBDGamepad
                 return 0;
         }
     }
+
+    public boolean getButtonPressed( Button theButton )
+    {
+        return changed[theButton.index] && buttons[theButton.index];
+    }
+
+    public boolean getButtonReleased( Button theButton )
+    {
+        return changed[theButton.index] && !buttons[theButton.index];
+    }
+
+    public void notifyDriver(int numBlips) { gamepad.rumbleBlips(numBlips);}
 
     public void update() {
 

@@ -72,6 +72,8 @@ public class Thunderbot2023
     private Telemetry telemetry = null;
     private long initPosition;
     private double startAngle;
+    private boolean notifyTheDriver1 = false;
+    private boolean notifyTheDriver2 = false;
 
     /**
      * Constructor
@@ -607,9 +609,17 @@ public class Thunderbot2023
         heading = getHeading();
         telemetry.addData("Heading: ", heading);
 
+        notifyTheDriver1 = false;
+        notifyTheDriver2 = false;
         try {
-            if ( intake != null ) { intake.update(); }
-            if ( delivery != null ) { delivery.update(); }
+            if ( intake != null ) {
+                intake.update();
+                notifyTheDriver1 = intake.gripperClosed();
+            }
+            if ( delivery != null ) {
+                delivery.update();
+                notifyTheDriver2 = delivery.gripperClosed();
+            }
             if ( droneLauncher != null ) { droneLauncher.update();}
 
         } catch (Exception e) {
@@ -646,6 +656,10 @@ public class Thunderbot2023
         if (eyes != null) { return eyes.getPropY(); }
         else  { return -1; }
     }
+
+    public boolean notifyDriver1() { return notifyTheDriver1; }
+    public boolean notifyDriver2() { return notifyTheDriver2; }
+
 
 }
 

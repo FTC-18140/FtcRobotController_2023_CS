@@ -31,9 +31,9 @@ import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 @TeleOp(name = "Teleop", group = "Teleop")
 public class Teleop extends OpMode  {
 
-    public static double WRIST_INCREMENT = 0.01;
+    public static double WRIST_INCREMENT = 0.025;
     public static double WRIST_POSITION = Delivery.WRIST_INIT;
-    public static double TWIST_INCREMENT = 0.001;
+    public static double TWIST_INCREMENT = 0.01;
     public static double TWIST_POSITION = Delivery.TWIST_INIT;
     public static double ELBOW_INCREMENT = 0.0025;
     public static double ELBOW_POSITION = Delivery.ELBOW_INIT;
@@ -124,8 +124,8 @@ public class Teleop extends OpMode  {
 
         else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
         {
-            if ( robot.intake.driveSlowly()) {
-//            if (robot.intake.intakeElbowPos > 0.185) {
+//            if ( robot.intake.driveSlowly()) {
+            if (robot.intake.intakeElbowPos > 0.186) {
                 robot.joystickDrive(tbdGamepad1.getLeftY() * 0.1, tbdGamepad1.getLeftX() * 0.1,
                         tbdGamepad1.getRightX() * 0.1);
             } else {
@@ -202,13 +202,13 @@ public class Teleop extends OpMode  {
         //////////////////
         if ( robot.intake.clearedTransferZone())
         {
-            if (tbdGamepad2.getButton(B) )
+            if (tbdGamepad2.getButton(X) )
             {
 //        if (tbdGamepad2.getButton(B) && robot.intake.intakeElbowPos > 0.05) {
                 ELBOW_POSITION += ELBOW_INCREMENT;
                 ELBOW_POSITION = robot.delivery.setElbowPosition(ELBOW_POSITION);
             }
-            else if (tbdGamepad2.getButton(X) )
+            else if (tbdGamepad2.getButton(B) )
             {
 //        } else if (tbdGamepad2.getButton(X) && robot.intake.intakeElbowPos > 0.05) {
                 ELBOW_POSITION -= ELBOW_INCREMENT;
@@ -244,8 +244,10 @@ public class Teleop extends OpMode  {
         if (tbdGamepad2.getButton(DPAD_RIGHT)) {
             robot.delivery.setTwistPos(0);
         } else if (tbdGamepad2.getButton(DPAD_LEFT)) {
-            robot.delivery.setTwistPos(1);
+            robot.delivery.setTwistPos(0.5);
         }
+
+
 
         //////////////
         // LIFT

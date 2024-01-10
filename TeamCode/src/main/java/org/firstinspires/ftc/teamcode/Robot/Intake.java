@@ -155,7 +155,7 @@ public class Intake
                 goTo( Positions.DOWN_TO_PIXEL);
                 break;
             case DOWN_TO_PIXEL:
-                
+
                 goTo(Positions.INTAKE);
                 break;
             default:

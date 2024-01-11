@@ -30,9 +30,10 @@ public class Delivery
     public double lElbowPos = 0.46;
     public double rElbowPos = 0.46;
 
-    static public double ELBOW_MIN = 0;
-    static public double ELBOW_MAX = 0.5;
-
+    static public double ELBOW_MIN = 0.25;
+    // MIN is whenever the elbow is completely down
+    static public double ELBOW_MAX = 0.51;
+    // MAX is whenever the elbow is up and ready to recieve
     static public double WRIST_MIN = 0.135;
     static public double WRIST_MAX = 0.832;
 
@@ -42,10 +43,11 @@ public class Delivery
     static public double RIGHTGRIP_INIT = 0.5;
     static public double TWIST_INIT = 0.835;
     static public double ELBOW_INIT = 0.46;
+    static public double GRIP_DROP = 0;
     //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up
     static public double TWIST_TOGGLE_INCREMENT = 15;
-    private double WRIST_TOGGLE_INCREMENT=10;
+    private double WRIST_TOGGLE_INCREMENT = 10;
 
     // TODO: Define these positions to help with positioning the Depositor
     public enum Positions
@@ -191,9 +193,10 @@ public class Delivery
         else { telemetry.addData("delivery right elbow not initialized.", 0); }
     }
 
-    public void dropBoth() {
+    public boolean dropBoth() {
         dropLeft();
         dropRight();
+        return true;
     }
     public void dropLeft() {
         setLeftGripPos(GripperPositions.OPEN.leftGripPos);
@@ -251,6 +254,16 @@ public class Delivery
     }
 
     public boolean gripperClosed() { return leftGripperClosed || rightGripperClosed; }
+
+    public void toggleGrippersLeft() {
+        if ( leftGripPos != GRIP_DROP) { dropLeft(); }
+        else { holdPixelLeft(); }
+    }
+
+    public void toggleGripperRight() {
+        if ( rightGripPos != GRIP_DROP) { dropRight(); }
+        else { holdPixelRight(); }
+    }
 
     public void update()
     {

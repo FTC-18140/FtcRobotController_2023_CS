@@ -91,13 +91,6 @@ public class Teleop extends OpMode  {
         //////////////
         // DRIVING
         //////////////
-        if (tbdGamepad1.getButton(A)) {
-            toggle = true;
-        } else if (tbdGamepad1.getButton(B)) {
-            toggle = false;
-        }
-
-        telemetry.addData("test toggle = ", toggle);
 
         // Resets the measured angle of the robot
         if(tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON))
@@ -108,34 +101,40 @@ public class Teleop extends OpMode  {
 
         // Activates the oriented drive that changes the direction based on the robots movement
         // Each part of the if then statement
-        if (tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.5)
-        {
-            // TODO: Test Field Centric Drive
-            if ( tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.5)
-            {
-                robot.orientedDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.25, tbdGamepad1.getExpo(LEFT_X) * 0.25,
-                                    tbdGamepad1.getExpo(RIGHT_X) * 0.25);
-            }
-            else
-            {
-                robot.orientedDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.9, tbdGamepad1.getExpo(LEFT_X) * 0.9,
-                                    tbdGamepad1.getExpo(RIGHT_X) * 0.9);
-            }
-        }
-
-        else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
-        {
-            if ( robot.intake.driveSlowly()) {
-//            if (robot.intake.intakeElbowPos > 0.185) {
+//        if (tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.5)
+//        {
+//            // TODO: Test Field Centric Drive
+//            if ( tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.5)
+//            {
+//                robot.orientedDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.25, tbdGamepad1.getExpo(LEFT_X) * 0.25,
+//                                    tbdGamepad1.getExpo(RIGHT_X) * 0.25);
+//            }
+//            else
+//            {
+//                robot.orientedDrive(tbdGamepad1.getExpo(LEFT_Y) * 0.9, tbdGamepad1.getExpo(LEFT_X) * 0.9,
+//                                    tbdGamepad1.getExpo(RIGHT_X) * 0.9);
+//            }
+//        }
+//
+//        else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
+//        {
+//            if ( robot.intake.driveSlowly()) {
+            if (robot.intake.intakeElbowPos > 0.185) {
                 robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                         tbdGamepad1.getRightX() * 0.1);
+            } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
+                robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
+                        tbdGamepad1.getRightX());
+            } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
+                robot.joystickDrive(tbdGamepad1.getLeftY() * 0.25, tbdGamepad1.getLeftX() * 0.25,
+                        tbdGamepad1.getRightX() * 0.25);
             } else {
                 robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
                         tbdGamepad1.getRightX() * 0.9);
             }
 //            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
 //                                tbdGamepad1.getLeftX() * 0.9);
-        }
+        //}
 
 //        if (gamepad1.left_trigger > 0.5) {
 //            if (gamepad1.right_trigger > 0.5) {
@@ -176,14 +175,14 @@ public class Teleop extends OpMode  {
         // INTAKE GRIPPER
         ////////////////////
 
-        if (tbdGamepad1.getButtonPressed(X)) {
-            robot.intake.dropBoth();
-        } else if (tbdGamepad1.getButtonPressed(Y)) {
-            robot.intake.holdPixelsBoth();
-        }
+//        if (tbdGamepad1.getButtonPressed(X)) {
+//            robot.intake.dropBoth();
+//        } else if (tbdGamepad1.getButtonPressed(Y)) {
+//            robot.intake.holdPixelsBoth();
+//        }
 
         // TRY THIS
-        if (tbdGamepad1.getButtonPressed(A))
+        if (tbdGamepad1.getButtonPressed(X))
         {
             robot.intake.toggleGripper();
         }
@@ -193,12 +192,9 @@ public class Teleop extends OpMode  {
         ////////////////////
 
         // TODO: Add a timer so that this cannot be activated before End Game
-        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(X))
-        {
+        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(X)) {
             robot.droneLauncher.launcherPower(1);
-        }
-        else
-        {
+        } else {
             robot.droneLauncher.launcherPower(0);
         }
         if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(Y)) {

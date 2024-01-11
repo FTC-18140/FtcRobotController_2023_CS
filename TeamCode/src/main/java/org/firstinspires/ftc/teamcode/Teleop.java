@@ -127,7 +127,7 @@ public class Teleop extends OpMode  {
         {
             if ( robot.intake.driveSlowly()) {
 //            if (robot.intake.intakeElbowPos > 0.185) {
-                robot.joystickDrive(tbdGamepad1.getLeftY() * 0.1, tbdGamepad1.getLeftX() * 0.1,
+                robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                         tbdGamepad1.getRightX() * 0.1);
             } else {
                 robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
@@ -205,7 +205,7 @@ public class Teleop extends OpMode  {
 
         }
 
-        if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 3); }
+        if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////// GAMEPAD 2 //////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,12 +237,14 @@ public class Teleop extends OpMode  {
 
         // TODO: Use Presets and possibly goTo method
 
-        if (tbdGamepad2.getButton(DPAD_UP)) {
+        if (tbdGamepad2.getButtonPressed(DPAD_UP)) {
             WRIST_POSITION += WRIST_INCREMENT;
-            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
-        } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
+//            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
+            robot.delivery.toggleUp();
+        } else if (tbdGamepad2.getButtonPressed(DPAD_DOWN)) {
             WRIST_POSITION -= WRIST_INCREMENT;
-            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
+//            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
+            robot.delivery.toggleDown();
         }
 
         //////////////////
@@ -251,10 +253,10 @@ public class Teleop extends OpMode  {
 
         if (tbdGamepad2.getButtonPressed(DPAD_RIGHT)) {
 //            robot.delivery.setTwistPos(0);
-            robot.delivery.toggleTwistCCW();
+            robot.delivery.toggleTwistCW();
         } else if (tbdGamepad2.getButtonPressed(DPAD_LEFT)) {
 //            robot.delivery.setTwistPos(0.5);
-            robot.delivery.toggleTwistCW();
+            robot.delivery.toggleTwistCCW();
         }
 
         //////////////
@@ -278,7 +280,7 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0) {
             robot.delivery.holdPixelsBoth();
         }
-        if (robot.notifyDriver2()) { tbdGamepad2.notifyDriver( 3); }
+        if (robot.notifyDriver2()) { tbdGamepad2.notifyDriver( 1); }
 
     }
 }

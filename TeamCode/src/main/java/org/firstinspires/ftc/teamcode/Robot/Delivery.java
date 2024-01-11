@@ -33,8 +33,8 @@ public class Delivery
     static public double ELBOW_MIN = 0;
     static public double ELBOW_MAX = 0.5;
 
-    static public double WRIST_MIN = 0;
-    static public double WRIST_MAX = 1;
+    static public double WRIST_MIN = 0.135;
+    static public double WRIST_MAX = 0.832;
 
 
     static public double WRIST_INIT = 0.7;
@@ -45,6 +45,7 @@ public class Delivery
     //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up
     static public double TWIST_TOGGLE_INCREMENT = 15;
+    private double WRIST_TOGGLE_INCREMENT=10;
 
     // TODO: Define these positions to help with positioning the Depositor
     public enum Positions
@@ -73,8 +74,8 @@ public class Delivery
     // TODO: Define these to help with the gripper positioning
     public enum GripperPositions
     {
-        CLOSED( 0.5,0.5),
-        OPEN( 1, 1),
+        CLOSED( 0.9,0.9),
+        OPEN( 0.5, 0.5),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
         public final double leftGripPos;
@@ -167,7 +168,7 @@ public class Delivery
     public void setTwistPos(double twistPos)
     {
         if ( twist != null ) {
-            double clippedPos = clip(twistPos, 0, 1);
+            double clippedPos = clip(twistPos, 0.166, TWIST_INIT);
             twist.setPosition( clippedPos); }
         else { telemetry.addData("delivery twist not initialized.", 0); }
     }
@@ -227,12 +228,14 @@ public class Delivery
 
     public void toggleUp()
     {
-
+        double newWristPos = wristPos - (WRIST_TOGGLE_INCREMENT/180.0);
+        setWristPos( newWristPos);
     }
 
     public void toggleDown()
     {
-
+        double newWristPos = wristPos + (WRIST_TOGGLE_INCREMENT/180.0);
+        setWristPos( newWristPos);
     }
 
     public void toggleTwistCW()

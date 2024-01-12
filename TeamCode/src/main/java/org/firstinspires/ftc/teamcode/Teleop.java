@@ -191,27 +191,27 @@ public class Teleop extends OpMode  {
         //////////////////////////////////////////////
         // GAMEPAD 1 ENDGAME
         //////////////////////////////////////////////
-
-        ////////////////////
-        // PULL-UP
-        ////////////////////
-        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(Y)) {
-            robot.endGame.pullUp(1);
-        } else if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(A)) {
-            robot.endGame.pullUp(-1);
-        } else {
-            robot.endGame.pullUp(0);
-        }
-        ////////////////////
-        // DRONE LAUNCHER
-        ////////////////////
-
-        // TODO: Add a timer so that this cannot be activated before End Game
-        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(X)) {
-            robot.endGame.launcherPower(1);
-        } else {
-            robot.endGame.launcherPower(0);
-        }
+//
+//        ////////////////////
+//        // PULL-UP
+//        ////////////////////
+//        if (tbdGamepad1.getButton(Y)) {
+//            robot.endGame.pullUp(1);
+//        } else if (tbdGamepad1.getButton(A)) {
+//            robot.endGame.pullUp(-1);
+//        } else {
+//            robot.endGame.pullUp(0);
+//        }
+//        ////////////////////
+//        // DRONE LAUNCHER
+//        ////////////////////
+//
+//        // TODO: Add a timer so that this cannot be activated before End Game
+//        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(X)) {
+//            robot.endGame.launcherPower(1);
+//        } else {
+//            robot.endGame.launcherPower(0);
+//        }
 
 
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
@@ -246,14 +246,18 @@ public class Teleop extends OpMode  {
 
         // TODO: Use Presets and possibly goTo method
 
-        if (tbdGamepad2.getButtonPressed(DPAD_UP)) {
-            WRIST_POSITION += WRIST_INCREMENT;
-//            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
-            robot.delivery.toggleUp();
-        } else if (tbdGamepad2.getButtonPressed(DPAD_DOWN)) {
-            WRIST_POSITION -= WRIST_INCREMENT;
-//            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
-            robot.delivery.toggleDown();
+        if (robot.delivery.lElbowPos > 0.49) {
+            robot.delivery.setWristPos(robot.delivery.WRIST_INIT);
+        } else {
+            if (tbdGamepad2.getButtonPressed(DPAD_UP)) {
+                WRIST_POSITION += WRIST_INCREMENT;
+            WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
+                robot.delivery.toggleUp();
+            } else if (tbdGamepad2.getButtonPressed(DPAD_DOWN)) {
+                WRIST_POSITION -= WRIST_INCREMENT;
+                WRIST_POSITION = robot.delivery.setWristPos(WRIST_POSITION);
+                robot.delivery.toggleDown();
+            }
         }
 
         //////////////////
@@ -269,7 +273,7 @@ public class Teleop extends OpMode  {
         }
 
         //////////////
-        // LIFT
+        // LINEAR SLIDES
         //////////////
         // One needs to be reversed
         if (tbdGamepad2.getButton(Y)) {

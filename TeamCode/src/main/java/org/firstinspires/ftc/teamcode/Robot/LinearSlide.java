@@ -74,6 +74,10 @@ public class LinearSlide
         }
     }
 
+    public void goToLinear(double position) {
+
+    }
+
     public void update() {
         if (leftLinear != null ) { leftSlidePosition = leftLinear.getCurrentPosition(); }
         if (rightLinear != null ) { rightSlidePosition = rightLinear.getCurrentPosition(); }

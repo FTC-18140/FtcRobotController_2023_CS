@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 @Autonomous
-public class AutoRedDownstage extends OpMode {
+public class AutoRed extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
     int state = 0;
@@ -23,10 +23,6 @@ public class AutoRedDownstage extends OpMode {
     final double MAX_AUTO_STRAFE= 0.5;
     final double MAX_AUTO_TURN  = 0.3;
 
-    double stepB = 0;
-    public static double stepBLeft = 270;
-    public static double stepBCenter = 0;
-    public static double stepBRight = 90;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
 
@@ -81,15 +77,12 @@ public class AutoRedDownstage extends OpMode {
         {
             case "LEFT":
                 tagNum = 4;
-                stepB = stepBLeft;
                 break;
             case "RIGHT":
                 tagNum = 6;
-                stepB = stepBRight;
                 break;
             default: // default CENTER
                 tagNum = 5;
-                stepB = stepBRight;
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
@@ -104,54 +97,16 @@ public class AutoRedDownstage extends OpMode {
     public void loop() {
         switch (state) {
             case 0:
-            if (!done) {
-                done = robot.gyroDrive(0, 81.2, 0.5);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
-            break;
-
-            // TODO Add the drop pixel command
-            case 1:
-            if (!done) {
-                done = robot.turnTo(stepB, 0.5);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
-            break;
-
-            case 2:
-            if (!done) {
-               done = robot.turnTo(90, 0.25);
-            } else {
-               robot.stop();
-               done = false;
-               state++;
-            }
-            break;
-
-            // TODO test code then add other steps from notebook
-            case 3:
-            if (!done) {
-                done = robot.gyroDrive(90, 81.3, 10);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
-            case 4:
                 if (!done) {
-                    done = true;
+                    done = robot.gyroDrive(0, 80, 0.5);
                 } else {
                     robot.stop();
                     done = false;
                     state++;
                 }
+                break;
+            default:
+                break;
         }
-        telemetry.addData("step", state);
     }
 }

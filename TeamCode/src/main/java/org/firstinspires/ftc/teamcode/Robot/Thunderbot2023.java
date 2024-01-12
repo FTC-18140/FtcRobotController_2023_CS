@@ -621,7 +621,7 @@ public class Thunderbot2023
                 notifyTheDriver2 = delivery.gripperClosed();
             }
             if ( endGame != null ) { endGame.update();}
-
+            if (linearSlide != null) {linearSlide.update(); }
         } catch (Exception e) {
             telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);
         }

@@ -27,8 +27,8 @@ public class Intake
     // 0 is the drop off point
     //
     static public double GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.52;
-    static public double RIGHT_GRIP_HOLD = 0.5;
+    static public double LEFT_GRIP_HOLD = 0.45 ;
+    static public double RIGHT_GRIP_HOLD = 0.45;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;

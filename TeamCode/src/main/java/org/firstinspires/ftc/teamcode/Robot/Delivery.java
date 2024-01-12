@@ -30,7 +30,7 @@ public class Delivery
     public double lElbowPos = 0.46;
     public double rElbowPos = 0.46;
 
-    static public double ELBOW_MIN = 0.25;
+    static public double ELBOW_MIN = 0.15;
     // MIN is whenever the elbow is completely down
     static public double ELBOW_MAX = 0.51;
     // MAX is whenever the elbow is up and ready to recieve

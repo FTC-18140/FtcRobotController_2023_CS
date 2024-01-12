@@ -118,8 +118,8 @@ public class Teleop extends OpMode  {
 //
 //        else // TODO: Test EXPO.  Try different values of the variable called expoYValue and expoXValue in TBDGamepad
 //        {
-//            if ( robot.intake.driveSlowly()) {
-            if (robot.intake.intakeElbowPos > 0.185) {
+            if ( robot.intake.driveSlowly()) {
+//            if (robot.intake.intakeElbowPos > 0.185) {
                 robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                         tbdGamepad1.getRightX() * 0.1);
             } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
@@ -213,7 +213,6 @@ public class Teleop extends OpMode  {
 //            robot.endGame.launcherPower(0);
 //        }
 
-
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////// GAMEPAD 2 //////////////////////////////////////////////////////
@@ -226,17 +225,13 @@ public class Teleop extends OpMode  {
         {
             if (tbdGamepad2.getButton(X) )
             {
-//        if (tbdGamepad2.getButton(B) && robot.intake.intakeElbowPos > 0.05) {
                 ELBOW_POSITION += ELBOW_INCREMENT;
                 ELBOW_POSITION = robot.delivery.setElbowPosition(ELBOW_POSITION);
             }
             else if (tbdGamepad2.getButton(B) )
             {
-//        } else if (tbdGamepad2.getButton(X) && robot.intake.intakeElbowPos > 0.05) {
                 ELBOW_POSITION -= ELBOW_INCREMENT;
                 ELBOW_POSITION = robot.delivery.setElbowPosition(ELBOW_POSITION);
-//            robot.delivery.setlElbowPos(0.04);
-//            robot.delivery.setrElbowPos(0.04);
             }
         }
 

@@ -87,6 +87,40 @@ public class LinearSlide
     public double getLiftPosition() {
         return SCALE_FACTOR *  (0.5 * (leftSlidePosition + rightSlidePosition)) / COUNTS_PER_CM;
     }
+    
+
+//    public void linearToPosition( double cm, double power )
+//    {
+//        int targetCounts = (int) (cm * COUNTS_PER_CM);
+//        if ( leftLinear != null  && rightLinear != null ) {
+//            leftLinear.setTargetPosition(targetCounts);
+//            rightLinear.setTargetPosition(targetCounts);
+//            leftLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rightLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            leftLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
+//            rightLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
+//        }
+//        else
+//        {
+//            telemetry.addData("linear slide motor not initialized.", 0);
+//        }
+//    }
+//
+//    public double toggleUp( double cmToggle )
+//    {
+//        double targetCM = getLiftPosition() + cmToggle;
+//        targetCM = clip( targetCM, MIN_POS, MAX_POS);
+//        linearToPosition( targetCM, DEFAULT_POWER);
+//        return targetCM;
+//    }
+//
+//    public double toggleDown( double cmToggle )
+//    {
+//        double targetCM = getLiftPosition() - cmToggle;
+//        targetCM = clip( targetCM, MIN_POS, MAX_POS);
+//        linearToPosition( targetCM, DEFAULT_POWER);
+//        return targetCM;
+//    }
 
 }
 

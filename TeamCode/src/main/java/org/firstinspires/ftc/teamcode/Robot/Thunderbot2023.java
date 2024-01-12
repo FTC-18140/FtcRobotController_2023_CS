@@ -34,7 +34,7 @@ public class Thunderbot2023
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
-    public DroneLauncher droneLauncher = new DroneLauncher();
+    public EndGame endGame = new EndGame();
     public Intake intake = new Intake();
     public ArtemisEyes eyes = new ArtemisEyes();
     List<LynxModule> allHubs;
@@ -187,7 +187,7 @@ public class Thunderbot2023
         try { delivery.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Delivery not found", 0); }
 
-        try {  droneLauncher.init(ahwMap, telem); }
+        try {  endGame.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
         try {  intake.init(ahwMap, telem); }
@@ -620,7 +620,7 @@ public class Thunderbot2023
                 delivery.update();
                 notifyTheDriver2 = delivery.gripperClosed();
             }
-            if ( droneLauncher != null ) { droneLauncher.update();}
+            if ( endGame != null ) { endGame.update();}
 
         } catch (Exception e) {
             telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);

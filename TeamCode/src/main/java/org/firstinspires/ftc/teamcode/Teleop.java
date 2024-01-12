@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.Range.clip;
 import static org.firstinspires.ftc.teamcode.Robot.Intake.Positions.DOWN_TO_PIXEL;
+import static org.firstinspires.ftc.teamcode.Robot.Intake.Positions.TRANSFER;
+import static org.firstinspires.ftc.teamcode.Robot.Intake.Positions.WAIT_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.A;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.B;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_DOWN;
@@ -13,9 +15,6 @@ import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.RIGHT_BUMPE
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.RIGHT_STICK_BUTTON;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.X;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.Y;
-import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Stick.LEFT_X;
-import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Stick.LEFT_Y;
-import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Stick.RIGHT_X;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.LEFT_STICK_BUTTON;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Trigger.LEFT_TRIGGER;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Trigger.RIGHT_TRIGGER;
@@ -87,6 +86,7 @@ public class Teleop extends OpMode  {
         robot.update();
         tbdGamepad1.update();
         tbdGamepad2.update();
+        resetRuntime();
 
         //////////////
         // DRIVING
@@ -157,13 +157,14 @@ public class Teleop extends OpMode  {
 
 //         TODO: presets or use goTo method
         if (tbdGamepad1.getButtonPressed(LEFT_BUMPER) ) {
-//           robot.intake.setElbowPos(0.185);
+           robot.intake.goTo(WAIT_TO_INTAKE, false);
            // TRY THIS
-            robot.intake.toggleDown();
+         //   robot.intake.toggleDown();
         } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
-//            robot.intake.setElbowPos(0);
+          //  robot.intake.setElbowPos(0);
+            robot.intake.goTo(TRANSFER, false);
             // TRY THIS
-             robot.intake.toggleUp();
+         //    robot.intake.toggleUp();
         } else if (tbdGamepad1.getButtonPressed(DPAD_DOWN)) {
 //            robot.intake.setElbowPos(0.25);
             // TRY THIS
@@ -187,19 +188,31 @@ public class Teleop extends OpMode  {
             robot.intake.toggleGripper();
         }
 
+        //////////////////////////////////////////////
+        // GAMEPAD 1 ENDGAME
+        //////////////////////////////////////////////
+
+        ////////////////////
+        // PULL-UP
+        ////////////////////
+        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(Y)) {
+            robot.endGame.pullUp(1);
+        } else if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(A)) {
+            robot.endGame.pullUp(-1);
+        } else {
+            robot.endGame.pullUp(0);
+        }
         ////////////////////
         // DRONE LAUNCHER
         ////////////////////
 
         // TODO: Add a timer so that this cannot be activated before End Game
         if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(X)) {
-            robot.droneLauncher.launcherPower(1);
+            robot.endGame.launcherPower(1);
         } else {
-            robot.droneLauncher.launcherPower(0);
+            robot.endGame.launcherPower(0);
         }
-        if (tbdGamepad1.getButton(LEFT_BUMPER) && tbdGamepad1.getButton(RIGHT_BUMPER) && tbdGamepad1.getButton(Y)) {
 
-        }
 
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

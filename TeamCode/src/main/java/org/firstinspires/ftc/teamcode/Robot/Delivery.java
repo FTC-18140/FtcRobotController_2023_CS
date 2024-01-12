@@ -26,7 +26,7 @@ public class Delivery
     public double wristPos = 0;
     public double leftGripPos = 0;
     public double rightGripPos = 0;
-    public double twistPos = 0;
+    public double twistPos = 0.5;
     public double lElbowPos = 0.46;
     public double rElbowPos = 0.46;
 
@@ -35,13 +35,13 @@ public class Delivery
     static public double ELBOW_MAX = 0.51;
     // MAX is whenever the elbow is up and ready to recieve
     static public double WRIST_MIN = 0.135;
-    static public double WRIST_MAX = 0.832;
+    static public double WRIST_MAX = 0.7575;
 
 
-    static public double WRIST_INIT = 0.7;
+    static public double WRIST_INIT = 0.775;
     static public double LEFTGRIP_INIT = 0.5;
     static public double RIGHTGRIP_INIT = 0.5;
-    static public double TWIST_INIT = 0.835;
+    static public double TWIST_INIT = 0.5;
     static public double ELBOW_INIT = 0.46;
     static public double GRIP_DROP = 0;
     //Initalization should be 0.46
@@ -118,6 +118,7 @@ public class Delivery
         }
         try {
             twist = hwMap.servo.get("twist");
+            twist.setDirection(Servo.Direction.REVERSE);
 //            twist.setPosition(TWIST_INIT);
         } catch (Exception e) {
             telemetry.addData("twist did not initialize", 0);
@@ -170,7 +171,7 @@ public class Delivery
     public void setTwistPos(double twistPos)
     {
         if ( twist != null ) {
-            double clippedPos = clip(twistPos, 0.166, TWIST_INIT);
+            double clippedPos = clip(twistPos, 0, 1);
             twist.setPosition( clippedPos); }
         else { telemetry.addData("delivery twist not initialized.", 0); }
     }

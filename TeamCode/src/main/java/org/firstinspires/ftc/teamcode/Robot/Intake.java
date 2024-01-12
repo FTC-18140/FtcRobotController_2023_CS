@@ -150,7 +150,8 @@ public class Intake
         {
             case TRANSFER:
             case READY_TO_TRANSFER:
-                goTo(Positions.INIT, false);
+              //  goTo(Positions.INIT, false);
+
                 break;
             case INIT:
                 goTo(Positions.WAIT_TO_INTAKE, false);

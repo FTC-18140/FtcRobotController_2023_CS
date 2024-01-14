@@ -93,8 +93,8 @@ public class Thunderbot2023
         try
         {
             imu = ahwMap.get(IMU.class, "imu");
-            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
             RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
             imu.initialize(new IMU.Parameters(orientationOnRobot));
             lastAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -565,7 +565,7 @@ public class Thunderbot2023
      */
     private double getHeading()
     {
-        double rawImuAngle =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double rawImuAngle =  -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         double delta = rawImuAngle - lastAngle;
 
         // An illustrative example: assume the robot is facing +179 degrees (last angle) and makes a +2 degree turn.

@@ -76,7 +76,6 @@ public class Strafer_Chassis extends OpMode{
     public void loop() {
     robot.update();
     tbdGamepad1.update();
-    tbdGamepad2.update();
     robot.joystickDrive(-tbdGamepad1.getLeftY(), -tbdGamepad1.getLeftX(), -tbdGamepad1.getRightX());
     }
 }

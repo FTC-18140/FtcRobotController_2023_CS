@@ -15,8 +15,8 @@ public class EndGame
     Telemetry telemetry;
 
     CRServo launcher = null;
-    DcMotor oX = null;
-    DcMotor oY = null;
+    DcMotor leftLift = null;
+    DcMotor rightLift = null;
     double power = 0;
 
     public void init(HardwareMap hwMap, Telemetry telem)
@@ -30,14 +30,16 @@ public class EndGame
             telemetry.addData("launcher not found", 0);
         }
         try {
-            oX = hwMap.dcMotor.get("lLift");
-            oX.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftLift = hwMap.dcMotor.get("oX");
+            leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } catch (Exception e) {
             telemetry.addData("leftLift not found", 0);
         }
         try {
-            oY = hwMap.dcMotor.get("rLift");
-            oX.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightLift = hwMap.dcMotor.get("oY");
+            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightLift.setDirection(DcMotorSimple.Direction.FORWARD);
         } catch (Exception e) {
             telemetry.addData("rightLift not found", 0);
         }
@@ -54,7 +56,7 @@ public class EndGame
         else { telemetry.addData("drone launcher not initialized.", 0); }
     }
     public void pullUp(double power) {
-        oX.setPower(power);
-        oY.setPower(power);
+        leftLift.setPower(power * 0.625);
+        rightLift.setPower(power);
     }
 }

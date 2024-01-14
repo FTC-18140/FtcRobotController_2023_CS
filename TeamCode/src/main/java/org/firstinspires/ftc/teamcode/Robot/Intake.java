@@ -40,10 +40,11 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0, GRIP_DROP, GRIP_DROP),
+        TRANSFER( 0.005, GRIP_DROP, GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
+        TELE_INIT(INTAKEELBOW_INIT, GRIP_DROP, GRIP_DROP),
         INIT(INTAKEELBOW_INIT, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
         WAIT_TO_INTAKE(0.185, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
@@ -88,12 +89,13 @@ public class Intake
         goTo(Positions.INIT, true);
     }
 
-    public void setElbowPos(double elbow)
+    public boolean setElbowPos(double elbow)
     {
         if ( intakeElbow != null ) {
             intakeElbow.setPosition(elbow);
         }
         else { telemetry.addData("intake elbow not initialized.", 0); }
+        return true;
     }
 
     public void setLeftGripPos(double leftGripPos)
@@ -108,9 +110,10 @@ public class Intake
         else { telemetry.addData("intake right gripper not initialized.", 0); }
     }
 
-    public void dropBoth() {
+    public boolean dropBoth() {
         dropLeft();
         dropRight();
+        return true;
     }
     public void dropLeft() {
         setLeftGripPos(GRIP_DROP);
@@ -207,7 +210,7 @@ public class Intake
     {
         if (intakeElbow != null) {
             intakeElbowPos = intakeElbow.getPosition();
-            moveSlowly = (intakeElbowPos >= Positions.WAIT_TO_INTAKE.elbowPos);
+            moveSlowly = (intakeElbowPos > Positions.WAIT_TO_INTAKE.elbowPos);
             clearOfTransferZone = (intakeElbowPos >= Positions.INIT.elbowPos);
         }
         if (leftGripper != null) {
@@ -220,10 +223,10 @@ public class Intake
             rightGripperClosed = tempPos != rightGripPos && tempPos == RIGHT_GRIP_HOLD;
             rightGripPos = tempPos;
         }
-        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
-        telemetry.addData("Intake Left Gripper Position =", leftGripPos);
-        telemetry.addData("Intake Position: ", currentPosition);
-        telemetry.addData("Drive Slowly: ", moveSlowly);
-        telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
+//        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
+//        telemetry.addData("Intake Left Gripper Position =", leftGripPos);
+//        telemetry.addData("Intake Position: ", currentPosition);
+//        telemetry.addData("Drive Slowly: ", moveSlowly);
+//        telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
     }
 }

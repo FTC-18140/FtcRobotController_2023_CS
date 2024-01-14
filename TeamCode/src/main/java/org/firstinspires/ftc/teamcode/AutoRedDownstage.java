@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Robot.Delivery;
+import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 @Autonomous
@@ -24,7 +26,7 @@ public class AutoRedDownstage extends OpMode {
     final double MAX_AUTO_TURN  = 0.3;
 
     double stepB = 0;
-    public static double stepBLeft = 270;
+    public static double stepBLeft = -90;
     public static double stepBCenter = 0;
     public static double stepBRight = 90;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
@@ -89,7 +91,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             default: // default CENTER
                 tagNum = 5;
-                stepB = stepBRight;
+                stepB = stepBCenter;
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
@@ -102,55 +104,173 @@ public class AutoRedDownstage extends OpMode {
 
     @Override
     public void loop() {
+        robot.update();
+
         switch (state) {
             case 0:
             if (!done) {
-                done = robot.gyroDrive(0, 81.2, 0.5);
+                done = robot.gyroDrive(0, 130, 0.5);
             } else {
                 robot.stop();
                 done = false;
                 state++;
             }
-            break;
+                break;
 
             // TODO Add the drop pixel command
             case 1:
             if (!done) {
-                done = robot.turnTo(stepB, 0.5);
+                done = robot.turnTo(stepBCenter, 0.5);
             } else {
                 robot.stop();
                 done = false;
                 state++;
             }
-            break;
-
+                break;
             case 2:
-            if (!done) {
-               done = robot.turnTo(90, 0.25);
-            } else {
-               robot.stop();
-               done = false;
-               state++;
-            }
-            break;
-
-            // TODO test code then add other steps from notebook
-            case 3:
-            if (!done) {
-                done = robot.gyroDrive(90, 81.3, 10);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
-            case 4:
                 if (!done) {
+                    //done = robot.drive(stepBCenter, 2.5, 0.5);
                     done = true;
                 } else {
                     robot.stop();
                     done = false;
                     state++;
                 }
+                break;
+            case 3:
+                if (!done) {
+                        done = robot.intake.setElbowPos(0.185);
+                } else {
+                    resetRuntime();
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 4:
+                if (!done) {
+                    if (getRuntime() > 2) {
+                        done = robot.intake.dropBoth();
+                    }
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 5:
+                if (!done) {
+                    done = robot.gyroDrive(0, 10, -0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 6:
+                if (!done) {
+               done = robot.turnTo(-90, 0.25);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 7:
+                if (!done) {
+                    done = robot.delivery.autoSetWristPos(0.73);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 8:
+                if (!done) {
+                    done = robot.delivery.setElbowPos(0.275);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 9:
+                if (!done) {
+                        done = robot.gyroDrive(-90, 171.5, -0.5);
+                } else {
+                    resetRuntime();
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 10:
+                if (!done) {
+                    if (getRuntime() > 1)
+                        done = robot.delivery.dropBoth();
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 11:
+                if (!done) {
+                    done = robot.drive(0, 50, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 12:
+                if (!done) {
+                    done = robot.turnTo(0,0.25);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 13:
+                if (!done) {
+                    robot.delivery.goTo(Delivery.Positions.AUTO_INIT);
+                    done = true;
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 14:
+                if (!done) {
+                    done = robot.gyroDrive(0, 100, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 15:
+                if (!done) {
+                    done = robot.turnTo(90, 0.25);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 16:
+                if (!done) {
+                    done = robot.gyroDrive(90, 50, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            default:
+                break;
         }
         telemetry.addData("step", state);
     }

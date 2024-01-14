@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
@@ -13,8 +15,8 @@ public class LinearSlide
     Telemetry telemetry;
 
     // Defining Motors
-    DcMotor leftLinear = null;
-    DcMotor rightLinear = null;
+    DcMotorEx leftLinear = null;
+    DcMotorEx rightLinear = null;
 
     public double leftSlidePosition = 0;
     public double rightSlidePosition = 0;
@@ -26,13 +28,18 @@ public class LinearSlide
             / (SPOOL_DIAMETER_CM * Math.PI);
 
     public static double SCALE_FACTOR = 1;
+    public static double MIN_POS = 0;
+    public static double MAX_POS = 100;
+    public static double MAX_SPEED = 0.75;
+    public static double DEFAULT_POWER = 0.5;
+
 
     // Initialize
     public void init(HardwareMap hwMap, Telemetry telem)
     {
         telemetry = telem;
         try {
-            leftLinear = hwMap.dcMotor.get("lSlide");
+            leftLinear = hwMap.get(DcMotorEx.class, "lSlide");
             leftLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLinear.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -41,7 +48,7 @@ public class LinearSlide
             telemetry.addData("lSlide not found", 0);
         }
         try {
-            rightLinear = hwMap.dcMotor.get("rSlide");
+            rightLinear = hwMap.get(DcMotorEx.class, "rSlide");
             rightLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightLinear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -53,7 +60,7 @@ public class LinearSlide
     }
 
     public void linearPower(double power) {
-        if (leftLinear != null ) {leftLinear.setPower(power); }
+        if (leftLinear != null ) {leftLinear.setPower(power);}
         else { telemetry.addData("linear slide left motor not initialized.", 0); }
         if (rightLinear != null ) { rightLinear.setPower(power); }
         else { telemetry.addData("linear slide right  motor not initialized.", 0); }
@@ -66,9 +73,9 @@ public class LinearSlide
         } else if (getLiftPosition() <= 7.5 &&  getLiftPosition() >= 0) {
             linearPower(power * 0.5);
         } else if (getLiftPosition() > 36) {
-            linearPower(-0.5);
+            linearPower(-0.25);
         } else if (getLiftPosition() < 0){
-            linearPower(0.5);
+            linearPower(0.25);
         } else {
             linearPower(0);
         }
@@ -81,7 +88,7 @@ public class LinearSlide
     public void update() {
         if (leftLinear != null ) { leftSlidePosition = leftLinear.getCurrentPosition(); }
         if (rightLinear != null ) { rightSlidePosition = rightLinear.getCurrentPosition(); }
-        telemetry.addData("Slide Position = ", getLiftPosition());
+        //    telemetry.addData("Slide Position = ", getLiftPosition());
     }
 
     public double getLiftPosition() {
@@ -89,27 +96,25 @@ public class LinearSlide
     }
     
 
-//    public void linearToPosition( double cm, double power )
-//    {
-//        int targetCounts = (int) (cm * COUNTS_PER_CM);
-//        if ( leftLinear != null  && rightLinear != null ) {
-//            leftLinear.setTargetPosition(targetCounts);
-//            rightLinear.setTargetPosition(targetCounts);
-//            leftLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            rightLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            leftLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
-//            rightLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
-//        }
-//        else
-//        {
-//            telemetry.addData("linear slide motor not initialized.", 0);
-//        }
-//    }
-//
+    public void linearToPosition( double cm, double power )
+    {
+        int targetCounts = (int) (cm * COUNTS_PER_CM);
+        if ( leftLinear != null  && rightLinear != null ) {
+            leftLinear.setTargetPosition(targetCounts);
+            rightLinear.setTargetPosition(targetCounts);
+            leftLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
+            rightLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
+        } else {
+            telemetry.addData("linear slide motor not initialized.", 0);
+        }
+    }
+
 //    public double toggleUp( double cmToggle )
 //    {
 //        double targetCM = getLiftPosition() + cmToggle;
-//        targetCM = clip( targetCM, MIN_POS, MAX_POS);
+//        targetCM = Range.clip(targetCM, MIN_POS, MAX_POS);
 //        linearToPosition( targetCM, DEFAULT_POWER);
 //        return targetCM;
 //    }
@@ -117,7 +122,7 @@ public class LinearSlide
 //    public double toggleDown( double cmToggle )
 //    {
 //        double targetCM = getLiftPosition() - cmToggle;
-//        targetCM = clip( targetCM, MIN_POS, MAX_POS);
+//        targetCM = Range.clip(targetCM, MIN_POS, MAX_POS);
 //        linearToPosition( targetCM, DEFAULT_POWER);
 //        return targetCM;
 //    }

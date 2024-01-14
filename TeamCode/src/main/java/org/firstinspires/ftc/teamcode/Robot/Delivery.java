@@ -35,12 +35,12 @@ public class Delivery
     static public double ELBOW_MAX = 0.51;
     // MAX is whenever the elbow is up and ready to recieve
     static public double WRIST_MIN = 0.135;
-    static public double WRIST_MAX = 0.7575;
+    static public double WRIST_MAX = 0.775;
 
 
     static public double WRIST_INIT = 0.775;
-    static public double LEFTGRIP_INIT = 0.5;
-    static public double RIGHTGRIP_INIT = 0.5;
+    static public double LEFTGRIP_INIT = 0.9;
+    static public double RIGHTGRIP_INIT = 0.9;
     static public double TWIST_INIT = 0.5;
     static public double ELBOW_INIT = 0.46;
     static public double GRIP_DROP = 0;
@@ -54,7 +54,8 @@ public class Delivery
     {
         READY_TO_TRANSER(ELBOW_MIN, ELBOW_MIN, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
         TRANSFER( 0, 0, 0, 0, GripperPositions.CLOSED),
-        INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
+        TELE_INIT(ELBOW_MAX, ELBOW_MAX, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
+        AUTO_INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
         ALIGN_TO_BACKDROP(0.5, 0.5, 1, 1, GripperPositions.CLOSED);
 
         public final double lElbowPos;
@@ -76,7 +77,8 @@ public class Delivery
     // TODO: Define these to help with the gripper positioning
     public enum GripperPositions
     {
-        CLOSED( 0.9,0.9),
+        // IF ANY GRIP ISSUES CHANGE THE GRIP POSITIONS TO 0.8 INSTEAD OF 0.775 (ITS TIGHTER)
+        CLOSED( 0.8,0.8),
         OPEN( 0.5, 0.5),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
@@ -141,7 +143,7 @@ public class Delivery
         }
 
         // Now that everything is inited, put the Delivery into a good position.
-        goTo(Positions.INIT);
+        goTo(Positions.AUTO_INIT);
 //        holdPixelsBoth();
     }
 
@@ -154,6 +156,10 @@ public class Delivery
         }
         else { telemetry.addData("delivery wrist not initialized.", 0); }
         return -1;
+    }
+    public boolean autoSetWristPos(double position) {
+        wrist.setPosition(position);
+        return true;
     }
 
     public void setLeftGripPos(double leftGripPos)
@@ -181,6 +187,11 @@ public class Delivery
         setlElbowPos(clippedPosition);
         setrElbowPos(clippedPosition);
         return clippedPosition;
+    }
+    public boolean setElbowPos(double position) {
+        lElbow.setPosition(position);
+        rElbow.setPosition(position);
+        return true;
     }
     public void setlElbowPos(double lElbowPos)
     {
@@ -282,12 +293,12 @@ public class Delivery
         if (twist != null) { twistPos = twist.getPosition(); }
         if (lElbow != null) { lElbowPos = lElbow.getPosition(); }
         if (rElbow != null) {  rElbowPos = rElbow.getPosition(); }
-        telemetry.addData("wrist position", wristPos);
-        telemetry.addData("leftGrip Position", leftGripPos);
-        telemetry.addData("rightGrip Position", rightGripPos);
-        telemetry.addData("twist position", twistPos);
-        telemetry.addData("lElbow position", lElbowPos);
-        telemetry.addData("rElbow Position", rElbowPos);
+//        telemetry.addData("wrist position", wristPos);
+//        telemetry.addData("leftGrip Position", leftGripPos);
+//        telemetry.addData("rightGrip Position", rightGripPos);
+//        telemetry.addData("twist position", twistPos);
+//        telemetry.addData("lElbow position", lElbowPos);
+//        telemetry.addData("rElbow Position", rElbowPos);
     }
 
 }

@@ -56,7 +56,8 @@ public class EndGame
         else { telemetry.addData("drone launcher not initialized.", 0); }
     }
     public void pullUp(double power) {
-        leftLift.setPower(power * 0.625);
+        leftLift.setPower(power * 0.8375);
+//        leftLift.setPower(power);
         rightLift.setPower(power);
     }
 }

@@ -78,7 +78,7 @@ public class Delivery
     public enum GripperPositions
     {
         // IF ANY GRIP ISSUES CHANGE THE GRIP POSITIONS TO 0.8 INSTEAD OF 0.775 (ITS TIGHTER)
-        CLOSED( 0.8,0.8),
+        CLOSED( 0.815,0.805),
         OPEN( 0.5, 0.5),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 

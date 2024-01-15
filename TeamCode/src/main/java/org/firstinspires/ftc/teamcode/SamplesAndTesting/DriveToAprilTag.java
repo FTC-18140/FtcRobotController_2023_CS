@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.SamplesAndTesting;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,6 +16,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Drive To AprilTag")
 public class DriveToAprilTag extends OpMode
@@ -200,24 +201,24 @@ public class DriveToAprilTag extends OpMode
     */
     private void    setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
-//
-//        if (visionPortal == null) {
-//            return;
-//        }
-//
-//        // Make sure camera is streaming before we try to set the exposure controls
-//        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-//            telemetry.addData("Camera", "Ready");
-//            telemetry.update();
-//        }
-//
-//        // Set camera controls unless we are stopping.
-//            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-//            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-//                exposureControl.setMode(ExposureControl.Mode.Manual);
-//            }
-//            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-//            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-//            gainControl.setGain(gain);
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
     }
 }

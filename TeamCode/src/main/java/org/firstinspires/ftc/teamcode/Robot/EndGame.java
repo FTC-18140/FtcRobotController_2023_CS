@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,21 +13,15 @@ public class EndGame
 
     Telemetry telemetry;
 
-    CRServo launcher = null;
     DcMotor leftLift = null;
     DcMotor rightLift = null;
-    double power = 0;
+    double leftPower = 0;
+    private double rightPower;
 
     public void init(HardwareMap hwMap, Telemetry telem)
     {
         telemetry = telem;
 
-        try {
-            launcher = hwMap.crservo.get("launcher");
-            launcher.setPower(0);
-        } catch (Exception e) {
-            telemetry.addData("launcher not found", 0);
-        }
         try {
             leftLift = hwMap.dcMotor.get("oX");
             leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -47,17 +40,20 @@ public class EndGame
 
     public void update()
     {
-        if (launcher != null) { power = launcher.getPower();}
+        if (leftLift != null) {leftPower = leftLift.getPower();}
+        if (rightLift != null) { rightPower = rightLift.getPower(); }
     }
 
-    public void launcherPower(double power)
+    public void pullUp(double power)
     {
-        if (launcher != null) {launcher.setPower(power);}
-        else { telemetry.addData("drone launcher not initialized.", 0); }
-    }
-    public void pullUp(double power) {
-        leftLift.setPower(power * 0.8375);
-//        leftLift.setPower(power);
-        rightLift.setPower(power);
+        if (leftLift != null && rightLift != null)
+        {
+            leftLift.setPower(power * 0.8375);
+            rightLift.setPower(power);
+        }
+        else
+        {
+            telemetry.addData("Winch lift motor not initialized.", 0);
+        }
     }
 }

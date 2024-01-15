@@ -307,15 +307,13 @@ public class Thunderbot2023
         if (!moving)
         {
             startAngle = heading;
-
-            initPosition = (long) allMotors;
-
+//            initPosition = (long) allMotors;
+            initPosition = leftFrontPosition;
             moving = true;
         }
 
-
         double distanceMoved;
-        distanceMoved = abs(allMotors - initPosition);
+        distanceMoved = abs(leftFrontPosition - initPosition);
 
         double distanceMovedInCM = distanceMoved / COUNTS_PER_CM;
         telemetry.addData("distanceMoved", distanceMoved);

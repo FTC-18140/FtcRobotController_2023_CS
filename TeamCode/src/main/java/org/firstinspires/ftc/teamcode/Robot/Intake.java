@@ -89,13 +89,12 @@ public class Intake
         goTo(Positions.INIT, true);
     }
 
-    public boolean setElbowPos(double elbow)
+    public void setElbowPosition(double elbow)
     {
         if ( intakeElbow != null ) {
             intakeElbow.setPosition(elbow);
         }
         else { telemetry.addData("intake elbow not initialized.", 0); }
-        return true;
     }
 
     public void setLeftGripPos(double leftGripPos)
@@ -110,10 +109,9 @@ public class Intake
         else { telemetry.addData("intake right gripper not initialized.", 0); }
     }
 
-    public boolean dropBoth() {
+    public void dropBoth() {
         dropLeft();
         dropRight();
-        return true;
     }
     public void dropLeft() {
         setLeftGripPos(GRIP_DROP);
@@ -139,7 +137,7 @@ public class Intake
     {
         previousPosition = currentPosition;
         currentPosition = pos;
-        setElbowPos(pos.elbowPos);
+        setElbowPosition(pos.elbowPos);
         if ( gripperToo)
         {
             setLeftGripPos(pos.leftGripPos);

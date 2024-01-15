@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
+import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
+
 @Autonomous
 public class AutoRedDownstage extends OpMode {
 
@@ -100,6 +102,7 @@ public class AutoRedDownstage extends OpMode {
     @Override
     public void start() {
         robot.resetIMUYaw();
+        robot.eyes.activateBackCamera();
     }
 
     @Override
@@ -116,8 +119,6 @@ public class AutoRedDownstage extends OpMode {
                 state++;
             }
                 break;
-
-            // TODO Add the drop pixel command
             case 1:
             if (!done) {
                 done = robot.turnTo(stepBCenter, 0.5);
@@ -172,7 +173,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 6:
                 if (!done) {
-               done = robot.turnTo(-90, 0.25);
+                    done = robot.turnTo(-90, 0.25);
                 } else {
                     robot.stop();
                     done = false;
@@ -182,6 +183,8 @@ public class AutoRedDownstage extends OpMode {
             case 7:
                 if (!done) {
 //                    robot.delivery.setWristPosition(0.73);
+                    // This next command sets both the wrist and the elbow, so Case 8 may not be
+                    // needed.  Verify by testing.
                     robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
                     done = true;
                 } else {
@@ -191,14 +194,14 @@ public class AutoRedDownstage extends OpMode {
                 }
                 break;
             case 8:
-                if (!done) {
-//                    robot.delivery.setElbowPosition(0.275);
-                    done = true;
-                } else {
-                    robot.stop();
-                    done = false;
+//                if (!done) {
+////                    robot.delivery.setElbowPosition(0.275);
+//                    done = true;
+//                } else {
+//                    robot.stop();
+//                    done = false;
                     state++;
-                }
+//                }
                 break;
             case 9:
                 if (!done) {
@@ -213,8 +216,10 @@ public class AutoRedDownstage extends OpMode {
             case 10:
                 if (!done) {
                     if (getRuntime() > 1)
+                    {
                         robot.delivery.dropBoth();
                         done = true;
+                    }
                 } else {
                     robot.stop();
                     done = false;
@@ -224,6 +229,7 @@ public class AutoRedDownstage extends OpMode {
             case 11:
                 if (!done) {
 //                    done = robot.drive(0, 50, 0.5);
+                    // TODO: Test this next command.
                     done = robot.gyroDrive( -90, 10, 0.5);
                 } else {
                     robot.stop();
@@ -233,7 +239,8 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 12:
                 if (!done) {
-                    done = robot.drive( 90, 80, 0.5);
+                    // TODO: Strafe... Test this.
+                    done = robot.strafe(RIGHT, 80, 0.5);
 //                    done = robot.turnTo(0,0.25);
                 } else {
                     robot.stop();

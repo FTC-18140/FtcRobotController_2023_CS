@@ -75,6 +75,12 @@ public class Thunderbot2023
     private boolean notifyTheDriver1 = false;
     private boolean notifyTheDriver2 = false;
 
+    public enum Direction
+    {
+        LEFT,
+        RIGHT;
+    }
+
     /**
      * Constructor
      */
@@ -524,32 +530,17 @@ public class Thunderbot2023
     }
 
 
-//    public boolean strafe(double distance, double power)
-//    {
-//        double targetPosition = distance * COUNTS_PER_CM;
-//
-//        if (distance > 0) {
-//            if (leftFrontPosition < targetPosition) {
-//                leftFront.setPower(power);
-//                rightFront.setPower(-power);
-//                leftRear.setPower(-power);
-//                rightRear.setPower(power);
-//            } else {
-//                stop();
-//            }
-//        }
-//        if (distance < 0) {
-//            if (leftFrontPosition > targetPosition) {
-//                leftFront.setPower(-power);
-//                rightFront.setPower(power);
-//                leftRear.setPower(power);
-//                rightRear.setPower(-power);
-//            } else {
-//                stop();
-//            }
-//        }
-//        return true;
-//    }
+    public boolean strafe(Direction dir, double distance, double power)
+    {
+        if ( dir == Direction.LEFT)
+        {
+            return drive(-90, distance,  power);
+        }
+        else
+        {
+            return drive( 90, distance, power);
+        }
+    }
 
     /**
      * Get the heading angle from the imu and convert it to degrees.

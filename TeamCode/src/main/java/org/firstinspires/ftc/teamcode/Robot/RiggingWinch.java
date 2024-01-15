@@ -37,7 +37,6 @@ public class RiggingWinch
         } catch(Exception e) {
             telemetry.addData("rWinch not found", 0);
         }
-        // TODO: need to initialize servos if they are needed.
     }
 
     public void leftWinchPower(double power) {

@@ -34,7 +34,7 @@ public class Thunderbot2023
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
-    public DroneLauncher droneLauncher = new DroneLauncher();
+    public EndGame endGame = new EndGame();
     public Intake intake = new Intake();
     public ArtemisEyes eyes = new ArtemisEyes();
     List<LynxModule> allHubs;
@@ -93,8 +93,8 @@ public class Thunderbot2023
         try
         {
             imu = ahwMap.get(IMU.class, "imu");
-            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
             RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
             imu.initialize(new IMU.Parameters(orientationOnRobot));
             lastAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -187,7 +187,7 @@ public class Thunderbot2023
         try { delivery.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Delivery not found", 0); }
 
-        try {  droneLauncher.init(ahwMap, telem); }
+        try {  endGame.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
         try {  intake.init(ahwMap, telem); }
@@ -307,15 +307,13 @@ public class Thunderbot2023
         if (!moving)
         {
             startAngle = heading;
-
-            initPosition = (long) allMotors;
-
+//            initPosition = (long) allMotors;
+            initPosition = leftFrontPosition;
             moving = true;
         }
 
-
         double distanceMoved;
-        distanceMoved = abs(allMotors - initPosition);
+        distanceMoved = abs(leftFrontPosition - initPosition);
 
         double distanceMovedInCM = distanceMoved / COUNTS_PER_CM;
         telemetry.addData("distanceMoved", distanceMoved);
@@ -565,7 +563,7 @@ public class Thunderbot2023
      */
     private double getHeading()
     {
-        double rawImuAngle =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double rawImuAngle =  -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         double delta = rawImuAngle - lastAngle;
 
         // An illustrative example: assume the robot is facing +179 degrees (last angle) and makes a +2 degree turn.
@@ -620,8 +618,8 @@ public class Thunderbot2023
                 delivery.update();
                 notifyTheDriver2 = delivery.gripperClosed();
             }
-            if ( droneLauncher != null ) { droneLauncher.update();}
-
+            if ( endGame != null ) { endGame.update();}
+            if (linearSlide != null) {linearSlide.update(); }
         } catch (Exception e) {
             telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);
         }

@@ -27,8 +27,8 @@ public class Intake
     // 0 is the drop off point
     //
     static public double GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.52;
-    static public double RIGHT_GRIP_HOLD = 0.5;
+    static public double LEFT_GRIP_HOLD = 0.45 ;
+    static public double RIGHT_GRIP_HOLD = 0.45;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
@@ -40,10 +40,11 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0, GRIP_DROP, GRIP_DROP),
+        TRANSFER( 0.005, GRIP_DROP, GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
+        TELE_INIT(INTAKEELBOW_INIT, GRIP_DROP, GRIP_DROP),
         INIT(INTAKEELBOW_INIT, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
         WAIT_TO_INTAKE(0.185, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
@@ -88,7 +89,7 @@ public class Intake
         goTo(Positions.INIT, true);
     }
 
-    public void setElbowPos(double elbow)
+    public void setElbowPosition(double elbow)
     {
         if ( intakeElbow != null ) {
             intakeElbow.setPosition(elbow);
@@ -136,7 +137,7 @@ public class Intake
     {
         previousPosition = currentPosition;
         currentPosition = pos;
-        setElbowPos(pos.elbowPos);
+        setElbowPosition(pos.elbowPos);
         if ( gripperToo)
         {
             setLeftGripPos(pos.leftGripPos);
@@ -150,7 +151,8 @@ public class Intake
         {
             case TRANSFER:
             case READY_TO_TRANSFER:
-                goTo(Positions.INIT, false);
+              //  goTo(Positions.INIT, false);
+
                 break;
             case INIT:
                 goTo(Positions.WAIT_TO_INTAKE, false);
@@ -206,7 +208,7 @@ public class Intake
     {
         if (intakeElbow != null) {
             intakeElbowPos = intakeElbow.getPosition();
-            moveSlowly = (intakeElbowPos >= Positions.WAIT_TO_INTAKE.elbowPos);
+            moveSlowly = (intakeElbowPos > Positions.WAIT_TO_INTAKE.elbowPos);
             clearOfTransferZone = (intakeElbowPos >= Positions.INIT.elbowPos);
         }
         if (leftGripper != null) {
@@ -219,10 +221,10 @@ public class Intake
             rightGripperClosed = tempPos != rightGripPos && tempPos == RIGHT_GRIP_HOLD;
             rightGripPos = tempPos;
         }
-        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
-        telemetry.addData("Intake Left Gripper Position =", leftGripPos);
-        telemetry.addData("Intake Position: ", currentPosition);
-        telemetry.addData("Drive Slowly: ", moveSlowly);
-        telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
+//        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
+//        telemetry.addData("Intake Left Gripper Position =", leftGripPos);
+//        telemetry.addData("Intake Position: ", currentPosition);
+//        telemetry.addData("Drive Slowly: ", moveSlowly);
+//        telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
     }
 }

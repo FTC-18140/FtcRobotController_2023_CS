@@ -36,7 +36,6 @@ public class Intake
     private boolean leftGripperClosed = false;
     private boolean rightGripperClosed = false;
 
-    // TODO: define these Positions to help with intake control
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it

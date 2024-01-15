@@ -116,9 +116,13 @@ public class LinearSlide
         {
             leftSlidePosition = leftLinear.getCurrentPosition();
             rightSlidePosition = rightLinear.getCurrentPosition();
-            // Check to see if we are drawing too much current.  This could be caused by
-            // the linear slide motors going too low and bottoming out.
-            //TODO: CHECK THIS OVERCURRENT TEST. WHAT CURRENT INDICATES WE HAVE HIT BOTTOM?
+
+            telemetry.addData("Left Lift Current AMPS: ", leftLinear.getCurrent(AMPS));
+            telemetry.addData("Right Lift Current AMPS: ", rightLinear.getCurrent(AMPS));
+
+            // TODO: Check to see if we are drawing too much current.  This could be caused by the
+            //  linear slide motors going too low and bottoming out.
+            //  CHECK THIS OVERCURRENT TEST. WHAT CURRENT INDICATES WE HAVE HIT BOTTOM?
             if (leftLinear.isOverCurrent() || rightLinear.isOverCurrent() )
             {
                 leftLinear.setVelocity(0);

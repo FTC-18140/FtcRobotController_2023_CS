@@ -51,7 +51,6 @@ public class Delivery
 
     private boolean clearOfTransferZone = false;
 
-    // TODO: Define these positions to help with positioning the Depositor
     public enum Positions
     {
         READY_TO_TRANSFER(ELBOW_MIN, ELBOW_MIN, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
@@ -76,7 +75,6 @@ public class Delivery
         }
     }
 
-    // TODO: Define these to help with the gripper positioning
     public enum GripperPositions
     {
         // IF ANY GRIP ISSUES CHANGE THE GRIP POSITIONS TO 0.8 INSTEAD OF 0.775 (ITS TIGHTER)

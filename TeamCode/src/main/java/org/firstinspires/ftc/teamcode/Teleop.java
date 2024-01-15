@@ -71,8 +71,8 @@ public class Teleop extends OpMode  {
     public void init_loop()
     {
         super.init_loop();
-        // TODO: test the ability to detect the team prop and find the LEFT/CENTER/RIGHT
 
+        // TODO: Can use this to test the vision processing to find the team prop.  DELETE WHEN HAPPY.
         String spikePos = robot.getSpikePos();
         telemetry.addData("Spike Pos = ", spikePos);
         telemetry.addData("Prop X:", robot.getPropX());

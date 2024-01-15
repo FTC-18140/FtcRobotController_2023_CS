@@ -11,7 +11,7 @@ import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
 
 @Autonomous
-public class AutoRedDownstage extends OpMode {
+public class AutoRedUpStage extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
     int state = 0;
@@ -103,7 +103,7 @@ public class AutoRedDownstage extends OpMode {
     @Override
     public void start() {
         robot.resetIMUYaw();
-      //  robot.eyes.activateBackCamera();
+        //  robot.eyes.activateBackCamera();
     }
 
     @Override
@@ -112,13 +112,13 @@ public class AutoRedDownstage extends OpMode {
 
         switch (state) {
             case 0:
-            if (!done) {
-                done = robot.gyroDrive(0, 160, 0.5);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
+                if (!done) {
+                    done = robot.gyroDrive(0, 160, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
                 break;
             case 1:
                 if (!done) {
@@ -130,13 +130,13 @@ public class AutoRedDownstage extends OpMode {
                 }
                 break;
             case 2:
-            if (!done) {
-                done = robot.turnTo(stepBCenter, 0.5);
-            } else {
-                robot.stop();
-                done = false;
-                state++;
-            }
+                if (!done) {
+                    done = robot.turnTo(stepBCenter, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
                 break;
             case 3:
                 if (!done) {
@@ -150,9 +150,9 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 4:
                 if (!done) {
-                        robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                    robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
 //                                setElbowPosition(0.185);
-                        done = true;
+                    done = true;
                 } else {
                     resetRuntime();
                     robot.stop();
@@ -195,8 +195,7 @@ public class AutoRedDownstage extends OpMode {
 //                    robot.delivery.setWristPosition(0.73);
                     // This next command sets both the wrist and the elbow, so Case 8 may not be
                     // needed.  Verify by testing.
-                    robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
-                    done = true;
+                    done = robot.gyroDrive(-90, 322, -0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -210,8 +209,11 @@ public class AutoRedDownstage extends OpMode {
                     // TODO: Test this distance.  We need to get set up so that we can see the
                     //  AprilTags but far enough away to give the robot room to maneuver to the
                     //  correct tag in the next step.
-                    done = robot.gyroDrive(-90, 100, -0.5);
+                        robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                        done = true;
+
                 } else {
+                    resetRuntime();
                     robot.stop();
                     done = false;
                     state++;
@@ -219,12 +221,14 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 10:
                 if (!done) {
-                        done = robot.gyroDrive(-90, 65, -0.25);
-                        // 161.5
+                    if(getRuntime() > 1.5) {
+                        done = robot.gyroDrive(-90, 60, -0.25);
+                    }
+                    // 161.5
                     // TODO: test the drive to AprilTag code.
                     //  It probably can't get the robot close enough to drop on the backdrop, but it
                     //  will align the robot.
-                  //  done = robot.driveToTag(tagNum, -0.4, 20);
+                    //  done = robot.driveToTag(tagNum, -0.4, 20);
                 } else {
                     resetRuntime();
                     robot.stop();
@@ -238,7 +242,7 @@ public class AutoRedDownstage extends OpMode {
 //                    done = true;
                     // TODO: Test this.  It needs to get to the right distance after localizing on
                     //  the AprilTag in the prior step.
-                //    done = robot.gyroDrive(-90, 10, 0.5);
+                    //    done = robot.gyroDrive(-90, 10, 0.5);
                     done = true;
                 } else {
                     robot.stop();
@@ -292,7 +296,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 16:
                 if (!done) {
-                    robot.gyroDrive(-90, 25, -0.5);
+                    done = robot.gyroDrive(-90, 25, -0.5);
                 } else {
                     robot.stop();
                     done = false;

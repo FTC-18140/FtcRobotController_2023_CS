@@ -33,7 +33,7 @@ public class Delivery
     static public double ELBOW_MIN = 0.15;
     // MIN is whenever the elbow is completely down
     static public double ELBOW_MAX = 0.51;
-    // MAX is whenever the elbow is up and ready to recieve
+    // MAX is whenever the elbow is nested and ready to recieve
     static public double WRIST_MIN = 0.135;
     static public double WRIST_MAX = 0.775;
 
@@ -57,7 +57,7 @@ public class Delivery
         TRANSFER( 0, 0, 0, 0, GripperPositions.CLOSED),
         TELE_INIT(ELBOW_MAX, ELBOW_MAX, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
         AUTO_INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
-        ALIGN_TO_BACKDROP(0.275, 0.275, 0.73, 1, GripperPositions.CLOSED);
+        ALIGN_TO_BACKDROP(0.275, 0.275, 0.675, 0.5, GripperPositions.CLOSED);
 
         public final double lElbowPos;
         public final double rElbowPos;
@@ -287,15 +287,15 @@ public class Delivery
         if (twist != null) { twistPos = twist.getPosition(); }
         if (lElbow != null) {
             lElbowPos = lElbow.getPosition();
-            clearOfTransferZone = lElbowPos <= Positions.TELE_INIT.lElbowPos;
+            clearOfTransferZone = lElbowPos <= Positions.AUTO_INIT.lElbowPos;
         }
         if (rElbow != null) { rElbowPos = rElbow.getPosition(); }
-//        telemetry.addData("wrist position", wristPos);
-//        telemetry.addData("leftGrip Position", leftGripPos);
-//        telemetry.addData("rightGrip Position", rightGripPos);
-//        telemetry.addData("twist position", twistPos);
-//        telemetry.addData("lElbow position", lElbowPos);
-//        telemetry.addData("rElbow Position", rElbowPos);
+        telemetry.addData("wrist position", wristPos);
+        telemetry.addData("leftGrip Position", leftGripPos);
+        telemetry.addData("rightGrip Position", rightGripPos);
+        telemetry.addData("twist position", twistPos);
+        telemetry.addData("lElbow position", lElbowPos);
+        telemetry.addData("rElbow Position", rElbowPos);
     }
 
 }

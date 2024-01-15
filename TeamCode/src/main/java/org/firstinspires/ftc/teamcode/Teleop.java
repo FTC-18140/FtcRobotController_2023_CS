@@ -265,7 +265,6 @@ public class Teleop extends OpMode  {
         //////////////////
         // TWIST
         //////////////////
-        // TODO: Check the limit on twist.
 
         if ( robot.delivery.clearedTransferZone())
         {

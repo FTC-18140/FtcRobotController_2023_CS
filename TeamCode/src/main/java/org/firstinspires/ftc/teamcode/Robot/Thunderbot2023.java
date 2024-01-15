@@ -378,13 +378,13 @@ public class Thunderbot2023
         if (!moving)
         {
             startAngle = currentAngle;
-            initPosition = (long) allMotors;
+            initPosition = (long) leftFrontPosition;
             moving = true;
         }
 
         double distanceMoved;
 
-        distanceMoved = abs(allMotors - initPosition);
+        distanceMoved = abs(leftFrontPosition - initPosition);
 
         double distanceMovedInCM = distanceMoved / COUNTS_PER_CM;
 
@@ -593,7 +593,7 @@ public class Thunderbot2023
 
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
-        telemetry.addData("Motor Position", allMotors);
+        telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();
         telemetry.addData("Heading: ", heading);
@@ -619,10 +619,10 @@ public class Thunderbot2023
     public void start(){}
 
     public void stop() {
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
+        leftFront.setVelocity(0);
+        rightFront.setVelocity(0);
+        leftRear.setVelocity(0);
+        rightRear.setVelocity(0);
     }
 
     public void resetIMUYaw()

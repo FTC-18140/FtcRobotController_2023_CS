@@ -32,6 +32,7 @@ public class AutoRedDownstage extends OpMode {
     public static double stepBLeft = -90;
     public static double stepBCenter = 0;
     public static double stepBRight = 90;
+
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
 
@@ -113,7 +114,7 @@ public class AutoRedDownstage extends OpMode {
         switch (state) {
             case 0:
             if (!done) {
-                done = robot.gyroDrive(0, 160, 0.5);
+                done = robot.gyroDrive(0, 130, 0.5);
             } else {
                 robot.stop();
                 done = false;
@@ -121,32 +122,31 @@ public class AutoRedDownstage extends OpMode {
             }
                 break;
             case 1:
-                if (!done) {
-                    done = robot.gyroDrive(0, 20, -0.5);
-                } else {
-                    robot.stop();
-                    done = false;
-                    state++;
-                }
-                break;
-            case 2:
             if (!done) {
-                done = robot.turnTo(stepBCenter, 0.5);
+                done = robot.turnTo(stepBRight, 0.5);
             } else {
                 robot.stop();
                 done = false;
                 state++;
             }
-                break;
-            case 3:
+            break;
+            case 2:
                 if (!done) {
-                    //done = robot.drive(stepBCenter, 2.5, 0.5);
-                    done = true;
+                    done = robot.gyroDrive(stepBRight, 50, 0.5);
                 } else {
                     robot.stop();
                     done = false;
                     state++;
                 }
+                break;
+            case 3:
+            if (!done) {
+                    done = robot.gyroDrive(stepBRight, 25, -0.5);
+            } else {
+                robot.stop();
+                done = false;
+                state++;
+            }
                 break;
             case 4:
                 if (!done) {
@@ -238,8 +238,15 @@ public class AutoRedDownstage extends OpMode {
 //                    done = true;
                     // TODO: Test this.  It needs to get to the right distance after localizing on
                     //  the AprilTag in the prior step.
-                //    done = robot.gyroDrive(-90, 10, 0.5);
-                    done = true;
+                    if (stepB == stepBLeft) {
+                        robot.strafe(RIGHT, 20, 0.25);
+                        done = true;
+                    } else if (stepB == stepBRight) {
+                        robot.strafe(LEFT, 20, 0.25);
+                        done = true;
+                    } else {
+                        done = true;
+                    }
                 } else {
                     robot.stop();
                     resetRuntime();
@@ -292,7 +299,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 16:
                 if (!done) {
-                    robot.gyroDrive(-90, 25, -0.5);
+                    done = robot.gyroDrive(-90, 25, -0.5);
                 } else {
                     robot.stop();
                     done = false;

@@ -8,10 +8,9 @@ import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT;
-import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
 
 @Autonomous
-public class AutoRedUpStage extends OpMode {
+public class AutoRedUpstage extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
     int state = 0;

@@ -128,6 +128,7 @@ public class Teleop extends OpMode  {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
         } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
             robot.intake.goTo(TRANSFER, false);
+            robot.delivery.setElbowPosition(0.51);
         } else if (tbdGamepad1.getButtonPressed(DPAD_DOWN)) {
              robot.intake.goTo( DOWN_TO_PIXEL, false);
         }

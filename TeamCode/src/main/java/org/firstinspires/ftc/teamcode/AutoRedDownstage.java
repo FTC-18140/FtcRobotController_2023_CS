@@ -31,7 +31,17 @@ public class AutoRedDownstage extends OpMode {
     double stepB = 0;
     public static double stepBLeft = -90;
     public static double stepBCenter = 0;
-    public static double stepBRight = 90;
+    public static double stepBRight = -90;
+    public static double stepStrafe = 0;
+    public static double stepStrafeRight = 125;
+    public static double driveToBackDrop = 75;
+    public static double driveToBackDropRight = 30;
+    public static double strafeToPlace = 0;
+    public static double strafeToPlaceLeft = 10;
+    public static double strafeToPlaceRight = 40;
+    public static double stepBBack = 50;
+    public static double stepBBackLeft = 40;
+    public static double stepBBackRight = 25;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
@@ -88,14 +98,20 @@ public class AutoRedDownstage extends OpMode {
             case "LEFT":
                 tagNum = 4;
                 stepB = stepBLeft;
+                strafeToPlace = strafeToPlaceLeft;
                 break;
             case "RIGHT":
                 tagNum = 6;
                 stepB = stepBRight;
+                stepStrafe = stepStrafeRight;
+                strafeToPlace = strafeToPlaceRight;
                 break;
             default: // default CENTER
                 tagNum = 5;
-                stepB = stepBCenter;
+                stepB = stepBLeft;
+                strafeToPlace = strafeToPlaceLeft;
+                stepBBack = stepBBackLeft;
+
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
@@ -110,9 +126,17 @@ public class AutoRedDownstage extends OpMode {
     @Override
     public void loop() {
         robot.update();
-
         switch (state) {
             case 0:
+                if (!done) {
+                    done = robot.strafe(RIGHT, stepStrafe, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 1:
             if (!done) {
                 done = robot.gyroDrive(0, 130, 0.5);
             } else {
@@ -121,34 +145,34 @@ public class AutoRedDownstage extends OpMode {
                 state++;
             }
                 break;
-            case 1:
+            case 2:
             if (!done) {
-                done = robot.turnTo(stepBRight, 0.5);
+                done = robot.turnTo(stepB, 0.5);
             } else {
                 robot.stop();
                 done = false;
                 state++;
             }
             break;
-            case 2:
+            case 3:
                 if (!done) {
-                    done = robot.gyroDrive(stepBRight, 50, 0.5);
+                    done = robot.gyroDrive(stepB, 50, 0.5);
                 } else {
                     robot.stop();
                     done = false;
                     state++;
                 }
                 break;
-            case 3:
+            case 4:
             if (!done) {
-                    done = robot.gyroDrive(stepBRight, 25, -0.5);
+                    done = robot.gyroDrive(stepB, stepBBack, -0.5);
             } else {
                 robot.stop();
                 done = false;
                 state++;
             }
                 break;
-            case 4:
+            case 5:
                 if (!done) {
                         robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
 //                                setElbowPosition(0.185);
@@ -160,7 +184,7 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 5:
+            case 6:
                 if (!done) {
                     if (getRuntime() > 1) {
                         robot.intake.dropBoth();
@@ -172,16 +196,16 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 6:
+            case 7:
                 if (!done) {
-                    done = robot.gyroDrive(0, 10, -0.5);
+                    done = robot.gyroDrive(stepB, 10, -0.5);
                 } else {
                     robot.stop();
                     done = false;
                     state++;
                 }
                 break;
-            case 7:
+            case 8:
                 if (!done) {
                     done = robot.turnTo(-90, 0.25);
                 } else {
@@ -190,7 +214,7 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 8:
+            case 9:
                 if (!done) {
 //                    robot.delivery.setWristPosition(0.73);
                     // This next command sets both the wrist and the elbow, so Case 8 may not be
@@ -203,30 +227,15 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 9:
+            case 10:
                 if (!done) {
 //                    robot.delivery.setElbowPosition(0.275);
 //                    done = true;
                     // TODO: Test this distance.  We need to get set up so that we can see the
                     //  AprilTags but far enough away to give the robot room to maneuver to the
                     //  correct tag in the next step.
-                    done = robot.gyroDrive(-90, 100, -0.5);
+                    done = robot.gyroDrive(-90, driveToBackDrop, -0.5);
                 } else {
-                    robot.stop();
-                    done = false;
-                    state++;
-                }
-                break;
-            case 10:
-                if (!done) {
-                        done = robot.gyroDrive(-90, 65, -0.25);
-                        // 161.5
-                    // TODO: test the drive to AprilTag code.
-                    //  It probably can't get the robot close enough to drop on the backdrop, but it
-                    //  will align the robot.
-                  //  done = robot.driveToTag(tagNum, -0.4, 20);
-                } else {
-                    resetRuntime();
                     robot.stop();
                     done = false;
                     state++;
@@ -234,19 +243,35 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 11:
                 if (!done) {
+                        done = robot.gyroDrive(-90, driveToBackDrop, -0.25);
+                        // 161.5
+                    // TODO: test the drive to AprilTag code.
+                    //  It probably can't get the robot close enough to drop on the backdrop, but it
+                    //  will align the robot.
+                  //  done = robot.driveToTag(tagNum, -0.4, 20);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 12:
+                if (!done) {
 //                    robot.delivery.setElbowPosition(0.275);
 //                    done = true;
                     // TODO: Test this.  It needs to get to the right distance after localizing on
                     //  the AprilTag in the prior step.
-                    if (stepB == stepBLeft) {
-                        robot.strafe(RIGHT, 20, 0.25);
-                        done = true;
-                    } else if (stepB == stepBRight) {
-                        robot.strafe(LEFT, 20, 0.25);
-                        done = true;
-                    } else {
-                        done = true;
-                    }
+                    robot.strafe(LEFT, strafeToPlace, 0.25);
+                    done = true;
+//                    if (stepB == stepBLeft) {
+//                        robot.strafe(RIGHT, strafeToPlaceLeft, 0.25);
+//                        done = true;
+//                    } else if (stepB == stepBRight) {
+//                        robot.strafe(LEFT, strafeToPlaceRight, 0.25);
+//                        done = true;
+//                    } else {
+//                        done = true;
+//                    }
                 } else {
                     robot.stop();
                     resetRuntime();
@@ -254,9 +279,9 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 12:
+            case 13:
                 if (!done) {
-                    if (getRuntime() > 1)
+                    if (getRuntime() > 3)
                     {
                         robot.delivery.dropBoth();
                         done = true;
@@ -267,7 +292,7 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 13:
+            case 14:
                 if (!done) {
 //                    done = robot.drive(0, 50, 0.5);
                     done = robot.gyroDrive( -90, 15, 0.5);
@@ -277,7 +302,7 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 14:
+            case 15:
                 if (!done) {
                     done = robot.strafe(LEFT, 130, 0.5);
 //                    done = robot.turnTo(0,0.25);
@@ -287,7 +312,7 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 15:
+            case 16:
                 if (!done) {
                     robot.delivery.goTo(Delivery.Positions.AUTO_INIT);
                     done = true;
@@ -297,7 +322,7 @@ public class AutoRedDownstage extends OpMode {
                     state++;
                 }
                 break;
-            case 16:
+            case 17:
                 if (!done) {
                     done = robot.gyroDrive(-90, 25, -0.5);
                 } else {

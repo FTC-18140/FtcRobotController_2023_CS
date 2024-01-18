@@ -511,7 +511,7 @@ public class Thunderbot2023
             }
         }
 
-        if ( angleErrorMagnitude <= 0.5)
+        if ( angleErrorMagnitude <= 1.5)
         {
             // Stops turning when at the specified angle (or really close)
             stop();

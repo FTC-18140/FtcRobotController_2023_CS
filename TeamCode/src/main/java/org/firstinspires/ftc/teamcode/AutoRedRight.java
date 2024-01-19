@@ -11,22 +11,22 @@ import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
 
 @Autonomous
-public class AutoRedDownstage extends OpMode {
+public class AutoRedRight extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
-    int state = 0;
+    int state = -1;
     boolean done = false;
 
     // Adjust these numbers
     final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
 
-    final double SPEED_GAIN  =  0.02  ;
-    final double STRAFE_GAIN =  0.015 ;
-    final double TURN_GAIN   =  0.01  ;
+    final double SPEED_GAIN = 0.02;
+    final double STRAFE_GAIN = 0.015;
+    final double TURN_GAIN = 0.01;
 
     final double MAX_AUTO_SPEED = 0.5;
-    final double MAX_AUTO_STRAFE= 0.5;
-    final double MAX_AUTO_TURN  = 0.3;
+    final double MAX_AUTO_STRAFE = 0.5;
+    final double MAX_AUTO_TURN = 0.3;
 // STEPS FOR OLD CODE
 //    double stepB = 0;
 //    public static double stepBLeft = -90;
@@ -42,14 +42,33 @@ public class AutoRedDownstage extends OpMode {
 //    public static double stepBBack = 50;
 //    public static double stepBBackLeft = 40;
 //    public static double stepBBackRight = 25;
+    double step0 = 15;
+    double step0Left = 50;
     double stepA = 0;
     double stepALeft = -27;
     double  stepARight = 27;
-    double stepBDistance = 30;
+    double stepBDistance = 0;
     double stepBAngle = 0;
-    double stepBLDistance = 16;
-    double stepBLAngle = -40;
+    double stepBLDistance = 0;
+    double stepBLAngle = -27;
     double stepBRAngle = 27;
+    double stepBRDistance = 0;
+    double stepD = 105;
+    double stepDLeft = 50;
+    double stepAwayPixel = 10;
+    double stepAwayPixelLeft = 40;
+    double stepToBackboard = 165;
+    double stepToBackboardLeft = 170;
+    double stepToBackboardRight = 135;
+    Thunderbot2023.Direction stepStrafe = LEFT;
+    Thunderbot2023.Direction stepStrafeLeft = RIGHT;
+    Thunderbot2023.Direction stepStrafeRight = RIGHT;
+    double stepStrafeDistance = 0;
+    double stepStrafeDistanceLeft = 85;
+    double stepStrafeDistanceRight = 2.5;
+    double stepPark = 100;
+    double stepParkLeft = 150;
+    double stepParkRight = 75;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
@@ -82,7 +101,6 @@ public class AutoRedDownstage extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap, telemetry, true);
-
 //        if (USE_WEBCAM) {
 //            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 //        }
@@ -104,20 +122,46 @@ public class AutoRedDownstage extends OpMode {
         switch (robot.eyes.getSpikePos())
         {
             case "LEFT":
-                tagNum = 4;
-/*                stepA = stepALeft;
+                step0 = step0Left;
+                stepA = stepALeft;
+                stepD = stepDLeft;
                 stepBAngle = stepBLAngle;
-                stepBDistance = stepBLDistance;*/
+                stepBDistance = stepBLDistance;
+                stepToBackboard = stepToBackboardLeft;
+                stepStrafe = stepStrafeLeft;
+                stepStrafeDistance = stepStrafeDistanceLeft;
+                stepPark = stepParkLeft;
+                stepAwayPixel = stepAwayPixelLeft;
+                tagNum = 4;
+                telemetry.addData("ZONE = LEFT", 0);
                 break;
             case "RIGHT":
-  /*              stepA = stepARight;
-                stepBAngle = stepBLAngle;*/
+                step0 = 15;
+                stepA = stepARight;
+                stepBAngle = stepBRAngle;
+                stepBDistance = stepBRDistance;
+                stepD = 105;
+                stepToBackboard = stepToBackboardRight;
+                stepStrafe = stepStrafeRight;
+                stepStrafeDistance = stepStrafeDistanceRight;
+                stepPark = stepParkRight;
+                stepAwayPixel = 10;
                 tagNum = 6;
-
+                telemetry.addData("ZONE = RIGHT", 0);
                 break;
             default: // default CENTER
+                step0 = 15;
+                stepA = 0;
+                stepBAngle = 0;
+                stepBDistance = 0;
+                stepD = 105;
+                stepToBackboard = 166;
+                stepStrafe = LEFT;
+                stepStrafeDistance = 0;
+                stepPark = 100;
+                stepAwayPixel = 10;
                 tagNum = 5;
-
+                telemetry.addData("ZONE = CENTER", 0);
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
@@ -364,12 +408,20 @@ public class AutoRedDownstage extends OpMode {
 //                    state++;
 //                }
 //                break;
-            case 0:
+            case -1:
                 if (!done) {
                     robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
                     done = true;
                 } else {
-                    resetRuntime();
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 0:
+                if (!done) {
+                    done = robot.gyroDrive(0, step0, 0.25);
+                } else {
                     robot.stop();
                     done = false;
                     state++;
@@ -386,7 +438,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 2:
                 if (!done) {
-                    done = robot.gyroDrive(stepA, 81, 0.5);
+                    done = robot.gyroDrive(stepA, stepD, 0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -395,7 +447,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 3:
                 if (!done) {
-                    done = robot.turnTo(stepBLAngle, 0.25);
+                    done = robot.turnTo(stepBAngle, 0.25);
                 }  else {
                     robot.stop();
                     done = false;
@@ -404,7 +456,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 4:
                 if (!done) {
-                    done = robot.gyroDrive(stepBLAngle, stepBLDistance, 0.5);
+                    done = robot.gyroDrive(stepBAngle, stepBDistance, 0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -425,7 +477,7 @@ public class AutoRedDownstage extends OpMode {
                 break;
             case 6:
                 if (!done) {
-                    done = robot.gyroDrive(stepBLAngle, 10, -0.5);
+                    done = robot.gyroDrive(stepBAngle, stepAwayPixel, -0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -435,6 +487,84 @@ public class AutoRedDownstage extends OpMode {
             case 7:
                 if (!done) {
                     done = robot.turnTo(-90, 0.25);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 8:
+                if (!done) {
+                    robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                    done = true;
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 9:
+                if (!done) {
+                    done = robot.gyroDrive(-90, stepToBackboard, -0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 10:
+                if (!done) {
+                    done = robot.strafe(stepStrafe, stepStrafeDistance, 0.5);
+                } else {
+                    resetRuntime();
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 11:
+                if (!done) {
+                    if (getRuntime() > 1) {
+                        robot.delivery.dropBoth();
+                        done = true;
+                    }
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 12:
+                if (!done) {
+                    done = robot.gyroDrive(-90, 10, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 13:
+                if (!done) {
+                    done = robot.strafe(LEFT, stepPark, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 14:
+                if (!done) {
+                    robot.delivery.goTo(Delivery.Positions.TELE_INIT);
+                    done = true;
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 15:
+                if (!done) {
+                    done = robot.gyroDrive(-90, 25, -0.5);
                 } else {
                     robot.stop();
                     done = false;

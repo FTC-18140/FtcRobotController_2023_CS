@@ -57,7 +57,7 @@ public class Delivery
         TRANSFER( 0, 0, 0, 0, GripperPositions.CLOSED),
         TELE_INIT(ELBOW_MAX, ELBOW_MAX, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
         AUTO_INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
-        ALIGN_TO_BACKDROP(0.275, 0.275, 0.675, 0.5, GripperPositions.CLOSED);
+        ALIGN_TO_BACKDROP(0.275, 0.275, 0.69, 0.5, GripperPositions.CLOSED);
 
         public final double lElbowPos;
         public final double rElbowPos;

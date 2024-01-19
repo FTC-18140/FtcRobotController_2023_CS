@@ -99,8 +99,7 @@ public class Teleop extends OpMode  {
         //////////////
 
         // Resets the measured angle of the robot
-        if(tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON))
-        {
+        if(tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON)) {
             robot.imu.resetYaw();
             telemetry.addData("imu: ", "reset");
         }
@@ -123,7 +122,6 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
-
         if (tbdGamepad1.getButtonPressed(LEFT_BUMPER) ) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
         } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
@@ -137,15 +135,7 @@ public class Teleop extends OpMode  {
         ////////////////////
         // INTAKE GRIPPER
         ////////////////////
-
-//        if (tbdGamepad1.getButtonPressed(X)) {
-//            robot.intake.dropBoth();
-//        } else if (tbdGamepad1.getButtonPressed(Y)) {
-//            robot.intake.holdPixelsBoth();
-//        }
-
-        if (tbdGamepad1.getButtonPressed(X))
-        {
+        if (tbdGamepad1.getButtonPressed(X)) {
             robot.intake.toggleGripper();
         }
 
@@ -166,17 +156,6 @@ public class Teleop extends OpMode  {
                 robot.endGame.pullUp(0);
             }
         }
-//        else
-//        {
-//            if (tbdGamepad1.getButton(Y) && getRuntime() > 90) {
-//                robot.endGame.pullUp(1);
-//            } else if (tbdGamepad1.getButton(A) && getRuntime() > 90) {
-//                robot.endGame.pullUp(-1);
-//            } else {
-//                robot.endGame.pullUp(0);
-//            }
-//        }
-
 
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
 
@@ -190,6 +169,7 @@ public class Teleop extends OpMode  {
         if (tbdGamepad2.getButton(LEFT_STICK_BUTTON) && tbdGamepad2.getButton(RIGHT_STICK_BUTTON)) {
             robot.delivery.goTo(Delivery.Positions.TELE_INIT);
             ELBOW_POSITION = robot.delivery.setElbowPosition(robot.delivery.ELBOW_INIT);
+            robot.linearSlide.linearToPosition(0, 1);
         }
 
 
@@ -204,26 +184,14 @@ public class Teleop extends OpMode  {
             robot.linearSlide.toggleDown(6.0, ignoreLimit);
         }
 
-//        if (tbdGamepad2.getButton(Y)) {
-//            robot.linearSlide.linearMove(1);
-//        } else if (tbdGamepad2.getButton(A)) {
-//            robot.linearSlide.linearMove(-1);
-//        } else {
-//            robot.linearSlide.linearMove(0);
-//        }
-
         //////////////////
         // DELIVERY ELBOW
         //////////////////
-        if ( robot.intake.clearedTransferZone())
-        {
-            if (tbdGamepad2.getButton(X) )
-            {
+        if ( robot.intake.clearedTransferZone()) {
+            if (tbdGamepad2.getButton(X) ) {
                 ELBOW_POSITION += ELBOW_INCREMENT;
                 ELBOW_POSITION = robot.delivery.setElbowPosition(ELBOW_POSITION);
-            }
-            else if (tbdGamepad2.getButton(B) )
-            {
+            } else if (tbdGamepad2.getButton(B) ) {
                 ELBOW_POSITION -= ELBOW_INCREMENT;
                 ELBOW_POSITION = robot.delivery.setElbowPosition(ELBOW_POSITION);
             }

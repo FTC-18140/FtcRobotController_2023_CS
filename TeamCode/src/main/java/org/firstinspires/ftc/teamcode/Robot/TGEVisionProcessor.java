@@ -84,10 +84,12 @@ public class TGEVisionProcessor implements VisionProcessor
         if (theColor.equalsIgnoreCase("RED"))
         {
             minThreshold = 140;
+            extractChannel = 1;
         }
         else
         {
             minThreshold = 170;
+            extractChannel = 2;
         }
 
         // Step CV_cvtColor0:
@@ -169,13 +171,13 @@ public class TGEVisionProcessor implements VisionProcessor
             {
                 spikePos = "LEFT";// LEFT
             }
-            else if ( xPos > 500)
+            else if ( xPos > 200)
             {
-                spikePos = "RIGHT";   // RIGHT
+                spikePos = "CENTER";   // CENTER
             }
             else
             {
-                spikePos = "CENTER";// CENTER
+                spikePos = "RIGHT";// RIGHT
             }
         }
         else
@@ -195,7 +197,7 @@ public class TGEVisionProcessor implements VisionProcessor
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
     {
-        if ((System.nanoTime() / 1_000_000_000.0) - inittime > 2)
+        if ((System.nanoTime() / 1_000_000_000.0) - inittime > 1)
         {
             index++;
             inittime = System.nanoTime() / 1_000_000_000.0;

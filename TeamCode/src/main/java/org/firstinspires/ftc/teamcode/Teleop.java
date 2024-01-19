@@ -37,7 +37,7 @@ public class Teleop extends OpMode  {
     public static double WRIST_POSITION = Delivery.WRIST_INIT;
     public static double TWIST_INCREMENT = 0.01;
     public static double TWIST_POSITION = TWIST_INIT;
-    public static double ELBOW_INCREMENT = 0.0025;
+    public static double ELBOW_INCREMENT = 0.005;
     public static double ELBOW_POSITION = Delivery.ELBOW_INIT;
     public static double INTAKE_INCREMENT = 0.01;
     public static double INTAKE_POSITION = Intake.INTAKEELBOW_INIT;

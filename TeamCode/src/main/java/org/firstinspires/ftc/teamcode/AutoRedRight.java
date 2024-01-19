@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
+import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT;
@@ -101,6 +102,7 @@ public class AutoRedRight extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap, telemetry, true);
+        TGEVisionProcessor.theColor = "RED";
 //        if (USE_WEBCAM) {
 //            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 //        }
@@ -136,6 +138,7 @@ public class AutoRedRight extends OpMode {
                 telemetry.addData("ZONE = LEFT", 0);
                 break;
             case "RIGHT":
+            case "NOT FOUND":
                 step0 = 15;
                 stepA = stepARight;
                 stepBAngle = stepBRAngle;

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
+import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT;
@@ -101,6 +102,7 @@ public class AutoBlueLeft extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap, telemetry, true);
+        TGEVisionProcessor.theColor = "BLUE";
 //        if (USE_WEBCAM) {
 //            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 //        }
@@ -133,9 +135,10 @@ public class AutoBlueLeft extends OpMode {
                 stepPark = stepParkRight;
                 stepAwayPixel = 10;
                 tagNum = 6;
-                telemetry.addData("ZONE = LEFT", 0);
+                telemetry.addData("ZONE = ", "LEFT");
                 break;
             case "RIGHT":
+            case "NOT FOUND":
                 step0 = step0Left;
                 stepA = stepALeft;
                 stepD = stepDLeft;
@@ -147,7 +150,7 @@ public class AutoBlueLeft extends OpMode {
                 stepPark = stepParkLeft;
                 stepAwayPixel = stepAwayPixelLeft;
                 tagNum = 4;
-                telemetry.addData("ZONE = RIGHT", 0);
+                telemetry.addData("ZONE = ", "RIGHT");
                 break;
             default: // default CENTER
                 step0 = 15;
@@ -161,7 +164,7 @@ public class AutoBlueLeft extends OpMode {
                 stepPark = 100;
                 stepAwayPixel = 10;
                 tagNum = 5;
-                telemetry.addData("ZONE = CENTER", 0);
+                telemetry.addData("ZONE = ", "CENTER");
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );

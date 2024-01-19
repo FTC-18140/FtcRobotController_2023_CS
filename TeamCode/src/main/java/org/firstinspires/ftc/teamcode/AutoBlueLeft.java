@@ -122,7 +122,18 @@ public class AutoBlueLeft extends OpMode {
         switch (robot.eyes.getSpikePos())
         {
             case "LEFT":
-
+                step0 = 15;
+                stepA = stepARight;
+                stepBAngle = stepBRAngle;
+                stepBDistance = stepBRDistance;
+                stepD = 105;
+                stepToBackboard = stepToBackboardRight;
+                stepStrafe = stepStrafeRight;
+                stepStrafeDistance = stepStrafeDistanceRight;
+                stepPark = stepParkRight;
+                stepAwayPixel = 10;
+                tagNum = 6;
+                telemetry.addData("ZONE = LEFT", 0);
                 break;
             case "RIGHT":
                 step0 = step0Left;
@@ -140,29 +151,17 @@ public class AutoBlueLeft extends OpMode {
                 break;
             default: // default CENTER
                 step0 = 15;
-                stepA = stepARight;
-                stepBAngle = stepBRAngle;
-                stepBDistance = stepBRDistance;
+                stepA = 0;
+                stepBAngle = 0;
+                stepBDistance = 0;
                 stepD = 105;
-                stepToBackboard = stepToBackboardRight;
-                stepStrafe = stepStrafeRight;
-                stepStrafeDistance = stepStrafeDistanceRight;
-                stepPark = stepParkRight;
+                stepToBackboard = 166;
+                stepStrafe = LEFT;
+                stepStrafeDistance = 0;
+                stepPark = 100;
                 stepAwayPixel = 10;
-                tagNum = 6;
-                telemetry.addData("ZONE = LEFT", 0);
-//                step0 = 15;
-//                stepA = 0;
-//                stepBAngle = 0;
-//                stepBDistance = 0;
-//                stepD = 105;
-//                stepToBackboard = 166;
-//                stepStrafe = LEFT;
-//                stepStrafeDistance = 0;
-//                stepPark = 100;
-//                stepAwayPixel = 10;
-//                tagNum = 5;
-//                telemetry.addData("ZONE = CENTER", 0);
+                tagNum = 5;
+                telemetry.addData("ZONE = CENTER", 0);
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );

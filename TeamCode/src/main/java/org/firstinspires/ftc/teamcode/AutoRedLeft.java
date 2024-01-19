@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT;
 
 @Autonomous
-public class AutoRedUpstage extends OpMode {
+public class AutoRedLeft extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
     int state = 0;

@@ -56,10 +56,11 @@ public class AutoBlueLeft extends OpMode {
     double stepBRDistance = 0;
     double stepD = 105;
     double stepDLeft = 50;
-    double stepAwayPixel = 10;
-    double stepAwayPixelLeft = 40;
+    double stepDRight = 85;
+    double stepAwayPixel = 5;
+    double stepAwayPixelLeft = 50;
     double stepToBackboard = 165;
-    double stepToBackboardLeft = 170;
+    double stepToBackboardLeft = 160;
     double stepToBackboardRight = 135;
     Thunderbot2023.Direction stepStrafe = RIGHT;
     Thunderbot2023.Direction stepStrafeLeft = LEFT;
@@ -68,7 +69,7 @@ public class AutoBlueLeft extends OpMode {
     double stepStrafeDistanceLeft = 85;
     double stepStrafeDistanceRight = 0;
     double stepPark = 100;
-    double stepParkLeft = 150;
+    double stepParkLeft = 170;
     double stepParkRight = 75;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
@@ -128,7 +129,7 @@ public class AutoBlueLeft extends OpMode {
                 stepA = stepARight;
                 stepBAngle = stepBRAngle;
                 stepBDistance = stepBRDistance;
-                stepD = 105;
+                stepD = stepDRight;
                 stepToBackboard = stepToBackboardRight;
                 stepStrafe = stepStrafeRight;
                 stepStrafeDistance = stepStrafeDistanceRight;

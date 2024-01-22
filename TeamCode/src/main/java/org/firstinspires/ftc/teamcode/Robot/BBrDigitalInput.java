@@ -5,19 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
-public class Sensors extends OpMode {
+public class BBrDigitalInput extends OpMode {
 
     // Define a variable for our sensors
     Rev2mDistanceSensor distanceLeft;
     Rev2mDistanceSensor distanceRight;
     ColorSensor colorright;
     ColorSensor colorleft;
-    TouchSensor beamBreakLeft;
-    TouchSensor beamBreakRight;
+    DigitalInput beamBreakLeft;
+    DigitalInput beamBreakRight;
+
 
     int colorRed;
     int colorBlue;

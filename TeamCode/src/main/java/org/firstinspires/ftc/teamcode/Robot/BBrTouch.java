@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -16,8 +17,8 @@ public class BBrTouch extends OpMode {
     Rev2mDistanceSensor distanceRight;
     ColorSensor colorright;
     ColorSensor colorleft;
-    TouchSensor beamBreakLeft;
-    TouchSensor beamBreakRight;
+    DigitalChannel beamBreakLeft;
+    DigitalChannel beamBreakRight;
 
     int colorRed;
     int colorBlue;
@@ -37,9 +38,9 @@ public class BBrTouch extends OpMode {
         //I2C 3
         colorleft = hardwareMap.get(ColorSensor.class, "colorleft");
         // TODO: Digital ?
-        beamBreakLeft = hardwareMap.get(TouchSensor.class, "bbrleft");
+        beamBreakLeft = hardwareMap.get(DigitalChannel.class, "bbrleft");
         // TODO: Digital ?
-        beamBreakRight = hardwareMap.get(TouchSensor.class, "bbrright");
+        beamBreakRight = hardwareMap.get(DigitalChannel.class, "bbrright");
 
     }
 
@@ -53,8 +54,9 @@ public class BBrTouch extends OpMode {
 //        telemetry.addData("Right Red ColorV3", colorright.red());
         telemetry.addData("Tape Color", TapeLineColor());
         telemetry.addData("Backdrop distance", GetAverageDistance());
-        telemetry.addData("Beam Break Status Left", beamBreakLeft.isPressed());
-        telemetry.addData("Beam Break Status Right", beamBreakRight.isPressed());
+        telemetry.addData("Beam Break Status Left", beamBreakLeft.getState());
+        telemetry.addData("Beam Break Status Right", beamBreakRight.getMode());
+
         telemetry.update();
 
         colorBlue = ((colorleft.blue() + colorright.blue()) / 2);
@@ -85,6 +87,14 @@ public class BBrTouch extends OpMode {
 
     public double GetAverageDistance () {
         return distance;
+    }
+
+    public boolean LeftBeamBroken () {
+        return beamBreakLeft.getState();
+    }
+
+    public boolean RightBeamBroken () {
+        return beamBreakRight.getState();
     }
 
 }

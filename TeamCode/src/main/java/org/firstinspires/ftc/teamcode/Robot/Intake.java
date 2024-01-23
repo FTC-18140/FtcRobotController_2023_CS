@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,6 +15,9 @@ public class Intake
 
     Servo intakeElbow = null;
 
+    DigitalChannel beamBreakLeft;
+    DigitalChannel beamBreakRight;
+
     public double leftGripPos = 0;
     public double rightGripPos = 0;
     public double intakeElbowPos = 0;
@@ -25,7 +29,7 @@ public class Intake
     // 0.185 is the down position ready to pick up the pixel
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
-    //
+
     static public double GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.45 ;
     static public double RIGHT_GRIP_HOLD = 0.45;
@@ -86,6 +90,11 @@ public class Intake
             telemetry.addData("intakeArm not found", 0);
         }
         goTo(Positions.INIT, true);
+
+        // TODO: Digital ?
+        beamBreakLeft = hwMap.get(DigitalChannel.class, "bbrleft");
+        // TODO: Digital ?
+        beamBreakRight = hwMap.get(DigitalChannel.class, "bbrright");
     }
 
     public void setElbowPosition(double elbow)
@@ -203,6 +212,13 @@ public class Intake
 
     public boolean gripperClosed() { return leftGripperClosed || rightGripperClosed; }
 
+    public boolean LeftBeamBroken () {
+        return beamBreakLeft.getState();
+    }
+
+    public boolean RightBeamBroken () {
+        return beamBreakRight.getState();
+    }
     public void update()
     {
         if (intakeElbow != null) {

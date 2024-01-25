@@ -87,7 +87,6 @@ public class ThunderbotAuto2023
 
         drive = new SampleMecanumDrive(ahwMap);
 
-
         try {
             allHubs = ahwMap.getAll(LynxModule.class);
 

@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class BBrTouch extends OpMode {
 
     // Define a variable for our sensors
-    Rev2mDistanceSensor distanceLeft;
-    Rev2mDistanceSensor distanceRight;
+//    Rev2mDistanceSensor distanceLeft;
+//    Rev2mDistanceSensor distanceRight;
     ColorSensor colorright;
     ColorSensor colorleft;
     DigitalChannel beamBreakLeft;
@@ -30,17 +30,18 @@ public class BBrTouch extends OpMode {
         // TODO: fix these comments to be the correct i2c busses
 
         //I2C 2
-        distanceLeft = hardwareMap.get(Rev2mDistanceSensor.class, "distanceleft");
-        //I2C 1
-        distanceRight = hardwareMap.get(Rev2mDistanceSensor.class, "distanceright");
+//        distanceLeft = hardwareMap.get(Rev2mDistanceSensor.class, "distanceleft");
+//        //I2C 1
+//        distanceRight = hardwareMap.get(Rev2mDistanceSensor.class, "distanceright");
         //I2C 3 Control Hub
         colorright = hardwareMap.get(ColorSensor.class, "colorright");
         //I2C 3
         colorleft = hardwareMap.get(ColorSensor.class, "colorleft");
-        // TODO: Digital ?
-        beamBreakLeft = hardwareMap.get(DigitalChannel.class, "bbrleft");
-        // TODO: Digital ?
-        beamBreakRight = hardwareMap.get(DigitalChannel.class, "bbrright");
+        // Digital 3
+        // left and right are switched here so they can be right on the robot
+        beamBreakLeft = hardwareMap.get(DigitalChannel.class, "bbrright");
+        // Digital 5
+        beamBreakRight = hardwareMap.get(DigitalChannel.class, "bbrleft");
 
     }
 
@@ -53,16 +54,16 @@ public class BBrTouch extends OpMode {
 //        telemetry.addData("Left Red ColorV3", colorleft.red());
 //        telemetry.addData("Right Red ColorV3", colorright.red());
         telemetry.addData("Tape Color", TapeLineColor());
-        telemetry.addData("Backdrop distance", GetAverageDistance());
+//        telemetry.addData("Backdrop distance", GetAverageDistance());
         telemetry.addData("Beam Break Status Left", beamBreakLeft.getState());
-        telemetry.addData("Beam Break Status Right", beamBreakRight.getMode());
+        telemetry.addData("Beam Break Status Right", beamBreakRight.getState());
 
         telemetry.update();
 
-        colorBlue = ((colorleft.blue() + colorright.blue()) / 2);
-        colorRed = ((colorleft.red() + colorright.red()) / 2);
-
-        distance = ((distanceLeft.getDistance(DistanceUnit.CM) + distanceRight.getDistance(DistanceUnit.CM)) / 2);
+//        colorBlue = ((colorleft.blue() + colorright.blue()) / 2);
+//        colorRed = ((colorleft.red() + colorright.red()) / 2);
+//
+//        distance = ((distanceLeft.getDistance(DistanceUnit.CM) + distanceRight.getDistance(DistanceUnit.CM)) / 2);
     }
 
     public int TapeLineColor () {
@@ -85,9 +86,9 @@ public class BBrTouch extends OpMode {
     }
 
 
-    public double GetAverageDistance () {
-        return distance;
-    }
+//    public double GetAverageDistance () {
+//        return distance;
+//    }
 
     public boolean LeftBeamBroken () {
         return beamBreakLeft.getState();

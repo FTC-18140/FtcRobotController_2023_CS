@@ -26,7 +26,7 @@ import java.util.List;
 public class ThunderbotAuto2023
 {
 
-    SampleMecanumDrive drive;
+    public SampleMecanumDrive drive;
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();

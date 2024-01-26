@@ -83,8 +83,7 @@ public class Teleop extends OpMode  {
     @Override
     public void start() {}
 
-    public void loop()
-    {
+    public void loop() {
         ////////////////////////////////////////
         // UPDATE robot, gamepads, and timers
         ////////////////////////////////////////
@@ -99,17 +98,16 @@ public class Teleop extends OpMode  {
         //////////////
 
         // Resets the measured angle of the robot
-        if(tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON))
-        {
+        if (tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON)) {
             robot.imu.resetYaw();
             telemetry.addData("imu: ", "reset");
         }
 
-        if ( robot.intake.driveSlowly()) {
+        if (robot.intake.driveSlowly()) {
 //            if (robot.intake.intakeElbowPos > 0.185) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                     tbdGamepad1.getRightX() * 0.1);
-        } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
+        } else if (tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
             robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
                     tbdGamepad1.getRightX());
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
@@ -118,7 +116,9 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad1.getButton(A) && tbdGamepad1.getButton(B)) {
             robot.joystickDrive(tbdGamepad1.getExpo(TBDGamepad.Stick.LEFT_Y), tbdGamepad1.getExpo(TBDGamepad.Stick.LEFT_X),
                     tbdGamepad1.getRightX());
-        } else {
+        } else if (tbdGamepad1.getButton(RIGHT_STICK_BUTTON)) {
+            robot
+        }else{
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
                     tbdGamepad1.getRightX() * 0.9);
         }

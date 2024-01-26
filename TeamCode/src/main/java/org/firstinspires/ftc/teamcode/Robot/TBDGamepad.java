@@ -10,8 +10,8 @@ public class TBDGamepad
 {
     public Gamepad gamepad;
 
-    public static double expoYValue = 2.5;
-    public static double expoXValue = 2.5;
+    public static double expoYValue = 5;
+    public static double expoXValue = 5;
     public boolean[] buttons = new boolean[14];
     public boolean[] oldButtons = new boolean[14];
     public boolean[] changed = new boolean[14];

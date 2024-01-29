@@ -220,20 +220,25 @@ public class Intake
         return beamBreakRight.getState();
     }
 
-    public void autoIntake (){
+    public void autoIntake () throws InterruptedException {
         boolean loaded = LeftBeamBroken() && RightBeamBroken();
-        int position = 0;
+        boolean step0Done = false;
+        boolean step1Done = false;
+        boolean step2Done = false;
         if (loaded) {
             goTo(Positions.DOWN_TO_PIXEL, false);
-            position++;
+            step0Done = true;
+            Thread.sleep(500);
         }
-        if (position == 1) {
+        if (step0Done) {
             goTo(Positions.READY_TO_TRANSFER, false);
-            position++;
+            step1Done = true;
+            Thread.sleep(500);
         }
-        if (position == 2) {
+        if (step1Done) {
             goTo(Positions.TRANSFER,false);
-            //position++;
+            Thread.sleep(500);
+            step2Done = true;
         }
     }
     public void update()

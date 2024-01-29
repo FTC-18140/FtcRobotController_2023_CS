@@ -219,6 +219,23 @@ public class Intake
     public boolean RightBeamBroken () {
         return beamBreakRight.getState();
     }
+
+    public void autoIntake (){
+        boolean loaded = LeftBeamBroken() && RightBeamBroken();
+        int position = 0;
+        if (loaded) {
+            goTo(Positions.DOWN_TO_PIXEL, false);
+            position++;
+        }
+        if (position == 1) {
+            goTo(Positions.READY_TO_TRANSFER, false);
+            position++;
+        }
+        if (position == 2) {
+            goTo(Positions.TRANSFER,false);
+            //position++;
+        }
+    }
     public void update()
     {
         if (intakeElbow != null) {

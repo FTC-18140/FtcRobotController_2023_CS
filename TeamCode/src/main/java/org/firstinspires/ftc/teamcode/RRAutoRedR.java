@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
 public class RRAutoRedR extends OpMode {
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    SampleMecanumDrive drive;
     final int START_X = -58;
     final int START_Y = -12;
 
@@ -24,6 +24,7 @@ public class RRAutoRedR extends OpMode {
 
     @Override
     public void init(){
+        drive = new SampleMecanumDrive(hardwareMap);
         //robot.init(hardwareMap, telemetry, true);
         //0.9083333
     }

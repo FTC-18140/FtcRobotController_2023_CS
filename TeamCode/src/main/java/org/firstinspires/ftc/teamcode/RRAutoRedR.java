@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
 public class RRAutoRedR extends OpMode {
+
     SampleMecanumDrive drive;
     final int START_X = -58;
     final int START_Y = -12;
@@ -19,6 +20,22 @@ public class RRAutoRedR extends OpMode {
 
     boolean done = false;
 
+    /*
+    * START
+    * Place Purple^
+    * Place Yellow^+>
+    * >BONUS:
+    *  Go through truss
+    *  Exit truss
+    *  Go to pixel stack
+    *  run into stack
+    *  grab pixel(s)
+    *  transfer pixel(s)
+    *  travel through stage door
+    *  go to backdrop
+    *  place pixel
+    * PARK
+    * */
     Trajectory step1;
     //Thunderbot2023 robot = new Thunderbot2023();
 
@@ -30,6 +47,7 @@ public class RRAutoRedR extends OpMode {
     }
     @Override
     public void start(){
+
         step1 = drive.trajectoryBuilder(new Pose2d(START_X, START_Y, Math.toRadians(0)))
                 .strafeTo(new Vector2d(END_X, END_Y))
                 .build();

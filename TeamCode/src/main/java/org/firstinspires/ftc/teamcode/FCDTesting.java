@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp
+@TeleOp (name = "FCD", group = "Teleop")
 public class FCDTesting extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();

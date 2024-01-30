@@ -63,10 +63,10 @@ public class AutoRedRight extends OpMode {
     double stepToBackboard = 165;
     double stepToBackboardLeft = 165;
     double stepToBackboardRight = 140;
-    Thunderbot2023.Direction stepStrafe = LEFT;
+    Thunderbot2023.Direction stepStrafe = RIGHT;
     Thunderbot2023.Direction stepStrafeLeft = RIGHT;
     Thunderbot2023.Direction stepStrafeRight = RIGHT;
-    double stepStrafeDistance = 0;
+    double stepStrafeDistance = 2.5;
     double stepStrafeDistanceLeft = 80;
     double stepStrafeDistanceRight = 2.5;
     double stepPark = 100;

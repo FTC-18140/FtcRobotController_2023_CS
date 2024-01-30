@@ -66,7 +66,7 @@ public class AutoBlueLeft extends OpMode {
     Thunderbot2023.Direction stepStrafeLeft = LEFT;
     Thunderbot2023.Direction stepStrafeRight = LEFT;
     double stepStrafeDistance = 0;
-    double stepStrafeDistanceLeft = 85;
+    double stepStrafeDistanceLeft = 77.5;
     double stepStrafeDistanceRight = 0;
     double stepPark = 100;
     double stepParkLeft = 170;

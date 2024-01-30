@@ -91,6 +91,7 @@ public class RR_FSMTrajTest extends OpMode
     {
         super.start();
         robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+        robot.drive.followTrajectoryAsync(trajectory1);
     }
 
     /**

@@ -35,7 +35,7 @@ public class LinearSlide
     public static double SCALE_FACTOR = 1;
     public static double MIN_POS = 0;
     public static double MAX_POS = 36;
-    public static double MAX_SPEED = 30;
+    public static double MAX_SPEED = 40;
     public static double DEFAULT_POWER = 1;
     public static double MAX_CURRENT_AMPS = 5.0;
     private int targetCounts;

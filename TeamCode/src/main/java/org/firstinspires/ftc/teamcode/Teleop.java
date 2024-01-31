@@ -99,10 +99,10 @@ public class Teleop extends OpMode  {
         //////////////
 
         // Resets the measured angle of the robot
-        if(tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON)) {
-            robot.imu.resetYaw();
-            telemetry.addData("imu: ", "reset");
-        }
+//        if(tbdGamepad1.getButton(LEFT_STICK_BUTTON) && tbdGamepad1.getButton(RIGHT_STICK_BUTTON)) {
+//            robot.imu.resetYaw();
+//            telemetry.addData("imu: ", "reset");
+//        }
 
         if ( robot.intake.driveSlowly()) {
 //            if (robot.intake.intakeElbowPos > 0.185) {
@@ -178,7 +178,7 @@ public class Teleop extends OpMode  {
         //////////////
         // One needs to be reversed
         if (tbdGamepad2.getButtonPressed(Y)) {
-            robot.linearSlide.toggleUp(6.0);
+            robot.linearSlide.toggleUp(25);
         } else if (tbdGamepad2.getButtonPressed(A)) {
             boolean ignoreLimit = tbdGamepad2.getButton(BACK);
             robot.linearSlide.toggleDown(6.0, ignoreLimit);

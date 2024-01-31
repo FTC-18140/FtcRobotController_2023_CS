@@ -27,22 +27,21 @@ public class Delivery
     public double leftGripPos = 0;
     public double rightGripPos = 0;
     public double twistPos = 0.5;
-    public double lElbowPos = 0.46;
-    public double rElbowPos = 0.46;
+    public double lElbowPos = 0.935;
+    public double rElbowPos = 0.935;
 
-    static public double ELBOW_MIN = 0.15;
-    // MIN is whenever the elbow is completely down
-    static public double ELBOW_MAX = 0.51;
-    // MAX is whenever the elbow is nested and ready to recieve
+    static public double ELBOW_MIN = 0.175;
+    // MIN is whenever the elbow is completely up ready to receive
+    static public double ELBOW_MAX = 0.935;
+    // MAX is whenever the elbow is down
     static public double WRIST_MIN = 0.135;
-    static public double WRIST_MAX = 0.775;
+    static public double WRIST_MAX = 0.8;
 
-
+    static public double ELBOW_INIT = 0.8;
     static public double WRIST_INIT = 0.775;
     static public double LEFTGRIP_INIT = 0.9;
     static public double RIGHTGRIP_INIT = 0.9;
     static public double TWIST_INIT = 0.5;
-    static public double ELBOW_INIT = 0.46;
     static public double GRIP_DROP = 0;
     //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up

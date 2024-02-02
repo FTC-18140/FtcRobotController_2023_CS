@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
@@ -13,7 +14,7 @@ public class RRAutoRedR extends OpMode {
 
     SampleMecanumDrive drive;
 
-    int spike = 1;
+    int tagNum = 1;
     final int START_X = -58;
     final int START_Y = -12;
 
@@ -71,17 +72,35 @@ public class RRAutoRedR extends OpMode {
 
     Trajectory truss1;
     Trajectory park;
-    //Thunderbot2023 robot = new Thunderbot2023();
+    Thunderbot2023 robot = new Thunderbot2023();
 
     @Override
     public void init(){
         drive = new SampleMecanumDrive(hardwareMap);
-        //robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, true);
         //0.9083333
     }
+
+    @Override
+    public void init_loop(){
+        switch (robot.eyes.getSpikePos())
+        {
+            case "LEFT":
+                tagNum = 1;
+                break;
+            case "RIGHT":
+                tagNum = 3;
+                break;
+            default: // default CENTER
+                tagNum = 2;
+                break;
+        }
+        telemetry.addData("Tag Number: ", tagNum );
+    }
+
     @Override
     public void start(){
-        switch(spike){
+        switch(tagNum){
             case(1):
                 spike_x = SPIKE_L_X;
                 spike_y = SPIKE_L_Y;
@@ -125,7 +144,7 @@ public class RRAutoRedR extends OpMode {
     @Override
     public void loop(){
         drive.update();
-        //robot.update();
+        robot.update();
 
     }
 }

@@ -48,7 +48,7 @@ public class EndGame
     {
         if (leftLift != null && rightLift != null)
         {
-            leftLift.setPower(power);
+            leftLift.setPower(power * 0.9);
             rightLift.setPower(power);
         }
         else

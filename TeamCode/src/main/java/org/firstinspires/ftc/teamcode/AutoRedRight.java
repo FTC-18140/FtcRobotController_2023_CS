@@ -43,26 +43,26 @@ public class AutoRedRight extends OpMode {
 //    public static double stepBBack = 50;
 //    public static double stepBBackLeft = 40;
 //    public static double stepBBackRight = 25;
-    double step0 = 15;
-    double step0Left = 50;
+    double step0 = 5;
+    double step0Left = 40;
     double stepA = 0;
-    double stepALeft = -27;
-    double  stepARight = 27;
+    double stepALeft = -30;
+    double  stepARight = 30;
     double stepBDistance = 0;
     double stepBAngle = 0;
     double stepBLDistance = 0;
-    double stepBLAngle = -27;
-    double stepBRAngle = 27;
+    double stepBLAngle = -30;
+    double stepBRAngle = 30;
     double stepBRDistance = 0;
-    double stepD = 105;
-    double stepDLeft = 50;
-    double stepDRight = 70;
-    double stepAwayPixel = 10;
-    double stepAwayPixelLeft = 40;
-    double stepAwayPixelRight = 10;
-    double stepToBackboard = 165;
-    double stepToBackboardLeft = 165;
-    double stepToBackboardRight = 140;
+    double stepD = 75;
+    double stepDLeft = 40;
+    double stepDRight = 60;
+    double stepAwayPixel = 5;
+    double stepAwayPixelLeft = 20;
+    double stepAwayPixelRight = 20;
+    double stepToBackboard = 125;
+    double stepToBackboardLeft = 132.5;
+    double stepToBackboardRight = 125;
     Thunderbot2023.Direction stepStrafe = RIGHT;
     Thunderbot2023.Direction stepStrafeLeft = RIGHT;
     Thunderbot2023.Direction stepStrafeRight = RIGHT;
@@ -70,8 +70,8 @@ public class AutoRedRight extends OpMode {
     double stepStrafeDistanceLeft = 80;
     double stepStrafeDistanceRight = 2.5;
     double stepPark = 100;
-    double stepParkLeft = 150;
-    double stepParkRight = 75;
+    double stepParkLeft = 140;
+    double stepParkRight = 45;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
@@ -159,12 +159,12 @@ public class AutoRedRight extends OpMode {
                 stepA = 0;
                 stepBAngle = 0;
                 stepBDistance = 0;
-                stepD = 105;
-                stepToBackboard = 166;
+                stepD = 77.5;
+                stepToBackboard = 140;
                 stepStrafe = LEFT;
                 stepStrafeDistance = 0;
-                stepPark = 100;
-                stepAwayPixel = 10;
+                stepPark = 85;
+                stepAwayPixel = 5;
                 tagNum = 5;
                 telemetry.addData("ZONE = CENTER", 0);
                 break;
@@ -182,237 +182,6 @@ public class AutoRedRight extends OpMode {
     public void loop() {
         robot.update();
         switch (state) {
-            //            case 0:
-//                if (!done) {
-//                    done = robot.strafe(RIGHT, stepStrafe, 0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 1:
-//            if (!done) {
-//                done = robot.gyroDrive(0, 130, 0.5);
-//            } else {
-//                robot.stop();
-//                done = false;
-//                state++;
-//            }
-//                break;
-//            case 2:
-//            if (!done) {
-//                done = robot.turnTo(stepB, 0.5);
-//            } else {
-//                robot.stop();
-//                done = false;
-//                state++;
-//            }
-//            break;
-//            case 3:
-//                if (!done) {
-//                    done = robot.gyroDrive(stepB, 50, 0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 4:
-//            if (!done) {
-//                    done = robot.gyroDrive(stepB, stepBBack, -0.5);
-//            } else {
-//                robot.stop();
-//                done = false;
-//                state++;
-//            }
-//                break;
-//            case 5:
-//                if (!done) {
-//                        robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-////                                setElbowPosition(0.185);
-//                        done = true;
-//                } else {
-//                    resetRuntime();
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 6:
-//                if (!done) {
-//                    if (getRuntime() > 1) {
-//                        robot.intake.dropBoth();
-//                        done = true;
-//                    }
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 7:
-//                if (!done) {
-//                    done = robot.gyroDrive(stepB, 10, -0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 8:
-//                if (!done) {
-//                    done = robot.turnTo(-90, 0.25);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 9:
-//                if (!done) {
-////                    robot.delivery.setWristPosition(0.73);
-//                    // This next command sets both the wrist and the elbow, so Case 8 may not be
-//                    // needed.  Verify by testing.
-//                    robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
-//                    done = true;
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 10:
-//                if (!done) {
-////                    robot.delivery.setElbowPosition(0.275);
-////                    done = true;
-//                    // TODO: Test this distance.  We need to get set up so that we can see the
-//                    //  AprilTags but far enough away to give the robot room to maneuver to the
-//                    //  correct tag in the next step.
-//                    done = robot.gyroDrive(-90, driveToBackDrop, -0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 11:
-//                if (!done) {
-//                        done = robot.gyroDrive(-90, driveToBackDrop, -0.25);
-//                        // 161.5
-//                    // TODO: test the drive to AprilTag code.
-//                    //  It probably can't get the robot close enough to drop on the backdrop, but it
-//                    //  will align the robot.
-//                  //  done = robot.driveToTag(tagNum, -0.4, 20);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 12:
-//                if (!done) {
-////                    robot.delivery.setElbowPosition(0.275);
-////                    done = true;
-//                    // TODO: Test this.  It needs to get to the right distance after localizing on
-//                    //  the AprilTag in the prior step.
-//                    robot.strafe(LEFT, strafeToPlace, 0.25);
-//                    done = true;
-////                    if (stepB == stepBLeft) {
-////                        robot.strafe(RIGHT, strafeToPlaceLeft, 0.25);
-////                        done = true;
-////                    } else if (stepB == stepBRight) {
-////                        robot.strafe(LEFT, strafeToPlaceRight, 0.25);
-////                        done = true;
-////                    } else {
-////                        done = true;
-////                    }
-//                } else {
-//                    robot.stop();
-//                    resetRuntime();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 13:
-//                if (!done) {
-//                    if (getRuntime() > 3)
-//                    {
-//                        robot.delivery.dropBoth();
-//                        done = true;
-//                    }
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 14:
-//                if (!done) {
-////                    done = robot.drive(0, 50, 0.5);
-//                    done = robot.gyroDrive( -90, 15, 0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 15:
-//                if (!done) {
-//                    done = robot.strafe(LEFT, 130, 0.5);
-////                    done = robot.turnTo(0,0.25);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 16:
-//                if (!done) {
-//                    robot.delivery.goTo(Delivery.Positions.AUTO_INIT);
-//                    done = true;
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 17:
-//                if (!done) {
-//                    done = robot.gyroDrive(-90, 25, -0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 15:
-//                if (!done) {
-//                    done = robot.gyroDrive(0, 100, 0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 16:
-//                if (!done) {
-//                    done = robot.turnTo(90, 0.25);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
-//            case 17:
-//                if (!done) {
-//                    done = robot.gyroDrive(90, 50, 0.5);
-//                } else {
-//                    robot.stop();
-//                    done = false;
-//                    state++;
-//                }
-//                break;
             case -1:
                 if (!done) {
                     robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);

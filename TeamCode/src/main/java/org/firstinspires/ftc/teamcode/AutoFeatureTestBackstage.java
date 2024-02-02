@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 @Autonomous
+@Disabled
 public class AutoFeatureTestBackstage extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();

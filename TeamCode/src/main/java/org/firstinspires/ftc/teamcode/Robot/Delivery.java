@@ -27,17 +27,17 @@ public class Delivery
     public double leftGripPos = 0;
     public double rightGripPos = 0;
     public double twistPos = 0.5;
-    public double lElbowPos = 0.935;
-    public double rElbowPos = 0.935;
+    public double lElbowPos = 0.92;
+    public double rElbowPos = 0.92;
 
-    static public double ELBOW_MIN = 0.175;
+    static public double ELBOW_MIN = 0.8;
     // MIN is whenever the elbow is completely up ready to receive
-    static public double ELBOW_MAX = 0.935;
+    static public double ELBOW_MAX = 0.92;
     // MAX is whenever the elbow is down
     static public double WRIST_MIN = 0.135;
     static public double WRIST_MAX = 0.8;
 
-    static public double ELBOW_INIT = 0.8;
+    static public double ELBOW_INIT = 0.875;
     static public double WRIST_INIT = 0.775;
     static public double LEFTGRIP_INIT = 0.9;
     static public double RIGHTGRIP_INIT = 0.9;
@@ -56,7 +56,7 @@ public class Delivery
         TRANSFER( 0, 0, 0, 0, GripperPositions.CLOSED),
         TELE_INIT(ELBOW_MAX, ELBOW_MAX, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
         AUTO_INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
-        ALIGN_TO_BACKDROP(0.275, 0.275, 0.69, 0.5, GripperPositions.CLOSED);
+        ALIGN_TO_BACKDROP(0.82, 0.275, 0.69, 0.5, GripperPositions.CLOSED);
 
         public final double lElbowPos;
         public final double rElbowPos;

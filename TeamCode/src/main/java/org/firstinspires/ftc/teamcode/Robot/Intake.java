@@ -224,7 +224,6 @@ public class Intake
         boolean loaded = LeftBeamBroken() && RightBeamBroken();
         boolean step0Done = false;
         boolean step1Done = false;
-        boolean step2Done = false;
         if (loaded) {
             goTo(Positions.DOWN_TO_PIXEL, false);
             step0Done = true;
@@ -233,12 +232,13 @@ public class Intake
         if (step0Done) {
             goTo(Positions.READY_TO_TRANSFER, false);
             step1Done = true;
+            step0Done = false;
             Thread.sleep(500);
         }
         if (step1Done) {
             goTo(Positions.TRANSFER,false);
             Thread.sleep(500);
-            step2Done = true;
+            step1Done = false;
         }
     }
     public void update()

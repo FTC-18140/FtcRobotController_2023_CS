@@ -56,19 +56,19 @@ public class AutoRedRight extends OpMode {
     double stepBRDistance = 0;
     double stepD = 75;
     double stepDLeft = 40;
-    double stepDRight = 60;
+    double stepDRight = 45;
     double stepAwayPixel = 5;
     double stepAwayPixelLeft = 20;
     double stepAwayPixelRight = 20;
     double stepToBackboard = 125;
-    double stepToBackboardLeft = 132.5;
+    double stepToBackboardLeft = 140;
     double stepToBackboardRight = 125;
     Thunderbot2023.Direction stepStrafe = RIGHT;
     Thunderbot2023.Direction stepStrafeLeft = RIGHT;
     Thunderbot2023.Direction stepStrafeRight = RIGHT;
     double stepStrafeDistance = 2.5;
     double stepStrafeDistanceLeft = 80;
-    double stepStrafeDistanceRight = 2.5;
+    double stepStrafeDistanceRight = 25;
     double stepPark = 100;
     double stepParkLeft = 140;
     double stepParkRight = 45;
@@ -103,7 +103,7 @@ public class AutoRedRight extends OpMode {
 
     @Override
     public void init() {
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, true, true);
         TGEVisionProcessor.theColor = "RED";
 //        if (USE_WEBCAM) {
 //            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur

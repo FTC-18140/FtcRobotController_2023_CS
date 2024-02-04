@@ -63,7 +63,7 @@ public class AutoRedLeft extends OpMode {
 
     @Override
     public void init() {
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry, false, true);
 
 //        if (USE_WEBCAM) {
 //            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur

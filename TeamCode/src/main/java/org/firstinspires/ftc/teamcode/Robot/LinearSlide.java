@@ -39,12 +39,14 @@ public class LinearSlide
     public static double DEFAULT_POWER = 1;
     public static double MAX_CURRENT_AMPS = 5.0;
     private int targetCounts;
+    public int stepNumber = 0;
 
     public enum Positions
     {
-        LEVEL_1(10),
-        LEVEL_2(22),
-        LEVEL_3( 35);
+        LEVEL_0(0),
+        LEVEL_1(12),
+        LEVEL_2(24),
+        LEVEL_3( 36);
         public final double cmHeight;
 
         Positions( double cm)
@@ -94,19 +96,6 @@ public class LinearSlide
     }
 
     // Math behind the positions of the linear slides and seeing where it needs to stop and start
-    public void linearMove(double power) {
-        if (getLiftPosition() > 7.5) {
-            linearPower(power);
-        } else if (getLiftPosition() <= 7.5 &&  getLiftPosition() >= 0) {
-            linearPower(power * 0.5);
-        } else if (getLiftPosition() > MAX_POS) {
-            linearPower(-0.25);
-        } else if (getLiftPosition() < MIN_POS){
-            linearPower(0.25);
-        } else {
-            linearPower(0);
-        }
-    }
 
     public void goToLinear(Positions pos)
     {
@@ -114,7 +103,7 @@ public class LinearSlide
     }
 
     public double getLiftPosition() {
-        return SCALE_FACTOR *  (0.5 * (leftSlidePosition + rightSlidePosition)) / COUNTS_PER_CM;
+        return SCALE_FACTOR *  (leftSlidePosition) / COUNTS_PER_CM;
     }
     
 
@@ -155,7 +144,28 @@ public class LinearSlide
         linearToPosition( targetCM, DEFAULT_POWER);
         return targetCM;
     }
-
+    public void slideTogglePositionsUp() {
+        double position = getLiftPosition();
+            if (position < Positions.LEVEL_1.cmHeight) {
+                goToLinear(Positions.LEVEL_1);
+            } else if (position < Positions.LEVEL_2.cmHeight) {
+                goToLinear(Positions.LEVEL_2);
+            } else if(position < Positions.LEVEL_3.cmHeight) {
+                goToLinear(Positions.LEVEL_3);
+            }
+    }
+    public void slideTogglePositionsDown() {
+        double position = getLiftPosition();
+            if(position > Positions.LEVEL_3.cmHeight) {
+                goToLinear(Positions.LEVEL_3);
+            } else if (position > Positions.LEVEL_2.cmHeight) {
+                goToLinear(Positions.LEVEL_2);
+            } else if (position > Positions.LEVEL_1.cmHeight) {
+                goToLinear(Positions.LEVEL_1);
+            } else {
+                goToLinear(Positions.LEVEL_0);
+            }
+    }
     public void update() {
         if (leftLinear != null  && rightLinear != null )
         {
@@ -169,13 +179,13 @@ public class LinearSlide
             // TODO: Check to see if we are drawing too much current.  This could be caused by the
             //  linear slide motors going too low and bottoming out.
             //  CHECK THIS OVERCURRENT TEST. WHAT CURRENT INDICATES WE HAVE HIT BOTTOM?
-            if (leftLinear.isOverCurrent() || rightLinear.isOverCurrent() )
-            {
-                leftLinear.setVelocity(0);
-                rightLinear.setVelocity(0);
-                leftLinear.setTargetPosition( (int) leftSlidePosition);
-                rightLinear.setTargetPosition( (int) rightSlidePosition);
-            }
+//            if (leftLinear.isOverCurrent() || rightLinear.isOverCurrent() )
+//            {
+//                leftLinear.setVelocity(0);
+//                rightLinear.setVelocity(0);
+//                leftLinear.setTargetPosition( (int) leftSlidePosition);
+//                rightLinear.setTargetPosition( (int) rightSlidePosition);
+//            }
         }
         else
         {
@@ -184,6 +194,7 @@ public class LinearSlide
             telemetry.addData("Slide Position = ", getLiftPosition());
             telemetry.addData("Left Slide Position: ", leftSlidePosition);
             telemetry.addData("Right Slide Position: ", rightSlidePosition);
+            telemetry.addData("stepNumber", stepNumber);
     }
 
 }

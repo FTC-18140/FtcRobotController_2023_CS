@@ -21,7 +21,7 @@ public class AutoFeatureTestBackstage extends OpMode {
 
     @Override
     public void init() {
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry, false, true);
 
         // Initialize the Apriltag Detection process
 

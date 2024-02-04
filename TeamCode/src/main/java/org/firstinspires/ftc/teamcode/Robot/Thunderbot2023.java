@@ -88,11 +88,13 @@ public class Thunderbot2023
 
     /**
      * Initializes the Thunderbot and connects its hardware to the HardwareMap
+     *
      * @param ahwMap
      * @param telem
      * @param withVision
+     * @param ifAuto
      */
-    public void init(HardwareMap ahwMap, Telemetry telem, boolean withVision)
+    public void init(HardwareMap ahwMap, Telemetry telem, boolean withVision, boolean ifAuto)
     {
         telemetry = telem;
 
@@ -190,13 +192,13 @@ public class Thunderbot2023
         try { linearSlide.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Lift not found", 0); }
 
-        try { delivery.init(ahwMap, telem); }
-        catch(Exception e) { telemetry.addData("Delivery not found", 0); }
-
         try {  endGame.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
-        try {  intake.init(ahwMap, telem); }
+        try { delivery.init(ahwMap, telem, ifAuto); }
+        catch(Exception e) { telemetry.addData("Delivery not found", 0); }
+
+        try {  intake.init(ahwMap, telem, ifAuto); }
         catch(Exception e) { telemetry.addData("Intake not found", 0); }
 
     }

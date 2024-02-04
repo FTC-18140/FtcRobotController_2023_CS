@@ -39,16 +39,16 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.0275, GRIP_DROP, GRIP_DROP),
+        TRANSFER( 0.0325, GRIP_DROP, GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
-        TELE_INIT(INTAKEELBOW_INIT, GRIP_DROP, GRIP_DROP),
+        TELE_INIT(0.125, GRIP_DROP, GRIP_DROP),
         INIT(INTAKEELBOW_INIT, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
-        WAIT_TO_INTAKE(0.1, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
+        WAIT_TO_INTAKE(0.125, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // DOWN_TO_PIXEL is where the grippers are inside of the pixels and about to open to grab onto the pixels
-        DOWN_TO_PIXEL(0.125, GRIP_DROP, GRIP_DROP ),
+        DOWN_TO_PIXEL(0.15, GRIP_DROP, GRIP_DROP ),
         // INTAKE is where the grippers are in the pixels and open and holding onto the pixel
         INTAKE( 0.125, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
@@ -63,7 +63,7 @@ public class Intake
         }
     }
 
-    public void init(HardwareMap hwMap, Telemetry telem)
+    public void init(HardwareMap hwMap, Telemetry telem, boolean ifAuto)
     {
         telemetry = telem;
 
@@ -85,7 +85,11 @@ public class Intake
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }
-        goTo(Positions.INIT, true);
+        if (ifAuto) {
+            goTo(Positions.INIT, true);
+        } else {
+            goTo(Positions.TELE_INIT, true);
+        }
     }
 
     public void setElbowPosition(double elbow)

@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
@@ -13,7 +14,7 @@ public class RRAutoRedR extends OpMode {
 
     SampleMecanumDrive drive;
 
-    int spike = 1;
+    int tagNum = 1;
     final int START_X = -58;
     final int START_Y = -12;
 
@@ -47,6 +48,9 @@ public class RRAutoRedR extends OpMode {
     final int TRUSS_OUT_X = -36;
     final int TRUSS_OUT_Y = 26;
 
+    final int STACK_X = -36;
+    final int STACK_Y = 60;
+
     boolean done = false;
 
     /*
@@ -71,17 +75,37 @@ public class RRAutoRedR extends OpMode {
 
     Trajectory truss1;
     Trajectory park;
-    //Thunderbot2023 robot = new Thunderbot2023();
+
+    int step = 0;
+    Thunderbot2023 robot = new Thunderbot2023();
 
     @Override
     public void init(){
         drive = new SampleMecanumDrive(hardwareMap);
-        //robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, true);
         //0.9083333
     }
+
+    @Override
+    public void init_loop(){
+        switch (robot.eyes.getSpikePos())
+        {
+            case "LEFT":
+                tagNum = 1;
+                break;
+            case "RIGHT":
+                tagNum = 3;
+                break;
+            default: // default CENTER
+                tagNum = 2;
+                break;
+        }
+        telemetry.addData("Tag Number: ", tagNum );
+    }
+
     @Override
     public void start(){
-        switch(spike){
+        switch(tagNum){
             case(1):
                 spike_x = SPIKE_L_X;
                 spike_y = SPIKE_L_Y;
@@ -114,18 +138,35 @@ public class RRAutoRedR extends OpMode {
         truss1 = drive.trajectoryBuilder(yellow.end())
                 .splineToSplineHeading(new Pose2d(TRUSS_IN_X, TRUSS_IN_Y, Math.toRadians(90)), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(TRUSS_OUT_X, TRUSS_OUT_Y), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(STACK_X, STACK_Y, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         park = drive.trajectoryBuilder(new Pose2d(START_X, START_Y, Math.toRadians(0)))
                 .strafeTo(new Vector2d(END_X, END_Y))
                 .build();
 
-        drive.followTrajectoryAsync(park);
+
     }
     @Override
     public void loop(){
+        if(!drive.isBusy()){
+            switch (step){
+                case(0):
+                    drive.followTrajectoryAsync(yellow);
+                    break;
+                case(1):
+                    drive.followTrajectoryAsync(purple);
+                    break;
+                case(2):
+                    drive.followTrajectoryAsync(truss1);
+                    break;
+                case(3):
+                    drive.followTrajectoryAsync(park);
+                    break;
+            }
+        }
         drive.update();
-        //robot.update();
+        robot.update();
 
     }
 }

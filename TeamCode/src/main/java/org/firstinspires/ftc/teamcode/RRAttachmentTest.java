@@ -52,6 +52,7 @@ public class RRAttachmentTest extends OpMode{
 
         switch (state){
             case (IDLE_1):
+                state = State.FORWARD_1;
                 break;
             case (FORWARD_1):
                 if(!drive.isBusy()){

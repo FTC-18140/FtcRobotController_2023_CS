@@ -77,6 +77,7 @@ public class RRAutoRedR extends OpMode {
     Trajectory park;
 
     int step = 0;
+
     Thunderbot2023 robot = new Thunderbot2023();
 
     @Override

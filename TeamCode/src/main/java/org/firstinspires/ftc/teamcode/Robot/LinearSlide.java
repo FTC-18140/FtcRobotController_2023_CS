@@ -30,19 +30,23 @@ public class LinearSlide
     final private double SPOOL_DIAMETER_CM = 3.5;  // slide spool is 35mm in diameter
     final private double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (SPOOL_DIAMETER_CM * Math.PI);
+    // ^^^^ = 48.1 cm
 
     public static double SCALE_FACTOR = 1;
     public static double MIN_POS = 0;
     public static double MAX_POS = 36;
-    public static double MAX_SPEED = 0.5;
-    public static double DEFAULT_POWER = 0.5;
+    public static double MAX_SPEED = 40;
+    public static double DEFAULT_POWER = 1;
     public static double MAX_CURRENT_AMPS = 5.0;
+    private int targetCounts;
+    public int stepNumber = 0;
 
     public enum Positions
     {
-        LEVEL_1(10),
-        LEVEL_2(22),
-        LEVEL_3( 35);
+        LEVEL_0(0),
+        LEVEL_1(12),
+        LEVEL_2(24),
+        LEVEL_3( 36);
         public final double cmHeight;
 
         Positions( double cm)
@@ -92,65 +96,27 @@ public class LinearSlide
     }
 
     // Math behind the positions of the linear slides and seeing where it needs to stop and start
-    public void linearMove(double power) {
-        if (getLiftPosition() > 7.5) {
-            linearPower(power);
-        } else if (getLiftPosition() <= 7.5 &&  getLiftPosition() >= 0) {
-            linearPower(power * 0.5);
-        } else if (getLiftPosition() > MAX_POS) {
-            linearPower(-0.25);
-        } else if (getLiftPosition() < MIN_POS){
-            linearPower(0.25);
-        } else {
-            linearPower(0);
-        }
-    }
 
     public void goToLinear(Positions pos)
     {
         linearToPosition( pos.cmHeight, DEFAULT_POWER);
     }
 
-    public void update() {
-        if (leftLinear != null  && rightLinear != null )
-        {
-            leftSlidePosition = leftLinear.getCurrentPosition();
-            rightSlidePosition = rightLinear.getCurrentPosition();
-
-            telemetry.addData("Left Lift Current AMPS: ", leftLinear.getCurrent(AMPS));
-            telemetry.addData("Right Lift Current AMPS: ", rightLinear.getCurrent(AMPS));
-
-            // TODO: Check to see if we are drawing too much current.  This could be caused by the
-            //  linear slide motors going too low and bottoming out.
-            //  CHECK THIS OVERCURRENT TEST. WHAT CURRENT INDICATES WE HAVE HIT BOTTOM?
-            if (leftLinear.isOverCurrent() || rightLinear.isOverCurrent() )
-            {
-                leftLinear.setVelocity(0);
-                rightLinear.setVelocity(0);
-                leftLinear.setTargetPosition( (int) leftSlidePosition);
-                rightLinear.setTargetPosition( (int) rightSlidePosition);
-            }
-        }
-        else
-        {
-            telemetry.addData("linear slide motors not initialized.", 0);
-        }
-        //    telemetry.addData("Slide Position = ", getLiftPosition());
-    }
-
     public double getLiftPosition() {
-        return SCALE_FACTOR *  (0.5 * (leftSlidePosition + rightSlidePosition)) / COUNTS_PER_CM;
+        return SCALE_FACTOR *  (leftSlidePosition) / COUNTS_PER_CM;
     }
     
 
     public void linearToPosition( double cm, double power )
     {
-        int targetCounts = (int) (cm * COUNTS_PER_CM);
+        targetCounts = (int) (cm * COUNTS_PER_CM);
         if ( leftLinear != null  && rightLinear != null ) {
             leftLinear.setTargetPosition(targetCounts);
             rightLinear.setTargetPosition(targetCounts);
+            telemetry.addData("Target counts: ", targetCounts);
             leftLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            telemetry.addData("Motor mode", leftLinear.getMode());
             leftLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
             rightLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
         } else {
@@ -178,7 +144,58 @@ public class LinearSlide
         linearToPosition( targetCM, DEFAULT_POWER);
         return targetCM;
     }
+    public void slideTogglePositionsUp() {
+        double position = getLiftPosition();
+            if (position < Positions.LEVEL_1.cmHeight) {
+                goToLinear(Positions.LEVEL_1);
+            } else if (position < Positions.LEVEL_2.cmHeight) {
+                goToLinear(Positions.LEVEL_2);
+            } else if(position < Positions.LEVEL_3.cmHeight) {
+                goToLinear(Positions.LEVEL_3);
+            }
+    }
+    public void slideTogglePositionsDown() {
+        double position = getLiftPosition();
+            if(position > Positions.LEVEL_3.cmHeight) {
+                goToLinear(Positions.LEVEL_3);
+            } else if (position > Positions.LEVEL_2.cmHeight) {
+                goToLinear(Positions.LEVEL_2);
+            } else if (position > Positions.LEVEL_1.cmHeight) {
+                goToLinear(Positions.LEVEL_1);
+            } else {
+                goToLinear(Positions.LEVEL_0);
+            }
+    }
+    public void update() {
+        if (leftLinear != null  && rightLinear != null )
+        {
+            leftSlidePosition = leftLinear.getCurrentPosition();
+            rightSlidePosition = rightLinear.getCurrentPosition();
 
+            telemetry.addData("Left Lift Current AMPS: ", leftLinear.getCurrent(AMPS));
+            telemetry.addData("Right Lift Current AMPS: ", rightLinear.getCurrent(AMPS));
+            telemetry.addData("Target Counts: ", targetCounts);
+
+            // TODO: Check to see if we are drawing too much current.  This could be caused by the
+            //  linear slide motors going too low and bottoming out.
+            //  CHECK THIS OVERCURRENT TEST. WHAT CURRENT INDICATES WE HAVE HIT BOTTOM?
+//            if (leftLinear.isOverCurrent() || rightLinear.isOverCurrent() )
+//            {
+//                leftLinear.setVelocity(0);
+//                rightLinear.setVelocity(0);
+//                leftLinear.setTargetPosition( (int) leftSlidePosition);
+//                rightLinear.setTargetPosition( (int) rightSlidePosition);
+//            }
+        }
+        else
+        {
+            telemetry.addData("linear slide motors not initialized.", 0);
+        }
+            telemetry.addData("Slide Position = ", getLiftPosition());
+            telemetry.addData("Left Slide Position: ", leftSlidePosition);
+            telemetry.addData("Right Slide Position: ", rightSlidePosition);
+            telemetry.addData("stepNumber", stepNumber);
+    }
 
 }
 

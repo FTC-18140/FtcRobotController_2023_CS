@@ -88,11 +88,13 @@ public class Thunderbot2023
 
     /**
      * Initializes the Thunderbot and connects its hardware to the HardwareMap
+     *
      * @param ahwMap
      * @param telem
      * @param withVision
+     * @param ifAuto
      */
-    public void init(HardwareMap ahwMap, Telemetry telem, boolean withVision)
+    public void init(HardwareMap ahwMap, Telemetry telem, boolean withVision, boolean ifAuto)
     {
         telemetry = telem;
 
@@ -190,13 +192,13 @@ public class Thunderbot2023
         try { linearSlide.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Lift not found", 0); }
 
-        try { delivery.init(ahwMap, telem); }
-        catch(Exception e) { telemetry.addData("Delivery not found", 0); }
-
         try {  endGame.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
-        try {  intake.init(ahwMap, telem); }
+        try { delivery.init(ahwMap, telem, ifAuto); }
+        catch(Exception e) { telemetry.addData("Delivery not found", 0); }
+
+        try {  intake.init(ahwMap, telem, ifAuto); }
         catch(Exception e) { telemetry.addData("Intake not found", 0); }
 
     }
@@ -378,13 +380,13 @@ public class Thunderbot2023
         if (!moving)
         {
             startAngle = currentAngle;
-            initPosition = (long) allMotors;
+            initPosition = (long) leftFrontPosition;
             moving = true;
         }
 
         double distanceMoved;
 
-        distanceMoved = abs(allMotors - initPosition);
+        distanceMoved = abs(leftFrontPosition - initPosition);
 
         double distanceMovedInCM = distanceMoved / COUNTS_PER_CM;
 
@@ -511,7 +513,7 @@ public class Thunderbot2023
             }
         }
 
-        if ( angleErrorMagnitude <= 0.5)
+        if ( angleErrorMagnitude <= 1.5)
         {
             // Stops turning when at the specified angle (or really close)
             stop();
@@ -593,7 +595,7 @@ public class Thunderbot2023
 
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
-        telemetry.addData("Motor Position", allMotors);
+        telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();
         telemetry.addData("Heading: ", heading);
@@ -619,10 +621,10 @@ public class Thunderbot2023
     public void start(){}
 
     public void stop() {
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
+        leftFront.setVelocity(0);
+        rightFront.setVelocity(0);
+        leftRear.setVelocity(0);
+        rightRear.setVelocity(0);
     }
 
     public void resetIMUYaw()

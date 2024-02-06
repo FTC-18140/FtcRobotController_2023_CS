@@ -24,7 +24,7 @@ public class EndGame
 
         try {
             leftLift = hwMap.dcMotor.get("oX");
-            leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftLift.setDirection(DcMotorSimple.Direction.FORWARD);
             leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } catch (Exception e) {
             telemetry.addData("leftLift not found", 0);
@@ -48,7 +48,7 @@ public class EndGame
     {
         if (leftLift != null && rightLift != null)
         {
-            leftLift.setPower(power * 0.8375);
+            leftLift.setPower(power * 0.9);
             rightLift.setPower(power);
         }
         else

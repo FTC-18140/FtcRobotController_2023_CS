@@ -21,13 +21,13 @@ public class Intake
 
     static public double LEFTGRIP_INIT = 0.1;
     static public double RIGHTGRIP_INIT = 0.1;
-    static public double INTAKEELBOW_INIT = 0.06;
+    static public double INTAKEELBOW_INIT = 0.045;
     // 0.185 is the down position ready to pick up the pixel
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
     static public double GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.45 ;
+    static public double LEFT_GRIP_HOLD = 0.71;
     static public double RIGHT_GRIP_HOLD = 0.45;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
@@ -39,18 +39,18 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.005, GRIP_DROP, GRIP_DROP),
+        TRANSFER( 0.0325, GRIP_DROP, GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
-        TELE_INIT(INTAKEELBOW_INIT, GRIP_DROP, GRIP_DROP),
+        TELE_INIT(0.125, GRIP_DROP, GRIP_DROP),
         INIT(INTAKEELBOW_INIT, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
-        WAIT_TO_INTAKE(0.185, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
+        WAIT_TO_INTAKE(0.125, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // DOWN_TO_PIXEL is where the grippers are inside of the pixels and about to open to grab onto the pixels
-        DOWN_TO_PIXEL(0.23, GRIP_DROP, GRIP_DROP ),
+        DOWN_TO_PIXEL(0.15, GRIP_DROP, GRIP_DROP ),
         // INTAKE is where the grippers are in the pixels and open and holding onto the pixel
-        INTAKE( 0.23, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
+        INTAKE( 0.125, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
         public final double elbowPos;
         public final double leftGripPos;
@@ -63,7 +63,7 @@ public class Intake
         }
     }
 
-    public void init(HardwareMap hwMap, Telemetry telem)
+    public void init(HardwareMap hwMap, Telemetry telem, boolean ifAuto)
     {
         telemetry = telem;
 
@@ -85,7 +85,11 @@ public class Intake
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
         }
-        goTo(Positions.INIT, true);
+        if (ifAuto) {
+            goTo(Positions.INIT, true);
+        } else {
+            goTo(Positions.TELE_INIT, true);
+        }
     }
 
     public void setElbowPosition(double elbow)
@@ -207,7 +211,7 @@ public class Intake
     {
         if (intakeElbow != null) {
             intakeElbowPos = intakeElbow.getPosition();
-            moveSlowly = (intakeElbowPos > Positions.WAIT_TO_INTAKE.elbowPos);
+            moveSlowly = (intakeElbowPos >= Positions.DOWN_TO_PIXEL.elbowPos);
             clearOfTransferZone = (intakeElbowPos >= Positions.INIT.elbowPos);
         }
         if (leftGripper != null) {

@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 @Autonomous
+@Disabled
 public class AutoFeatureTestBackstage extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
@@ -19,7 +21,7 @@ public class AutoFeatureTestBackstage extends OpMode {
 
     @Override
     public void init() {
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry, false, true);
 
         // Initialize the Apriltag Detection process
 

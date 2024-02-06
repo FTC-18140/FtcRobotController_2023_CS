@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -31,7 +30,7 @@ public class RRAttachmentTest extends OpMode{
     final int END_X = 0;
     final int END_Y = -12;
 
-    RRAttachmentTest.State state = State.IDLE_1;
+    RRAttachmentTest.State step = State.IDLE_1;
 
     Trajectory forward_1;
 
@@ -50,14 +49,14 @@ public class RRAttachmentTest extends OpMode{
         drive.update();
         robot.update();
 
-        switch (state){
-            case (IDLE_1):
-                state = State.FORWARD_1;
+        switch (step){
+            case IDLE_1:
+                step = State.FORWARD_1;
                 break;
-            case (FORWARD_1):
+            case FORWARD_1:
                 if(!drive.isBusy()){
                     drive.followTrajectoryAsync(forward_1);
-                    state = State.ALIGN_1;
+                    step = State.ALIGN_1;
                 }
                 break;
             default:

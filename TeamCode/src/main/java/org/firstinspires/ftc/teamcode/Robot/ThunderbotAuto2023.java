@@ -115,13 +115,13 @@ public class ThunderbotAuto2023
         try { linearSlide.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Lift not found", 0); }
 
-        try { delivery.init(ahwMap, telem); }
+        try { delivery.init(ahwMap, telem, true); }
         catch(Exception e) { telemetry.addData("Delivery not found", 0); }
 
         try {  endGame.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
-        try {  intake.init(ahwMap, telem); }
+        try {  intake.init(ahwMap, telem, true); }
         catch(Exception e) { telemetry.addData("Intake not found", 0); }
 
     }

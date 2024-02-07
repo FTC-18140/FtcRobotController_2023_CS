@@ -121,11 +121,11 @@ public class Teleop extends OpMode  {
         if (tbdGamepad1.getButton(LEFT_BUMPER) ) {
             INTAKE_POSITION += INTAKE_INCREMENT;
             INTAKE_POSITION = clip( INTAKE_POSITION, 0, 1);
-            robot.intake.setElbowPos(INTAKE_POSITION);
+            robot.intake.setElbowPosition(INTAKE_POSITION);
         } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
             INTAKE_POSITION -= INTAKE_INCREMENT;
             INTAKE_POSITION = clip(INTAKE_POSITION, 0, 1);
-            robot.intake.setElbowPos(INTAKE_POSITION);
+            robot.intake.setElbowPosition(INTAKE_POSITION);
         }
 //        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
 //            robot.intake.setElbowPos(0);
@@ -155,19 +155,19 @@ public class Teleop extends OpMode  {
 
         // TODO: Use Presets and possibly goTo method
         if (tbdGamepad2.getButton(DPAD_UP)) {
-            robot.delivery.setWristPos(0);
+            robot.delivery.setWristPosition(0);
         } else if (tbdGamepad2.getButton(DPAD_DOWN)) {
-            robot.delivery.setWristPos(1);
+            robot.delivery.setWristPosition(1);
         }
 
         if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0.2) {
             WRIST_POSITION += WRIST_INCREMENT;
             WRIST_POSITION = clip( WRIST_POSITION, 0, 1);
-            robot.delivery.setWristPos(WRIST_POSITION);
+            robot.delivery.setWristPosition(WRIST_POSITION);
         } else if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0.2) {
             WRIST_POSITION -= WRIST_INCREMENT;
             WRIST_POSITION = clip(WRIST_POSITION, 0, 1);
-            robot.delivery.setWristPos(WRIST_POSITION);
+            robot.delivery.setWristPosition(WRIST_POSITION);
         }
 
         //////////////

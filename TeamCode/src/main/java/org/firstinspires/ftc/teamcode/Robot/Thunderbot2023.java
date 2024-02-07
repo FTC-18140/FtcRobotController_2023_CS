@@ -34,6 +34,7 @@ public class Thunderbot2023
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
+    public EndGame endGame = new EndGame();
     public DroneLauncher droneLauncher = new DroneLauncher();
     public Intake intake = new Intake();
     public ArtemisEyes eyes = new ArtemisEyes();
@@ -66,12 +67,20 @@ public class Thunderbot2023
     static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (WHEEL_DIAMETER_CM * Math.PI);
 
-    public static double MAX_VELOCITY_CM = 30;
+    public static double MAX_VELOCITY_CM = 200;
     static final double MAX_VELOCITY_TICKS = MAX_VELOCITY_CM * COUNTS_PER_CM;
 
     private Telemetry telemetry = null;
     private long initPosition;
     private double startAngle;
+    private boolean notifyTheDriver1 = false;
+    private boolean notifyTheDriver2 = false;
+
+    public enum Direction
+    {
+        LEFT,
+        RIGHT;
+    }
 
     /**
      * Constructor
@@ -91,8 +100,8 @@ public class Thunderbot2023
         try
         {
             imu = ahwMap.get(IMU.class, "imu");
-            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+            RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
             RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
             imu.initialize(new IMU.Parameters(orientationOnRobot));
             lastAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -104,15 +113,6 @@ public class Thunderbot2023
             imu = null;
         }
 
-        try
-        {
-            eyes.init( ahwMap, telem);
-        }
-        catch (Exception e) {
-            telemetry.addData("Vision Processor not initialized", 0);
-        }
-
-        // Define & Initialize Motors
         try {
             allHubs = ahwMap.getAll(LynxModule.class);
 
@@ -124,6 +124,18 @@ public class Thunderbot2023
             telemetry.addData("Lynx Module not initialized", 0);
         }
 
+        if ( withVision )
+        {
+            try
+            {
+                eyes.init(ahwMap, telem);
+            }
+            catch (Exception e)
+            {
+                telemetry.addData("Vision Processor not initialized.", 0);
+            }
+        }
+        // Define & Initialize Motors
         try
         {
             rightFront = ahwMap.get(DcMotorEx.class, "rightFront");
@@ -182,7 +194,7 @@ public class Thunderbot2023
         try { delivery.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Delivery not found", 0); }
 
-        try {  droneLauncher.init(ahwMap, telem); }
+        try {  endGame.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
         try {  intake.init(ahwMap, telem); }
@@ -302,15 +314,13 @@ public class Thunderbot2023
         if (!moving)
         {
             startAngle = heading;
-
-            initPosition = (long) allMotors;
-
+//            initPosition = (long) allMotors;
+            initPosition = leftFrontPosition;
             moving = true;
         }
 
-
         double distanceMoved;
-        distanceMoved = abs(allMotors - initPosition);
+        distanceMoved = abs(leftFrontPosition - initPosition);
 
         double distanceMovedInCM = distanceMoved / COUNTS_PER_CM;
         telemetry.addData("distanceMoved", distanceMoved);
@@ -521,32 +531,17 @@ public class Thunderbot2023
     }
 
 
-//    public boolean strafe(double distance, double power)
-//    {
-//        double targetPosition = distance * COUNTS_PER_CM;
-//
-//        if (distance > 0) {
-//            if (leftFrontPosition < targetPosition) {
-//                leftFront.setPower(power);
-//                rightFront.setPower(-power);
-//                leftRear.setPower(-power);
-//                rightRear.setPower(power);
-//            } else {
-//                stop();
-//            }
-//        }
-//        if (distance < 0) {
-//            if (leftFrontPosition > targetPosition) {
-//                leftFront.setPower(-power);
-//                rightFront.setPower(power);
-//                leftRear.setPower(power);
-//                rightRear.setPower(-power);
-//            } else {
-//                stop();
-//            }
-//        }
-//        return true;
-//    }
+    public boolean strafe(Direction dir, double distance, double power)
+    {
+        if ( dir == Direction.LEFT)
+        {
+            return drive(-90, distance,  power);
+        }
+        else
+        {
+            return drive( 90, distance, power);
+        }
+    }
 
     /**
      * Get the heading angle from the imu and convert it to degrees.
@@ -560,7 +555,7 @@ public class Thunderbot2023
      */
     private double getHeading()
     {
-        double rawImuAngle =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double rawImuAngle =  -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         double delta = rawImuAngle - lastAngle;
 
         // An illustrative example: assume the robot is facing +179 degrees (last angle) and makes a +2 degree turn.
@@ -600,19 +595,26 @@ public class Thunderbot2023
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
         telemetry.addData("Motor Position", allMotors);
-
+        telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();
-
         telemetry.addData("Heading: ", heading);
 
+        notifyTheDriver1 = false;
+        notifyTheDriver2 = false;
         try {
-            if ( intake != null ) { intake.update(); }
-            if ( delivery != null ) { delivery.update(); }
-            if ( droneLauncher != null ) { droneLauncher.update();}
+            if ( intake != null ) {
+                intake.update();
+                notifyTheDriver1 = intake.gripperClosed();
+            }
+            if ( delivery != null ) {
+                delivery.update();
+                notifyTheDriver2 = delivery.gripperClosed();
+            }
+            if ( endGame != null ) { endGame.update();}
+            if (linearSlide != null) {linearSlide.update(); }
         } catch (Exception e) {
             telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);
         }
-
     }
 
     public void start(){}
@@ -629,31 +631,25 @@ public class Thunderbot2023
         imu.resetYaw();
     }
 
-    public String getSpikePos() {
+    public String getSpikePos()
+    {
         if ( eyes != null ) { return eyes.getSpikePos(); }
         else { return "No Vision System Initialized."; }
     }
     public double getPropX()
     {
-        if (eyes != null)
-        {
-            return eyes.getPropX();
-        }
-        else
-        {
-            return -1;
-        }
+        if (eyes != null) {  return eyes.getPropX(); }
+        else { return -1; }
     }
     public double getPropY()
     {
-        if (eyes != null)
-        {
-            return eyes.getPropY();
-        }
-        else
-        {
-            return -1;
-        }
+        if (eyes != null) { return eyes.getPropY(); }
+        else  { return -1; }
     }
+
+    public boolean notifyDriver1() { return notifyTheDriver1; }
+    public boolean notifyDriver2() { return notifyTheDriver2; }
+
+
 }
 

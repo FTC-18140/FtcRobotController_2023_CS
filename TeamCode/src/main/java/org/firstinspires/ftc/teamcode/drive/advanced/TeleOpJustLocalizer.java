@@ -24,11 +24,11 @@ public class TeleOpJustLocalizer extends LinearOpMode {
         // This is assuming you are using StandardTrackingWheelLocalizer.java
         // Switch this class to something else (Like TwoWheeTrackingLocalizer.java) if your
         // configuration differs
-        StandardTrackingWheelLocalizer myLocalizer = new StandardTrackingWheelLocalizer(hardwareMap);
-
-        // Retrieve our pose from the PoseStorage.currentPose static field
-        // See AutoTransferPose.java for further details
-        myLocalizer.setPoseEstimate(PoseStorage.currentPose);
+//        StandardTrackingWheelLocalizer myLocalizer = new StandardTrackingWheelLocalizer(hardwareMap);
+//
+//        // Retrieve our pose from the PoseStorage.currentPose static field
+//        // See AutoTransferPose.java for further details
+//        myLocalizer.setPoseEstimate(PoseStorage.currentPose);
 
         waitForStart();
 
@@ -38,26 +38,26 @@ public class TeleOpJustLocalizer extends LinearOpMode {
             // Make sure to call myLocalizer.update() on *every* loop
             // Increasing loop time by utilizing bulk reads and minimizing writes will increase your
             // odometry accuracy
-            myLocalizer.update();
-
-            // Retrieve your pose
-            Pose2d myPose = myLocalizer.getPoseEstimate();
+//            myLocalizer.update();
+//
+//            // Retrieve your pose
+//            Pose2d myPose = myLocalizer.getPoseEstimate();
 
             // Print your pose to telemetry
-            telemetry.addData("x", myPose.getX());
-            telemetry.addData("y", myPose.getY());
-            telemetry.addData("heading", myPose.getHeading());
-            telemetry.update();
-
-            // Teleop driving part
-            // Mecanum example code from gm0
-            // https://gm0.org/en/stable/docs/software/mecanum-drive.html
-            double x = gamepad1.left_stick_x;
-            double y = -gamepad1.left_stick_y;
-            double rx = gamepad1.right_stick_x;
-
-            // Set drive power
-            robot.setDrivePower(x, y, rx);
+//            telemetry.addData("x", myPose.getX());
+//            telemetry.addData("y", myPose.getY());
+//            telemetry.addData("heading", myPose.getHeading());
+//            telemetry.update();
+//
+//            // Teleop driving part
+//            // Mecanum example code from gm0
+//            // https://gm0.org/en/stable/docs/software/mecanum-drive.html
+//            double x = gamepad1.left_stick_x;
+//            double y = -gamepad1.left_stick_y;
+//            double rx = gamepad1.right_stick_x;
+//
+//            // Set drive power
+//            robot.setDrivePower(x, y, rx);
         }
     }
 

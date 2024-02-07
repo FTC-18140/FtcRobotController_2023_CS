@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import java.util.Arrays;
+
 @Config
 public class TBDGamepad
 {
@@ -9,11 +12,20 @@ public class TBDGamepad
 
     public static double expoYValue = 2.5;
     public static double expoXValue = 2.5;
+    public boolean[] buttons = new boolean[14];
+    public boolean[] oldButtons = new boolean[14];
+    public boolean[] changed = new boolean[14];
+
 
     public enum Button {
-        Y, X, A, B, LEFT_BUMPER, RIGHT_BUMPER, BACK,
-        START, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT,
-        LEFT_STICK_BUTTON, RIGHT_STICK_BUTTON
+        A(0), B(1), X(2), Y(3), LEFT_BUMPER(4), RIGHT_BUMPER(5), BACK(6),
+        START(7), DPAD_UP(8), DPAD_DOWN(9), DPAD_LEFT(10), DPAD_RIGHT(11),
+        LEFT_STICK_BUTTON(12), RIGHT_STICK_BUTTON(13);
+        final int index;
+        Button( int ind )
+        {
+            this.index = ind;
+        }
     }
 
     public enum Trigger {
@@ -27,6 +39,9 @@ public class TBDGamepad
     public TBDGamepad(Gamepad gamepad)
     {
         this.gamepad = gamepad;
+        Arrays.fill(buttons, false);
+        Arrays.fill(oldButtons, false);
+        Arrays.fill(changed, false);
     }
 
     /**
@@ -79,7 +94,6 @@ public class TBDGamepad
                 buttonValue = gamepad.right_stick_button;
                 break;
             default:
-                buttonValue = false;
                 break;
         }
         return buttonValue;
@@ -147,6 +161,43 @@ public class TBDGamepad
                 return Math.pow(getRightY(), expoYValue);
             default:
                 return 0;
+        }
+    }
+
+    public boolean getButtonPressed( Button theButton )
+    {
+        return changed[theButton.index] && buttons[theButton.index];
+    }
+
+    public boolean getButtonReleased( Button theButton )
+    {
+        return changed[theButton.index] && !buttons[theButton.index];
+    }
+
+    public void notifyDriver(int numBlips) { gamepad.rumbleBlips(numBlips);}
+
+    public void update() {
+
+        System.arraycopy(buttons, 0, oldButtons, 0, 14);
+
+        buttons[Button.A.index] = gamepad.a;
+        buttons[Button.B.index] = gamepad.b;
+        buttons[Button.X.index] = gamepad.x;
+        buttons[Button.Y.index] = gamepad.y;
+        buttons[Button.LEFT_BUMPER.index] = gamepad.left_bumper;
+        buttons[Button.RIGHT_BUMPER.index] = gamepad.right_bumper;
+        buttons[Button.DPAD_UP.index] = gamepad.dpad_up;
+        buttons[Button.DPAD_DOWN.index] = gamepad.dpad_down;
+        buttons[Button.DPAD_LEFT.index] = gamepad.dpad_left;
+        buttons[Button.DPAD_RIGHT.index] = gamepad.dpad_right;
+        buttons[Button.BACK.index] = gamepad.back;
+        buttons[Button.START.index] = gamepad.start;
+        buttons[Button.LEFT_STICK_BUTTON.index] = gamepad.left_stick_button;
+        buttons[Button.RIGHT_STICK_BUTTON.index] = gamepad.right_stick_button;
+
+        for ( int i = 0; i < 14; i++ )
+        {
+            changed[i] = oldButtons[i] != buttons[i];
         }
     }
 

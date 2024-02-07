@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -14,7 +16,8 @@ import java.util.List;
 
 public class ArtemisEyes
 {
-    WebcamName theCamera;
+    private WebcamName theFrontCamera;
+    private WebcamName theBackCamera;
     public TGEVisionProcessor tgeFinder;
     AprilTagProcessor aprilTagFinder;
     VisionPortal thePortal;
@@ -25,16 +28,60 @@ public class ArtemisEyes
     void init(HardwareMap hardwareMap, Telemetry telem )
     {
         telemetry = telem;
-        theCamera = hardwareMap.get( WebcamName.class, "Webcam 1");
-        aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
-        tgeFinder = new TGEVisionProcessor();
-        thePortal = VisionPortal.easyCreateWithDefaults(theCamera, aprilTagFinder, tgeFinder);
-        aprilTagFinder.setDecimation(2);
+        try
+        {
+            theFrontCamera = hardwareMap.get(WebcamName.class, "Webcam 1");
+        }
+        catch (Exception e)
+        {
+            telemetry.addData("Webcam 1 not found -- theFrontCamera", 0);
+        }
+        try
+        {
+            theBackCamera = hardwareMap.get(WebcamName.class, "Webcam 2");
+        }
+        catch (Exception e)
+        {
+            telemetry.addData("Webcam 2 not found -- theRearCamera", 0);
+        }
+
+        if ( theFrontCamera != null && theBackCamera != null )
+        {
+            CameraName switchableCamera = ClassFactory.getInstance().getCameraManager().nameForSwitchableCamera(
+                    theFrontCamera, theBackCamera);
+            aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+            tgeFinder = new TGEVisionProcessor();
+            thePortal = VisionPortal.easyCreateWithDefaults(switchableCamera, aprilTagFinder, tgeFinder);
+            aprilTagFinder.setDecimation(2);
+            thePortal.setActiveCamera(theFrontCamera);
+        }
+        else if ( theBackCamera == null)
+        {
+            aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+            tgeFinder = new TGEVisionProcessor();
+            thePortal = VisionPortal.easyCreateWithDefaults(theFrontCamera, aprilTagFinder, tgeFinder);
+            aprilTagFinder.setDecimation(2);
+            thePortal.setActiveCamera(theFrontCamera);
+        }
+        else
+        {
+            aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+            tgeFinder = new TGEVisionProcessor();
+            thePortal = VisionPortal.easyCreateWithDefaults(theBackCamera, aprilTagFinder, tgeFinder);
+            aprilTagFinder.setDecimation(2);
+            thePortal.setActiveCamera(theBackCamera);
+        }
+        thePortal.stopLiveView();
+
+
     }
 
-    public String getSpikePos()
-    {
-        return tgeFinder.getSpikePos();
+    public String getSpikePos() {
+        if (tgeFinder != null) {
+            return tgeFinder.getSpikePos();
+        } else {
+            return "TGEFINDER NOT INITIALIZED";
+        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -75,7 +122,84 @@ public class ArtemisEyes
         return tagPos;
     }
 
-    public double getPropX() { return tgeFinder.xPos;}
-    public double getPropY() { return tgeFinder.yPos;}
+    public double getPropX() {
+        if (tgeFinder != null) {
+            return tgeFinder.xPos;
+        } else {
+            return -1;
+        }
+    }
+    public double getPropY() {
+        if (tgeFinder != null) {
+            return tgeFinder.yPos;
+        } else {
+            return -1;
+        }
+    }
+
+    public void activateFrontCamera()
+    {
+        if ( theFrontCamera != null )
+        {
+            thePortal.setActiveCamera(theFrontCamera);
+        }
+        else {
+            telemetry.addData("Can't activate front camera. Front camera not initialized.", 0);
+        }
+
+    }
+    public void activateBackCamera()
+    {
+        if ( theBackCamera != null )
+        {
+            thePortal.setActiveCamera(theBackCamera);
+        }
+        else {
+            telemetry.addData("Can't activate back camera. Back camera not initialized.", 0);
+        }
+    }
+
+    public void stopPropVisionProcessor()
+    {
+        if ( tgeFinder != null )
+        {
+            thePortal.setProcessorEnabled(tgeFinder, false);
+        }
+        else {
+            telemetry.addData("Can't disable Prop Vision Processor. Not initialized.", 0);
+        }
+    }
+
+    public void stopAprilTagProcessor()
+    {
+        if ( aprilTagFinder != null )
+        {
+            thePortal.setProcessorEnabled(aprilTagFinder, false);
+        }
+        else {
+            telemetry.addData("Can't disable AprilTag Processor. Not initialized.", 0);
+        }
+    }
+    public void startPropVisionProcessor()
+    {
+        if ( tgeFinder != null )
+        {
+            thePortal.setProcessorEnabled(tgeFinder, true);
+        }
+        else {
+            telemetry.addData("Can't enable Prop Vision Processor. Not initialized.", 0);
+        }
+    }
+
+    public void startAprilTagProcessor()
+    {
+        if ( aprilTagFinder != null )
+        {
+            thePortal.setProcessorEnabled(aprilTagFinder, true);
+        }
+        else {
+            telemetry.addData("Can't enable AprilTag Processor. Not initialized.", 0);
+        }
+    }
 
 }

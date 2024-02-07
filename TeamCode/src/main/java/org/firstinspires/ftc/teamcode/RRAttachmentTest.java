@@ -33,6 +33,7 @@ public class RRAttachmentTest extends OpMode{
     RRAttachmentTest.State step = State.IDLE_1;
 
     Trajectory forward_1;
+    Trajectory align_1;
 
     public void init(){
         robot = new ThunderbotAuto2023();
@@ -42,6 +43,7 @@ public class RRAttachmentTest extends OpMode{
         forward_1 = drive.trajectoryBuilder(new Pose2d(START_X,START_Y, Math.toRadians(0)))
                 .lineToConstantHeading(new Vector2d(END_X,END_Y))
                 .build();
+
 
     }
 
@@ -58,6 +60,8 @@ public class RRAttachmentTest extends OpMode{
                     drive.followTrajectoryAsync(forward_1);
                     step = State.ALIGN_1;
                 }
+                break;
+            case ALIGN_1:
                 break;
             default:
                 break;

@@ -14,16 +14,16 @@ public class RRTestRedRight extends OpMode {
 
     SampleMecanumDrive drive;
 
-    int tagNum = 1;
-    final int START_X = -58;
+    int tagNum = 2;
+    final int START_X = -60;
     final int START_Y = -12;
 
     final int END_X = -58;
     final int END_Y = -58;
 
-    final int SPIKE_L_X = -28;
-    final int SPIKE_M_X = -24;
-    final int SPIKE_R_X = -28;
+    final int SPIKE_L_X = -34;
+    final int SPIKE_M_X = -32;
+    final int SPIKE_R_X = -34;
 
     final int SPIKE_L_Y = 0;
     final int SPIKE_M_Y = -12;
@@ -78,13 +78,13 @@ public class RRTestRedRight extends OpMode {
 
     int step = 0;
 
-    String tag = "LEFT";
+    String tag = "RIGHT";
     Thunderbot2023 robot = new Thunderbot2023();
 
     @Override
     public void init(){
         drive = new SampleMecanumDrive(hardwareMap);
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, true, true);
         //0.9083333
     }
 
@@ -131,6 +131,8 @@ public class RRTestRedRight extends OpMode {
         }
 
         Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(0));
+
+        drive.setPoseEstimate(start);
         purple = drive.trajectoryBuilder(start)
                 .strafeTo(new Vector2d(spike_x, spike_y))
                 .build();
@@ -149,10 +151,14 @@ public class RRTestRedRight extends OpMode {
                 .strafeTo(new Vector2d(END_X, END_Y))
                 .build();
 
-        drive.followTrajectoryAsync(purple);
+
     }
     @Override
     public void loop(){
+        if(!drive.isBusy() && !done){
+            drive.followTrajectoryAsync(purple);
+            done = true;
+        }
         drive.update();
         robot.update();
 

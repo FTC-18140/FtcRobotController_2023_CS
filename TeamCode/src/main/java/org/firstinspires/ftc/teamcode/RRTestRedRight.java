@@ -14,6 +14,7 @@ public class RRTestRedRight extends OpMode {
 
     SampleMecanumDrive drive;
 
+    int bot_w = 8;
     int tagNum = 2;
     final int START_X = -60;
     final int START_Y = -12;
@@ -22,7 +23,7 @@ public class RRTestRedRight extends OpMode {
     final int END_Y = -58;
 
     final int SPIKE_L_X = -34;
-    final int SPIKE_M_X = -32;
+    final int SPIKE_M_X = -24 - bot_w;
     final int SPIKE_R_X = -34;
 
     final int SPIKE_L_Y = 0;

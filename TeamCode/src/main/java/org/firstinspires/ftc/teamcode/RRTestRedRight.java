@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -8,22 +9,24 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
+@Config
 public class RRTestRedRight extends OpMode {
 
     SampleMecanumDrive drive;
 
     int bot_w = 8;
     int tagNum = 2;
-    final int START_X = -60;
+    final int START_X = -70 + bot_w;
     final int START_Y = -12;
 
     final int END_X = -58;
     final int END_Y = -58;
 
     final int SPIKE_L_X = -34;
-    final int SPIKE_M_X = -24 - bot_w;
+    final int SPIKE_M_X = -25 - bot_w;
     final int SPIKE_R_X = -34;
 
     final int SPIKE_L_Y = 0;
@@ -71,6 +74,7 @@ public class RRTestRedRight extends OpMode {
      * PARK
      * */
 
+    TrajectorySequence origin_x;
     Trajectory purple;
     Trajectory yellow;
 
@@ -79,7 +83,7 @@ public class RRTestRedRight extends OpMode {
 
     int step = 0;
 
-    String tag = "RIGHT";
+    String tag = "NEITHER";
     Thunderbot2023 robot = new Thunderbot2023();
 
     @Override
@@ -134,6 +138,11 @@ public class RRTestRedRight extends OpMode {
         Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(0));
 
         drive.setPoseEstimate(start);
+        origin_x = drive.trajectorySequenceBuilder(start)
+                .waitSeconds(10)
+                .lineTo(new Vector2d(0,START_Y))
+                .build();
+
         purple = drive.trajectoryBuilder(start)
                 .strafeTo(new Vector2d(spike_x, spike_y))
                 .build();
@@ -156,8 +165,9 @@ public class RRTestRedRight extends OpMode {
     }
     @Override
     public void loop(){
+
         if(!drive.isBusy() && !done){
-            drive.followTrajectoryAsync(purple);
+            drive.followTrajectorySequenceAsync(origin_x);
             done = true;
         }
         drive.update();

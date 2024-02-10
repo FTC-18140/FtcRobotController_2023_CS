@@ -5,6 +5,9 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.Robot.Delivery;
+import org.firstinspires.ftc.teamcode.Robot.Intake;
+import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
@@ -77,7 +80,12 @@ public class RRAutoRedR extends OpMode {
     Trajectory truss1;
     Trajectory park;
 
-    int step = 0;
+    enum State {
+        PLACE_PURPLE,
+        BACKDROP_1,
+        PLACE_YELLOW
+    }
+    State step = State.PLACE_PURPLE;
 
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
 
@@ -129,7 +137,9 @@ public class RRAutoRedR extends OpMode {
 
 
         }
-        purple = drive.trajectoryBuilder(new Pose2d(START_X ,START_Y, Math.toRadians(0)))
+
+        Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(0));
+        purple = drive.trajectoryBuilder(start)
                 .strafeTo(new Vector2d(spike_x, spike_y))
                 .build();
 
@@ -143,7 +153,7 @@ public class RRAutoRedR extends OpMode {
                 .splineToSplineHeading(new Pose2d(STACK_X, STACK_Y, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
-        park = drive.trajectoryBuilder(new Pose2d(START_X, START_Y, Math.toRadians(0)))
+        park = drive.trajectoryBuilder(start)
                 .strafeTo(new Vector2d(END_X, END_Y))
                 .build();
 
@@ -153,20 +163,22 @@ public class RRAutoRedR extends OpMode {
     public void loop(){
         if(!drive.isBusy()){
             switch (step){
-                case(0):
+                case PLACE_PURPLE:
                     drive.followTrajectoryAsync(yellow);
                     break;
-                case(1):
+                case BACKDROP_1:
                     drive.followTrajectoryAsync(purple);
                     break;
-                case(2):
-                    drive.followTrajectoryAsync(truss1);
+                case PLACE_YELLOW:
+                    if (!done){
+                        robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                        done = true;
+                    }
                     break;
-                case(3):
+                default:
                     drive.followTrajectoryAsync(park);
                     break;
             }
-            step++;
         }
         robot.update();
 

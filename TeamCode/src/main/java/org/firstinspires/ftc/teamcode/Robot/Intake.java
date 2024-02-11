@@ -249,17 +249,24 @@ public class Intake
         rightMandible.setPosition(rightMandPos);
     }
     public void mandibleOpen() {
-        setLeftMandiblePos(0.5);
-        setRightMandiblePos(0.5);
+        setLeftMandiblePos(LEFT_MANDIBLE_OPEN);
+        setRightMandiblePos(RIGHT_MANDIBLE_OPEN);
     }
     public void mandibleClose() {
-        setLeftMandiblePos(0);
-        setRightMandiblePos(0);
+        setLeftMandiblePos(LEFT_MANDIBLE_CLOSE);
+        setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
     }
     public void leftMandibleToggle() {
         if (leftMandiblePos != LEFT_MANDIBLE_CLOSE) { mandibleClose();}
         else {  mandibleOpen(); }
     }
+    public void rightMandibleToggle()
+    {
+        if (rightMandiblePos != RIGHT_MANDIBLE_CLOSE) { mandibleClose();}
+        else {  mandibleOpen(); }
+    }
+
+
     public void update()
     {
         if (intakeElbow != null) {
@@ -276,6 +283,14 @@ public class Intake
             double tempPos = rightGripper.getPosition();
             rightGripperClosed = tempPos != rightGripPos && tempPos == RIGHT_GRIP_HOLD;
             rightGripPos = tempPos;
+        }
+        if (leftMandible != null )
+        {
+            leftMandiblePos = leftMandible.getPosition();
+        }
+        if (rightMandible != null )
+        {
+            rightMandiblePos = rightMandible.getPosition();
         }
 //        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
 //        telemetry.addData("Intake Left Gripper Position =", leftGripPos);

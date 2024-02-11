@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Intake
 {
+    public static boolean TELEM = false ;
     Telemetry telemetry;
     Servo leftGripper = null;
     Servo rightGripper = null;
@@ -292,10 +293,13 @@ public class Intake
         {
             rightMandiblePos = rightMandible.getPosition();
         }
-//        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
-//        telemetry.addData("Intake Left Gripper Position =", leftGripPos);
-//        telemetry.addData("Intake Position: ", currentPosition);
-//        telemetry.addData("Drive Slowly: ", moveSlowly);
-//        telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
+        if ( TELEM)
+        {
+            telemetry.addData("Intake Right Gripper Position =", rightGripPos);
+            telemetry.addData("Intake Left Gripper Position =", leftGripPos);
+            telemetry.addData("Intake Position: ", currentPosition);
+            telemetry.addData("Drive Slowly: ", moveSlowly);
+            telemetry.addData("Intake Clear of Transfer Zone: ", clearOfTransferZone);
+        }
     }
 }

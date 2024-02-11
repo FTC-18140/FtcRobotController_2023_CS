@@ -11,6 +11,7 @@ import static com.qualcomm.robotcore.util.Range.clip;
 @Config
 public class Delivery
 {
+    public static boolean TELEM = false ;
     Telemetry telemetry;
 
     // All the Attachment Defining
@@ -295,12 +296,16 @@ public class Delivery
             clearOfTransferZone = lElbowPos <= Positions.AUTO_INIT.lElbowPos;
         }
         if (rElbow != null) { rElbowPos = rElbow.getPosition(); }
-        telemetry.addData("wrist position", wristPos);
-        telemetry.addData("leftGrip Position", leftGripPos);
-        telemetry.addData("rightGrip Position", rightGripPos);
-        telemetry.addData("twist position", twistPos);
-        telemetry.addData("lElbow position", lElbowPos);
-        telemetry.addData("rElbow Position", rElbowPos);
+
+        if ( TELEM )
+        {
+            telemetry.addData("wrist position", wristPos);
+            telemetry.addData("leftGrip Position", leftGripPos);
+            telemetry.addData("rightGrip Position", rightGripPos);
+            telemetry.addData("twist position", twistPos);
+            telemetry.addData("lElbow position", lElbowPos);
+            telemetry.addData("rElbow Position", rElbowPos);
+        }
     }
 
 }

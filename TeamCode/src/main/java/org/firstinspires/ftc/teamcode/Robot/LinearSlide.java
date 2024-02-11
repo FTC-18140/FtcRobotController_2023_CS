@@ -16,6 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AM
 public class LinearSlide
 {
 
+    public static boolean TELEM = false ;
     Telemetry telemetry;
 
     // Defining Motors
@@ -172,9 +173,12 @@ public class LinearSlide
             leftSlidePosition = leftLinear.getCurrentPosition();
             rightSlidePosition = rightLinear.getCurrentPosition();
 
-            telemetry.addData("Left Lift Current AMPS: ", leftLinear.getCurrent(AMPS));
-            telemetry.addData("Right Lift Current AMPS: ", rightLinear.getCurrent(AMPS));
-            telemetry.addData("Target Counts: ", targetCounts);
+            if ( TELEM )
+            {
+                telemetry.addData("Left Lift Current AMPS: ", leftLinear.getCurrent(AMPS));
+                telemetry.addData("Right Lift Current AMPS: ", rightLinear.getCurrent(AMPS));
+                telemetry.addData("Target Counts: ", targetCounts);
+            }
 
             // TODO: Check to see if we are drawing too much current.  This could be caused by the
             //  linear slide motors going too low and bottoming out.
@@ -191,10 +195,14 @@ public class LinearSlide
         {
             telemetry.addData("linear slide motors not initialized.", 0);
         }
+
+        if ( TELEM )
+        {
             telemetry.addData("Slide Position = ", getLiftPosition());
             telemetry.addData("Left Slide Position: ", leftSlidePosition);
             telemetry.addData("Right Slide Position: ", rightSlidePosition);
             telemetry.addData("stepNumber", stepNumber);
+        }
     }
 
 }

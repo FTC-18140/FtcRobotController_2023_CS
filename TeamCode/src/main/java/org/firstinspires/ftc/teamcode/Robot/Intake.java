@@ -32,10 +32,10 @@ public class Intake
     static public double GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.775;
     static public double RIGHT_GRIP_HOLD = 0.45;
-    static public double LEFT_MANDIBLE_OPEN = 0.5;
-    static public double RIGHT_MANDIBLE_OPEN = 0.5;
-    static public double LEFT_MANDIBLE_CLOSE = 0;
-    static public double RIGHT_MANDIBLE_CLOSE = 0;
+    static public double LEFT_MANDIBLE_OPEN = 0.7;
+    static public double RIGHT_MANDIBLE_OPEN = 0.7;
+    static public double LEFT_MANDIBLE_CLOSE = 0.05;
+    static public double RIGHT_MANDIBLE_CLOSE = 0.1;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
@@ -109,14 +109,14 @@ public class Intake
         try {
             leftMandible = hwMap.servo.get("landible");
             leftMandible.setDirection(Servo.Direction.REVERSE);
-            leftMandible.setPosition(0);
+            leftMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("landible not found", 0);
         }
         try {
             rightMandible =  hwMap.servo.get("randible");
             rightMandible.setDirection(Servo.Direction.FORWARD);
-            rightMandible.setPosition(0);
+            rightMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("randible not found", 0);
         }
@@ -257,7 +257,7 @@ public class Intake
         setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
     }
     public void leftMandibleToggle() {
-        if (leftMandiblePos != LEFT_MANDIBLE_CLOSE) { mandibleClose();}
+        if (leftMandiblePos== LEFT_MANDIBLE_OPEN) { mandibleClose();}
         else {  mandibleOpen(); }
     }
     public void rightMandibleToggle()

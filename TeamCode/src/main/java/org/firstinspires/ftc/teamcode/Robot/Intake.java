@@ -11,13 +11,15 @@ public class Intake
     Telemetry telemetry;
     Servo leftGripper = null;
     Servo rightGripper = null;
-
+    Servo leftMandible = null;
+    Servo rightMandible = null;
     Servo intakeElbow = null;
 
     public double leftGripPos = 0;
     public double rightGripPos = 0;
     public double intakeElbowPos = 0;
-
+    public double leftMandiblePos = 0;
+    public double rightMandiblePos = 0;
 
     static public double LEFTGRIP_INIT = 0.1;
     static public double RIGHTGRIP_INIT = 0.1;
@@ -26,9 +28,14 @@ public class Intake
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
+    static public double MANDIBLE_INIT = 0;
     static public double GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.71;
+    static public double LEFT_GRIP_HOLD = 0.775;
     static public double RIGHT_GRIP_HOLD = 0.45;
+    static public double LEFT_MANDIBLE_OPEN = 0.7;
+    static public double RIGHT_MANDIBLE_OPEN = 0.7;
+    static public double LEFT_MANDIBLE_CLOSE = 0.05;
+    static public double RIGHT_MANDIBLE_CLOSE = 0.1;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
@@ -60,8 +67,22 @@ public class Intake
             elbowPos = elbow;
             leftGripPos = leftGrip;
             rightGripPos = rightGrip;
+
+
         }
     }
+    public enum MandiblePositions
+    {
+        CLOSED(LEFT_MANDIBLE_CLOSE, RIGHT_MANDIBLE_CLOSE),
+        OPEN(LEFT_MANDIBLE_OPEN, RIGHT_MANDIBLE_OPEN);
+        public final double leftMandiblePos;
+        public final double rightMandiblePos;
+        MandiblePositions(double leftMandible, double rightMandible) {
+            leftMandiblePos = leftMandible;
+            rightMandiblePos = rightMandible;
+        }
+    }
+
 
     public void init(HardwareMap hwMap, Telemetry telem, boolean ifAuto)
     {
@@ -84,6 +105,20 @@ public class Intake
             intakeElbow = hwMap.servo.get("iElbow");
         } catch(Exception e) {
             telemetry.addData("intakeArm not found", 0);
+        }
+        try {
+            leftMandible = hwMap.servo.get("landible");
+            leftMandible.setDirection(Servo.Direction.REVERSE);
+            leftMandible.setPosition(MANDIBLE_INIT);
+        } catch(Exception e) {
+            telemetry.addData("landible not found", 0);
+        }
+        try {
+            rightMandible =  hwMap.servo.get("randible");
+            rightMandible.setDirection(Servo.Direction.FORWARD);
+            rightMandible.setPosition(MANDIBLE_INIT);
+        } catch(Exception e) {
+            telemetry.addData("randible not found", 0);
         }
         if (ifAuto) {
             goTo(Positions.INIT, true);
@@ -207,6 +242,31 @@ public class Intake
 
     public boolean gripperClosed() { return leftGripperClosed || rightGripperClosed; }
 
+    public void setLeftMandiblePos(double leftMandPos) {
+        leftMandible.setPosition(leftMandPos);
+    }
+    public void setRightMandiblePos(double rightMandPos) {
+        rightMandible.setPosition(rightMandPos);
+    }
+    public void mandibleOpen() {
+        setLeftMandiblePos(LEFT_MANDIBLE_OPEN);
+        setRightMandiblePos(RIGHT_MANDIBLE_OPEN);
+    }
+    public void mandibleClose() {
+        setLeftMandiblePos(LEFT_MANDIBLE_CLOSE);
+        setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
+    }
+    public void leftMandibleToggle() {
+        if (leftMandiblePos== LEFT_MANDIBLE_OPEN) { mandibleClose();}
+        else {  mandibleOpen(); }
+    }
+    public void rightMandibleToggle()
+    {
+        if (rightMandiblePos != RIGHT_MANDIBLE_CLOSE) { mandibleClose();}
+        else {  mandibleOpen(); }
+    }
+
+
     public void update()
     {
         if (intakeElbow != null) {
@@ -223,6 +283,14 @@ public class Intake
             double tempPos = rightGripper.getPosition();
             rightGripperClosed = tempPos != rightGripPos && tempPos == RIGHT_GRIP_HOLD;
             rightGripPos = tempPos;
+        }
+        if (leftMandible != null )
+        {
+            leftMandiblePos = leftMandible.getPosition();
+        }
+        if (rightMandible != null )
+        {
+            rightMandiblePos = rightMandible.getPosition();
         }
 //        telemetry.addData("Intake Right Gripper Position =", rightGripPos);
 //        telemetry.addData("Intake Left Gripper Position =", leftGripPos);

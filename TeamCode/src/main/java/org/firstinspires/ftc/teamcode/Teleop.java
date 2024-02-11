@@ -141,6 +141,12 @@ public class Teleop extends OpMode  {
             robot.intake.toggleGripper();
         }
 
+        ////////////////////
+        // MANDIBLE
+        ////////////////////
+        if (tbdGamepad1.getButtonPressed(B)) {
+            robot.intake.leftMandibleToggle();
+        }
         //////////////////////////////////////////////
         // GAMEPAD 1 ENDGAME
         //////////////////////////////////////////////
@@ -170,10 +176,12 @@ public class Teleop extends OpMode  {
         //////////////////
         if (tbdGamepad2.getButton(LEFT_STICK_BUTTON)) {
             robot.delivery.goTo(Delivery.Positions.ALIGN_FOR_TRANSFER);
+            ELBOW_POSITION = 0.92;
             robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_0);
         }
         else if (tbdGamepad2.getButton(RIGHT_STICK_BUTTON)) {
             robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+            ELBOW_POSITION = 0.8;
             robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_1);
         }
 
@@ -247,43 +255,26 @@ public class Teleop extends OpMode  {
         //////////////////
         // TWIST
         //////////////////
-//
-//        if ( robot.delivery.clearedTransferZone())
-//        {
-//            if (tbdGamepad2.getButtonPressed(DPAD_LEFT))
-//            {
-//                robot.delivery.toggleTwistCW();
-//            }
-//            else if (tbdGamepad2.getButtonPressed(DPAD_RIGHT))
-//            {
-//                robot.delivery.toggleTwistCCW();
-//            }
-//            else if (tbdGamepad2.getButton(LEFT_BUMPER))
-//            {
-//                robot.delivery.setTwistPos(1);
-////                robot.delivery.twistPos = 1;
-//            }
-//            else if (tbdGamepad2.getButton(RIGHT_BUMPER))
-//            {
-//                robot.delivery.setTwistPos(0);
-////                robot.delivery.twistPos = 0;
-//            }
-//            else if (tbdGamepad2.getButton(LEFT_STICK_BUTTON) &&
-//                     tbdGamepad2.getButton(RIGHT_BUMPER))
-//            {
-//                robot.delivery.setTwistPos(TWIST_INIT);
-////                robot.delivery.twistPos = 0.5;
-//            }
-//        }
+        if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0.1) {
+            ELBOW_POSITION = robot.delivery.setElbowPosition(0.775);
+            robot.delivery.setWristPosition(0.525);
+            robot.delivery.setTwistPos(0.3);
+        } else if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0.1) {
+            ELBOW_POSITION = robot.delivery.setElbowPosition(0.775);
+            robot.delivery.setWristPosition(0.525);
+            robot.delivery.setTwistPos(0.7);
+        } else if (tbdGamepad2.getButtonPressed(DPAD_DOWN)) {
+            robot.delivery.setTwistPos(0.5);
+        }
 
         ////////////////////
         // DELIVERY GRIPPER
         ////////////////////
 
-        if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0) {
-            robot.delivery.dropBoth();
-        } else if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0) {
-            robot.delivery.holdPixelsBoth();
+        if (tbdGamepad2.getButtonPressed(LEFT_BUMPER)) {
+            robot.delivery.toggleGrippersLeft();
+        } else if (tbdGamepad2.getButtonPressed(RIGHT_BUMPER)) {
+            robot.delivery.toggleGripperRight();
         }
         if (robot.notifyDriver2()) { tbdGamepad2.notifyDriver( 1); }
 

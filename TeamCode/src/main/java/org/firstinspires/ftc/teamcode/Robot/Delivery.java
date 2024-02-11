@@ -24,13 +24,13 @@ public class Delivery
     private boolean leftGripperClosed = false;
     private boolean rightGripperClosed = false;
     public double wristPos = 0;
-    public double leftGripPos = 0;
-    public double rightGripPos = 0;
+    public double leftGripPos = 0.5;
+    public double rightGripPos = 0.5;
     public double twistPos = 0.5;
     public double lElbowPos = 0.92;
     public double rElbowPos = 0.92;
 
-    static public double ELBOW_MIN = 0.8;
+    static public double ELBOW_MIN = 0.775;
     // MIN is whenever the elbow is completely up ready to receive
     static public double ELBOW_MAX = 0.92;
     // MAX is whenever the elbow is down
@@ -39,10 +39,11 @@ public class Delivery
 
     static public double ELBOW_INIT = 0.89;
     static public double WRIST_INIT = 0.775;
-    static public double LEFTGRIP_INIT = 0.9;
-    static public double RIGHTGRIP_INIT = 0.9;
+    static public double LEFTGRIP_INIT = 0.5;
+    static public double RIGHTGRIP_INIT = 0.5;
     static public double TWIST_INIT = 0.5;
-    static public double GRIP_DROP = 0;
+    static public double LEFT_GRIP_DROP = 0.5;
+    static public double RIGHT_GRIP_DROP = 0.5;
     //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up
     static public double TWIST_TOGGLE_INCREMENT = 15;
@@ -50,14 +51,15 @@ public class Delivery
 
     private boolean clearOfTransferZone = false;
 
+
     public enum Positions
     {
-        READY_TO_TRANSFER(ELBOW_MIN, ELBOW_MIN, WRIST_INIT, TWIST_INIT, GripperPositions.OPEN),
-        TRANSFER( 0, 0, 0, 0, GripperPositions.CLOSED),
-        TELE_INIT(ELBOW_MAX, ELBOW_MAX, WRIST_INIT, TWIST_INIT, GripperPositions.CLOSED),
-        AUTO_INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.INIT),
-        ALIGN_FOR_TRANSFER(0.92, 0.92, 0.775, 0.5, GripperPositions.OPEN),
-        ALIGN_TO_BACKDROP(0.82, 0.82, 0.69, 0.5, GripperPositions.CLOSED);
+        READY_TO_TRANSFER(ELBOW_MIN, ELBOW_MIN, WRIST_INIT, TWIST_INIT, GripperPositions.RELEASED),
+        TRANSFER( 0, 0, 0, 0, GripperPositions.GRIPPED),
+        TELE_INIT(ELBOW_MAX, ELBOW_MAX, WRIST_INIT, TWIST_INIT, GripperPositions.GRIPPED),
+        AUTO_INIT(ELBOW_INIT, ELBOW_INIT, WRIST_INIT, TWIST_INIT, GripperPositions.GRIPPED),
+        ALIGN_FOR_TRANSFER(0.92, 0.92, 0.775, 0.5, GripperPositions.RELEASED),
+        ALIGN_TO_BACKDROP(0.8, 0.8, 0.63, 0.5, GripperPositions.GRIPPED);
 
         public final double lElbowPos;
         public final double rElbowPos;
@@ -78,13 +80,12 @@ public class Delivery
     public enum GripperPositions
     {
         // IF ANY GRIP ISSUES CHANGE THE GRIP POSITIONS TO 0.8 INSTEAD OF 0.775 (ITS TIGHTER)
-        CLOSED( 0.845,0.805),
-        OPEN( 0.5, 0.5),
+        GRIPPED( 0.845,0.805),
+        RELEASED( 0.5, 0.5),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
         public final double leftGripPos;
         public final double rightGripPos;
-
         GripperPositions( double leftGrip, double rightGrip)
         {
             leftGripPos = leftGrip;
@@ -208,10 +209,10 @@ public class Delivery
         dropRight();
     }
     public void dropLeft() {
-        setLeftGripPos(GripperPositions.OPEN.leftGripPos);
+        setLeftGripPos(GripperPositions.RELEASED.leftGripPos);
     }
     public void dropRight() {
-        setRightGripPos(GripperPositions.OPEN.rightGripPos);
+        setRightGripPos(GripperPositions.RELEASED.rightGripPos);
     }
 
     public void holdPixelsBoth() {
@@ -221,11 +222,11 @@ public class Delivery
 
     public void holdPixelLeft()
     {
-        setLeftGripPos(GripperPositions.CLOSED.leftGripPos);
+        setLeftGripPos(GripperPositions.GRIPPED.leftGripPos);
     }
 
     public void holdPixelRight() {
-        setRightGripPos(GripperPositions.CLOSED.rightGripPos);
+        setRightGripPos(GripperPositions.GRIPPED.rightGripPos);
     }
 
     public void goTo( Positions thePos)
@@ -265,13 +266,13 @@ public class Delivery
     public boolean gripperClosed() { return leftGripperClosed || rightGripperClosed; }
 
     public void toggleGrippersLeft() {
-        if ( leftGripPos != GRIP_DROP) { dropLeft(); }
+        if ( leftGripPos != LEFT_GRIP_DROP) { dropLeft(); }
         else { holdPixelLeft(); }
     }
 
     public void toggleGripperRight() {
-        if ( rightGripPos != GRIP_DROP) { dropRight(); }
-        else { holdPixelRight(); }
+        if ( rightGripPos != RIGHT_GRIP_DROP) { dropRight(); }
+        else { holdPixelRight();}
     }
     public boolean clearedTransferZone() { return clearOfTransferZone; }
 
@@ -280,12 +281,12 @@ public class Delivery
         if (wrist != null) { wristPos = wrist.getPosition(); }
         if (leftGripper != null) {
             double tempPos = leftGripper.getPosition();
-            leftGripperClosed = tempPos != leftGripPos && tempPos == GripperPositions.CLOSED.leftGripPos;
+            leftGripperClosed = tempPos != leftGripPos && tempPos == GripperPositions.GRIPPED.leftGripPos;
             leftGripPos = tempPos;
         }
         if (rightGripper != null) {
             double tempPos = rightGripper.getPosition();
-            rightGripperClosed = tempPos != rightGripPos && tempPos == GripperPositions.CLOSED.rightGripPos;
+            rightGripperClosed = tempPos != rightGripPos && tempPos == GripperPositions.GRIPPED.rightGripPos;
             rightGripPos = tempPos;
         }
         if (twist != null) { twistPos = twist.getPosition(); }

@@ -28,21 +28,7 @@ public class AutoRedRight extends OpMode {
     final double MAX_AUTO_SPEED = 0.5;
     final double MAX_AUTO_STRAFE = 0.5;
     final double MAX_AUTO_TURN = 0.3;
-// STEPS FOR OLD CODE
-//    double stepB = 0;
-//    public static double stepBLeft = -90;
-//    public static double stepBCenter = 0;
-//    public static double stepBRight = -90;
-//    public static double stepStrafe = 0;
-//    public static double stepStrafeRight = 125;
-//    public static double driveToBackDrop = 75;
-//    public static double driveToBackDropRight = 30;
-//    public static double strafeToPlace = 0;
-//    public static double strafeToPlaceLeft = 10;
-//    public static double strafeToPlaceRight = 40;
-//    public static double stepBBack = 50;
-//    public static double stepBBackLeft = 40;
-//    public static double stepBBackRight = 25;
+
     double step0 = 5;
     double step0Left = 40;
     double stepA = 0;
@@ -57,21 +43,21 @@ public class AutoRedRight extends OpMode {
     double stepD = 75;
     double stepDLeft = 40;
     double stepDRight = 45;
-    double stepAwayPixel = 5;
-    double stepAwayPixelLeft = 20;
-    double stepAwayPixelRight = 20;
+    double stepAwayPixel = 35;
+    double stepAwayPixelLeft = 40;
+    double stepAwayPixelRight = 40;
     double stepToBackboard = 125;
     double stepToBackboardLeft = 140;
-    double stepToBackboardRight = 125;
+    double stepToBackboardRight = 122.5;
     Thunderbot2023.Direction stepStrafe = RIGHT;
     Thunderbot2023.Direction stepStrafeLeft = RIGHT;
     Thunderbot2023.Direction stepStrafeRight = RIGHT;
     double stepStrafeDistance = 2.5;
-    double stepStrafeDistanceLeft = 80;
-    double stepStrafeDistanceRight = 25;
+    double stepStrafeDistanceLeft = 65;
+    double stepStrafeDistanceRight = 15;
     double stepPark = 100;
-    double stepParkLeft = 140;
-    double stepParkRight = 45;
+    double stepParkLeft = 160;
+    double stepParkRight = 65;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
@@ -163,8 +149,8 @@ public class AutoRedRight extends OpMode {
                 stepToBackboard = 140;
                 stepStrafe = LEFT;
                 stepStrafeDistance = 0;
-                stepPark = 85;
-                stepAwayPixel = 5;
+                stepPark = 105;
+                stepAwayPixel = 20;
                 tagNum = 5;
                 telemetry.addData("ZONE = CENTER", 0);
                 break;
@@ -185,6 +171,7 @@ public class AutoRedRight extends OpMode {
             case -1:
                 if (!done) {
                     robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                    robot.intake.mandibleOpen();
                     done = true;
                 } else {
                     robot.stop();
@@ -259,6 +246,26 @@ public class AutoRedRight extends OpMode {
                 }
                 break;
             case 7:
+                if ( !done) {
+                    robot.intake.mandibleClose();
+                    done = true;
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 8:
+                if (!done) {
+                    done = robot.gyroDrive(stepBAngle, 10, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 9:
+
                 if (!done) {
                     done = robot.turnTo(-90, 0.25);
                 } else {
@@ -267,7 +274,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 8:
+            case 10:
                 if (!done) {
                     robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
                     done = true;
@@ -277,7 +284,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 9:
+            case 11:
                 if (!done) {
                     done = robot.gyroDrive(-90, stepToBackboard, -0.5);
                 } else {
@@ -286,7 +293,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 10:
+            case 12:
                 if (!done) {
                     done = robot.strafe(stepStrafe, stepStrafeDistance, 0.5);
                 } else {
@@ -296,7 +303,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 11:
+            case 13:
                 if (!done) {
                     if (getRuntime() > 1) {
                         robot.delivery.dropBoth();
@@ -308,7 +315,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 12:
+            case 14:
                 if (!done) {
                     done = robot.gyroDrive(-90, 10, 0.5);
                 } else {
@@ -317,7 +324,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 13:
+            case 15:
                 if (!done) {
                     done = robot.strafe(LEFT, stepPark, 0.5);
                 } else {
@@ -326,7 +333,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 14:
+            case 16:
                 if (!done) {
                     robot.delivery.goTo(Delivery.Positions.TELE_INIT);
                     done = true;
@@ -336,7 +343,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 15:
+            case 17:
                 if (!done) {
                     done = robot.gyroDrive(-90, 25, -0.5);
                 } else {

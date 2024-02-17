@@ -113,7 +113,7 @@ public class Teleop extends OpMode  {
 //        } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
 //            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
 //                    tbdGamepad1.getRightX());
-        } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
+        } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.25, tbdGamepad1.getLeftX() * 0.25,
                     tbdGamepad1.getRightX() * 0.25);
         } else {
@@ -124,14 +124,13 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
-        if (tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1 ) {
+        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
-        } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
+        } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
             robot.intake.goTo(TRANSFER, false);
             robot.delivery.setElbowPosition(0.92);
         } else if (tbdGamepad1.getButtonPressed(B)) {
              robot.intake.goTo( DOWN_TO_PIXEL, false);
-             robot.intake.mandibleOpen();
         }
 
 
@@ -139,15 +138,16 @@ public class Teleop extends OpMode  {
         // INTAKE GRIPPER
         ////////////////////
         if (tbdGamepad1.getButtonPressed(X)) {
-            robot.intake.toggleGripper();
-
+            robot.intake.dropBoth();
+        } else if (tbdGamepad1.getButtonPressed(Y)) {
+            robot.intake.holdPixelsBoth();
         }
 
         ////////////////////
         // MANDIBLE
         ////////////////////
 
-        if (tbdGamepad1.getButtonPressed(LEFT_BUMPER)) {
+        if (tbdGamepad1.getTriggerPressed(LEFT_TRIGGER)) {
             robot.intake.leftMandibleToggle();
         }
         //////////////////////////////////////////////
@@ -186,6 +186,7 @@ public class Teleop extends OpMode  {
             robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
             ELBOW_POSITION = 0.8;
             robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_1);
+            robot.intake.mandibleClose();
         }
 
 

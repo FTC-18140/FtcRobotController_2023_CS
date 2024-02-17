@@ -67,7 +67,7 @@ public class TGEVisionProcessor implements VisionProcessor
     public static int minThreshold = 140;
     public static int maxThreshold = 255;
 
-    public static int erodeSize = 10;
+    public static int erodeSize = 20;
 
     public static String theColor = "RED";
     public static int extractChannel = 1;
@@ -167,17 +167,17 @@ public class TGEVisionProcessor implements VisionProcessor
             xPos = moments.m10/moments.m00;
             yPos = moments.m01/moments.m00;
 
-            if (xPos < 200 )
+            if (xPos > 200 )
             {
-                spikePos = "LEFT";// LEFT
+                spikePos = "RIGHT";// RIGHT
             }
-            else if ( xPos > 200)
+            else if ( xPos < 200)
             {
                 spikePos = "CENTER";   // CENTER
             }
             else
             {
-                spikePos = "RIGHT";// RIGHT
+                spikePos = "LEFT";// LEFT
             }
         }
         else

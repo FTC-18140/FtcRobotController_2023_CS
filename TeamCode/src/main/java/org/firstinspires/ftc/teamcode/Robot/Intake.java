@@ -16,27 +16,28 @@ public class Intake
     Servo rIntake = null;
     Servo lIntake = null;
 
-    public double leftGripPos = 0;
+    public double leftGripPos = 0.2;
     public double rightGripPos = 0;
     public double rIntakeElbowPos = 0;
     public double lIntakeElbowPos = 0;
     public double leftMandiblePos = 0;
     public double rightMandiblePos = 0;
 
-    static public double LEFTGRIP_INIT = 0.1;
-    static public double RIGHTGRIP_INIT = 0.1;
+    static public double LEFTGRIP_INIT = 0.2;
+    static public double RIGHTGRIP_INIT = 0;
     static public double INTAKEELBOW_INIT = 0.045;
     // 0.185 is the down position ready to pick up the pixel
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
     static public double MANDIBLE_INIT = 0;
-    static public double GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.775;
-    static public double RIGHT_GRIP_HOLD = 0.45;
-    static public double LEFT_MANDIBLE_OPEN = 0.6;
-    static public double RIGHT_MANDIBLE_OPEN = 0.5;
-    static public double LEFT_MANDIBLE_CLOSE = 0.175;
+    static public double LEFT_GRIP_DROP = 0.2;
+    static public double RIGHT_GRIP_DROP = 0;
+    static public double LEFT_GRIP_HOLD = 0.58;
+    static public double RIGHT_GRIP_HOLD = 0.35;
+    static public double LEFT_MANDIBLE_OPEN = 0.58;
+    static public double RIGHT_MANDIBLE_OPEN = 0.58;
+    static public double LEFT_MANDIBLE_CLOSE = 0.18;
     static public double RIGHT_MANDIBLE_CLOSE = 0.16;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
@@ -48,18 +49,18 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.0325, 0.0325, GRIP_DROP, GRIP_DROP),
+        TRANSFER( 0.02, 0.02, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, 0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
-        TELE_INIT(0.125, 0.125,  GRIP_DROP, GRIP_DROP),
+        TELE_INIT(0.125, 0.125,  LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
         INIT(INTAKEELBOW_INIT, INTAKEELBOW_INIT, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
         WAIT_TO_INTAKE(0.1275, 0.1275, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // DOWN_TO_PIXEL is where the grippers are inside of the pixels and about to open to grab onto the pixels
-        DOWN_TO_PIXEL(0.14, 0.14, GRIP_DROP, GRIP_DROP ),
+        DOWN_TO_PIXEL(0.15, 0.15, LEFT_GRIP_DROP, RIGHT_GRIP_DROP ),
         // INTAKE is where the grippers are in the pixels and open and holding onto the pixel
-        INTAKE( 0.13, 0.13, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
+        INTAKE( 0.15, 0.15, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
         public final double rElbowPos;
         public final double lElbowPos;
@@ -169,10 +170,10 @@ public class Intake
         dropRight();
     }
     public void dropLeft() {
-        setLeftGripPos(GRIP_DROP);
+        setLeftGripPos(LEFT_GRIP_DROP);
     }
     public void dropRight() {
-        setRightGripPos(GRIP_DROP);
+        setRightGripPos(RIGHT_GRIP_DROP);
     }
 
     public void holdPixelsBoth() {
@@ -249,10 +250,10 @@ public class Intake
 
     public void toggleGripper()
     {
-        if ( leftGripPos != GRIP_DROP ) { dropLeft(); }
+        if ( leftGripPos != LEFT_GRIP_DROP ) { dropLeft(); }
         else { holdPixelLeft(); }
 
-        if ( rightGripPos != GRIP_DROP ) { dropRight(); }
+        if ( rightGripPos != LEFT_GRIP_DROP ) { dropRight(); }
         else { holdPixelRight(); }
     }
     public boolean driveSlowly() { return moveSlowly; }

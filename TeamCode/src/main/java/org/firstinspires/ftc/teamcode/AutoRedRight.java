@@ -30,18 +30,18 @@ public class AutoRedRight extends OpMode {
     final double MAX_AUTO_TURN = 0.3;
 
     double step0 = 5;
-    double step0Left = 40;
+    double step0Left = 60;
     double stepA = 0;
-    double stepALeft = -30;
+    double stepALeft = -45;
     double  stepARight = 30;
     double stepBDistance = 0;
     double stepBAngle = 0;
     double stepBLDistance = 0;
-    double stepBLAngle = -30;
+    double stepBLAngle = -45;
     double stepBRAngle = 30;
     double stepBRDistance = 0;
     double stepD = 75;
-    double stepDLeft = 40;
+    double stepDLeft = 20;
     double stepDRight = 45;
     double stepAwayPixel = 35;
     double stepAwayPixelLeft = 40;
@@ -53,11 +53,14 @@ public class AutoRedRight extends OpMode {
     Thunderbot2023.Direction stepStrafeLeft = RIGHT;
     Thunderbot2023.Direction stepStrafeRight = RIGHT;
     double stepStrafeDistance = 2.5;
-    double stepStrafeDistanceLeft = 65;
+    double stepStrafeDistanceLeft = 60;
     double stepStrafeDistanceRight = 15;
     double stepPark = 100;
-    double stepParkLeft = 160;
+    double stepParkLeft = 130;
     double stepParkRight = 65;
+    double stepForward = 10;
+    double stepForwardLeft = 5;
+    double stepForwardCenter = 7.5;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
@@ -112,6 +115,7 @@ public class AutoRedRight extends OpMode {
         switch (robot.eyes.getSpikePos())
         {
             case "LEFT":
+            case "NOT FOUND":
                 step0 = step0Left;
                 stepA = stepALeft;
                 stepD = stepDLeft;
@@ -122,11 +126,11 @@ public class AutoRedRight extends OpMode {
                 stepStrafeDistance = stepStrafeDistanceLeft;
                 stepPark = stepParkLeft;
                 stepAwayPixel = stepAwayPixelLeft;
+                stepForward = stepForwardLeft;
                 tagNum = 4;
                 telemetry.addData("ZONE = LEFT", 0);
                 break;
             case "RIGHT":
-            case "NOT FOUND":
                 step0 = 15;
                 stepA = stepARight;
                 stepBAngle = stepBRAngle;
@@ -137,6 +141,7 @@ public class AutoRedRight extends OpMode {
                 stepStrafeDistance = stepStrafeDistanceRight;
                 stepPark = stepParkRight;
                 stepAwayPixel = stepAwayPixelRight;
+                stepForward = 10;
                 tagNum = 6;
                 telemetry.addData("ZONE = RIGHT", 0);
                 break;
@@ -146,11 +151,12 @@ public class AutoRedRight extends OpMode {
                 stepBAngle = 0;
                 stepBDistance = 0;
                 stepD = 77.5;
-                stepToBackboard = 140;
+                stepToBackboard = 137.5;
                 stepStrafe = LEFT;
                 stepStrafeDistance = 0;
                 stepPark = 105;
                 stepAwayPixel = 20;
+                stepForward = stepForwardCenter;
                 tagNum = 5;
                 telemetry.addData("ZONE = CENTER", 0);
                 break;
@@ -257,7 +263,7 @@ public class AutoRedRight extends OpMode {
                 break;
             case 8:
                 if (!done) {
-                    done = robot.gyroDrive(stepBAngle, 10, 0.5);
+                    done = robot.gyroDrive(stepBAngle, stepForward, 0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -317,7 +323,7 @@ public class AutoRedRight extends OpMode {
                 break;
             case 14:
                 if (!done) {
-                    done = robot.gyroDrive(-90, 10, 0.5);
+                    done = robot.gyroDrive(-90, 7.5, 0.5);
                 } else {
                     robot.stop();
                     done = false;

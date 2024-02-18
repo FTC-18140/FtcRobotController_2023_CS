@@ -16,6 +16,13 @@ public class TBDGamepad
     public boolean[] oldButtons = new boolean[14];
     public boolean[] changed = new boolean[14];
 
+    public boolean leftOldTrigger = false;
+    public boolean leftNewTrigger = false;
+    public double triggerThreshold = 0.5;
+    public boolean rightOldTrigger = false;
+    public boolean rightNewTrigger = false;
+    public boolean leftTriggerChanged = false;
+    public boolean rightTriggerChanged = false;
 
     public enum Button {
         A(0), B(1), X(2), Y(3), LEFT_BUMPER(4), RIGHT_BUMPER(5), BACK(6),
@@ -117,6 +124,20 @@ public class TBDGamepad
         }
         return triggerValue;
     }
+    public boolean getTriggerBoolean(Trigger trigger) {
+        boolean triggerValue = false;
+        switch (trigger) {
+            case LEFT_TRIGGER:
+                triggerValue = gamepad.left_trigger > 0.1;
+                break;
+            case RIGHT_TRIGGER:
+                triggerValue = gamepad.right_trigger > 0.1;
+                break;
+            default:
+                break;
+        }
+        return triggerValue;
+    }
 
     /**
      * @return the y-value on the left analog stick
@@ -173,6 +194,14 @@ public class TBDGamepad
     {
         return changed[theButton.index] && !buttons[theButton.index];
     }
+    public boolean getTriggerPressed(Trigger theTrigger) {
+            if (theTrigger == Trigger.LEFT_TRIGGER) {
+                return leftTriggerChanged && leftNewTrigger;
+            } else {
+                return rightTriggerChanged && rightNewTrigger;
+            }
+
+    }
 
     public void notifyDriver(int numBlips) { gamepad.rumbleBlips(numBlips);}
 
@@ -194,6 +223,12 @@ public class TBDGamepad
         buttons[Button.START.index] = gamepad.start;
         buttons[Button.LEFT_STICK_BUTTON.index] = gamepad.left_stick_button;
         buttons[Button.RIGHT_STICK_BUTTON.index] = gamepad.right_stick_button;
+        leftOldTrigger = leftNewTrigger;
+        leftNewTrigger = gamepad.left_trigger > triggerThreshold;
+        leftTriggerChanged = leftOldTrigger != leftNewTrigger;
+        rightOldTrigger = rightNewTrigger;
+        rightNewTrigger = gamepad.right_trigger > triggerThreshold;
+        rightTriggerChanged = rightOldTrigger != rightNewTrigger;
 
         for ( int i = 0; i < 14; i++ )
         {

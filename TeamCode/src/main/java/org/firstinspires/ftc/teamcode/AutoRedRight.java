@@ -28,50 +28,39 @@ public class AutoRedRight extends OpMode {
     final double MAX_AUTO_SPEED = 0.5;
     final double MAX_AUTO_STRAFE = 0.5;
     final double MAX_AUTO_TURN = 0.3;
-// STEPS FOR OLD CODE
-//    double stepB = 0;
-//    public static double stepBLeft = -90;
-//    public static double stepBCenter = 0;
-//    public static double stepBRight = -90;
-//    public static double stepStrafe = 0;
-//    public static double stepStrafeRight = 125;
-//    public static double driveToBackDrop = 75;
-//    public static double driveToBackDropRight = 30;
-//    public static double strafeToPlace = 0;
-//    public static double strafeToPlaceLeft = 10;
-//    public static double strafeToPlaceRight = 40;
-//    public static double stepBBack = 50;
-//    public static double stepBBackLeft = 40;
-//    public static double stepBBackRight = 25;
+
     double step0 = 5;
-    double step0Left = 40;
+    double step0Left = 60;
     double stepA = 0;
-    double stepALeft = -30;
+    double stepALeft = -45;
     double  stepARight = 30;
     double stepBDistance = 0;
     double stepBAngle = 0;
     double stepBLDistance = 0;
-    double stepBLAngle = -30;
+    double stepBLAngle = -45;
     double stepBRAngle = 30;
     double stepBRDistance = 0;
     double stepD = 75;
-    double stepDLeft = 40;
+    double stepDLeft = 20;
     double stepDRight = 45;
-    double stepAwayPixel = 5;
-    double stepAwayPixelLeft = 20;
-    double stepAwayPixelRight = 20;
+    double stepAwayPixel = 35;
+    double stepAwayPixelLeft = 40;
+    double stepAwayPixelRight = 40;
     double stepToBackboard = 125;
     double stepToBackboardLeft = 140;
-    double stepToBackboardRight = 125;
+    double stepToBackboardRight = 122.5;
     Thunderbot2023.Direction stepStrafe = RIGHT;
     Thunderbot2023.Direction stepStrafeLeft = RIGHT;
     Thunderbot2023.Direction stepStrafeRight = RIGHT;
     double stepStrafeDistance = 2.5;
-    double stepStrafeDistanceLeft = 80;
-    double stepStrafeDistanceRight = 25;
+    double stepStrafeDistanceLeft = 60;
+    double stepStrafeDistanceRight = 15;
     double stepPark = 100;
-    double stepParkLeft = 140;
-    double stepParkRight = 45;
+    double stepParkLeft = 130;
+    double stepParkRight = 65;
+    double stepForward = 10;
+    double stepForwardLeft = 5;
+    double stepForwardCenter = 7.5;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
@@ -126,6 +115,7 @@ public class AutoRedRight extends OpMode {
         switch (robot.eyes.getSpikePos())
         {
             case "LEFT":
+            case "NOT FOUND":
                 step0 = step0Left;
                 stepA = stepALeft;
                 stepD = stepDLeft;
@@ -136,11 +126,11 @@ public class AutoRedRight extends OpMode {
                 stepStrafeDistance = stepStrafeDistanceLeft;
                 stepPark = stepParkLeft;
                 stepAwayPixel = stepAwayPixelLeft;
+                stepForward = stepForwardLeft;
                 tagNum = 4;
                 telemetry.addData("ZONE = LEFT", 0);
                 break;
             case "RIGHT":
-            case "NOT FOUND":
                 step0 = 15;
                 stepA = stepARight;
                 stepBAngle = stepBRAngle;
@@ -151,6 +141,7 @@ public class AutoRedRight extends OpMode {
                 stepStrafeDistance = stepStrafeDistanceRight;
                 stepPark = stepParkRight;
                 stepAwayPixel = stepAwayPixelRight;
+                stepForward = 10;
                 tagNum = 6;
                 telemetry.addData("ZONE = RIGHT", 0);
                 break;
@@ -160,11 +151,12 @@ public class AutoRedRight extends OpMode {
                 stepBAngle = 0;
                 stepBDistance = 0;
                 stepD = 77.5;
-                stepToBackboard = 140;
+                stepToBackboard = 137.5;
                 stepStrafe = LEFT;
                 stepStrafeDistance = 0;
-                stepPark = 85;
-                stepAwayPixel = 5;
+                stepPark = 105;
+                stepAwayPixel = 20;
+                stepForward = stepForwardCenter;
                 tagNum = 5;
                 telemetry.addData("ZONE = CENTER", 0);
                 break;
@@ -185,6 +177,7 @@ public class AutoRedRight extends OpMode {
             case -1:
                 if (!done) {
                     robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                    robot.intake.mandibleOpen();
                     done = true;
                 } else {
                     robot.stop();
@@ -259,6 +252,26 @@ public class AutoRedRight extends OpMode {
                 }
                 break;
             case 7:
+                if ( !done) {
+                    robot.intake.mandibleClose();
+                    done = true;
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 8:
+                if (!done) {
+                    done = robot.gyroDrive(stepBAngle, stepForward, 0.5);
+                } else {
+                    robot.stop();
+                    done = false;
+                    state++;
+                }
+                break;
+            case 9:
+
                 if (!done) {
                     done = robot.turnTo(-90, 0.25);
                 } else {
@@ -267,7 +280,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 8:
+            case 10:
                 if (!done) {
                     robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
                     done = true;
@@ -277,7 +290,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 9:
+            case 11:
                 if (!done) {
                     done = robot.gyroDrive(-90, stepToBackboard, -0.5);
                 } else {
@@ -286,7 +299,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 10:
+            case 12:
                 if (!done) {
                     done = robot.strafe(stepStrafe, stepStrafeDistance, 0.5);
                 } else {
@@ -296,7 +309,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 11:
+            case 13:
                 if (!done) {
                     if (getRuntime() > 1) {
                         robot.delivery.dropBoth();
@@ -308,16 +321,16 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 12:
+            case 14:
                 if (!done) {
-                    done = robot.gyroDrive(-90, 10, 0.5);
+                    done = robot.gyroDrive(-90, 7.5, 0.5);
                 } else {
                     robot.stop();
                     done = false;
                     state++;
                 }
                 break;
-            case 13:
+            case 15:
                 if (!done) {
                     done = robot.strafe(LEFT, stepPark, 0.5);
                 } else {
@@ -326,7 +339,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 14:
+            case 16:
                 if (!done) {
                     robot.delivery.goTo(Delivery.Positions.TELE_INIT);
                     done = true;
@@ -336,7 +349,7 @@ public class AutoRedRight extends OpMode {
                     state++;
                 }
                 break;
-            case 15:
+            case 17:
                 if (!done) {
                     done = robot.gyroDrive(-90, 25, -0.5);
                 } else {

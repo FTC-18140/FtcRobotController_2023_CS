@@ -110,9 +110,9 @@ public class Teleop extends OpMode  {
 //            if (robot.intake.intakeElbowPos > 0.185) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                     tbdGamepad1.getRightX() * 0.1);
-        } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
-            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
-                    tbdGamepad1.getRightX());
+//        } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
+//            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
+//                    tbdGamepad1.getRightX());
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.25, tbdGamepad1.getLeftX() * 0.25,
                     tbdGamepad1.getRightX() * 0.25);
@@ -124,12 +124,12 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
-        if (tbdGamepad1.getButtonPressed(LEFT_BUMPER) ) {
+        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
-        } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
+        } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
             robot.intake.goTo(TRANSFER, false);
             robot.delivery.setElbowPosition(0.92);
-        } else if (tbdGamepad1.getButtonPressed(DPAD_DOWN)) {
+        } else if (tbdGamepad1.getButtonPressed(B)) {
              robot.intake.goTo( DOWN_TO_PIXEL, false);
         }
 
@@ -138,13 +138,16 @@ public class Teleop extends OpMode  {
         // INTAKE GRIPPER
         ////////////////////
         if (tbdGamepad1.getButtonPressed(X)) {
-            robot.intake.toggleGripper();
+            robot.intake.dropBoth();
+        } else if (tbdGamepad1.getButtonPressed(Y)) {
+            robot.intake.holdPixelsBoth();
         }
 
         ////////////////////
         // MANDIBLE
         ////////////////////
-        if (tbdGamepad1.getButtonPressed(B)) {
+
+        if (tbdGamepad1.getTriggerPressed(LEFT_TRIGGER)) {
             robot.intake.leftMandibleToggle();
         }
         //////////////////////////////////////////////
@@ -183,6 +186,7 @@ public class Teleop extends OpMode  {
             robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
             ELBOW_POSITION = 0.8;
             robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_1);
+            robot.intake.mandibleClose();
         }
 
 
@@ -255,28 +259,28 @@ public class Teleop extends OpMode  {
         //////////////////
         // TWIST
         //////////////////
-        if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0.1) {
-            ELBOW_POSITION = robot.delivery.setElbowPosition(0.775);
-            robot.delivery.setWristPosition(0.525);
-            robot.delivery.setTwistPos(0.3);
-        } else if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0.1) {
-            ELBOW_POSITION = robot.delivery.setElbowPosition(0.775);
-            robot.delivery.setWristPosition(0.525);
-            robot.delivery.setTwistPos(0.7);
-        } else if (tbdGamepad2.getButtonPressed(DPAD_DOWN)) {
-            robot.delivery.setTwistPos(0.5);
-        }
+//        if (tbdGamepad2.getTrigger(RIGHT_TRIGGER) > 0.1) {
+//            ELBOW_POSITION = robot.delivery.setElbowPosition(0.775);
+//            robot.delivery.setWristPosition(0.525);
+//            robot.delivery.setTwistPos(0.3);
+//        } else if (tbdGamepad2.getTrigger(LEFT_TRIGGER) > 0.1) {
+//            ELBOW_POSITION = robot.delivery.setElbowPosition(0.775);
+//            robot.delivery.setWristPosition(0.525);
+//            robot.delivery.setTwistPos(0.7);
+//        } else if (tbdGamepad2.getButtonPressed(DPAD_DOWN)) {
+//            robot.delivery.setTwistPos(0.5);
+//        }
 
         ////////////////////
         // DELIVERY GRIPPER
         ////////////////////
 
-        if (tbdGamepad2.getButtonPressed(LEFT_BUMPER)) {
+        if (tbdGamepad2.getTriggerPressed(LEFT_TRIGGER)) {
             robot.delivery.toggleGrippersLeft();
-        } else if (tbdGamepad2.getButtonPressed(RIGHT_BUMPER)) {
+        } else if (tbdGamepad2.getTriggerPressed(RIGHT_TRIGGER)) {
             robot.delivery.toggleGripperRight();
         }
-        if (robot.notifyDriver2()) { tbdGamepad2.notifyDriver( 1); }
+//        if (robot.notifyDriver2()) { tbdGamepad2.notifyDriver( 1); }
 
     }
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
+import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -74,7 +75,7 @@ public class RRTestRedRight extends OpMode {
      * PARK
      * */
 
-    TrajectorySequence origin_x;
+    Trajectory origin_x;
     Trajectory purple;
     Trajectory yellow;
 
@@ -83,13 +84,14 @@ public class RRTestRedRight extends OpMode {
 
     int step = 0;
 
-    String tag = "NEITHER";
-    Thunderbot2023 robot = new Thunderbot2023();
+    String tag = "RIGHT";
+    ThunderbotAuto2023 robot = new ThunderbotAuto2023();
 
     @Override
     public void init(){
-        drive = new SampleMecanumDrive(hardwareMap);
-        robot.init(hardwareMap, telemetry, true, true);
+
+        robot.init(hardwareMap, telemetry, false);
+        drive = robot.drive;
         //0.9083333
     }
 
@@ -138,13 +140,12 @@ public class RRTestRedRight extends OpMode {
         Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(0));
 
         drive.setPoseEstimate(start);
-        origin_x = drive.trajectorySequenceBuilder(start)
-                .waitSeconds(10)
+        origin_x = drive.trajectoryBuilder(start)
                 .lineTo(new Vector2d(0,START_Y))
                 .build();
 
         purple = drive.trajectoryBuilder(start)
-                .strafeTo(new Vector2d(spike_x, spike_y))
+                .splineTo(new Vector2d(spike_x, spike_y), Math.toRadians(-45))
                 .build();
 
         yellow = drive.trajectoryBuilder(purple.end())
@@ -157,7 +158,7 @@ public class RRTestRedRight extends OpMode {
                 .splineToSplineHeading(new Pose2d(STACK_X, STACK_Y, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
-        park = drive.trajectoryBuilder(new Pose2d(START_X, START_Y, Math.toRadians(0)))
+        park = drive.trajectoryBuilder(start)
                 .strafeTo(new Vector2d(END_X, END_Y))
                 .build();
 
@@ -167,10 +168,10 @@ public class RRTestRedRight extends OpMode {
     public void loop(){
 
         if(!drive.isBusy() && !done){
-            drive.followTrajectorySequenceAsync(origin_x);
+            drive.followTrajectoryAsync(purple);
             done = true;
         }
-        drive.update();
+        //drive.update();
         robot.update();
 
     }

@@ -30,7 +30,8 @@ public class Intake
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
-    static public double MANDIBLE_INIT = 0;
+    static public double LEFT_MANDIBLE_INIT = 0.18;
+    static public double RIGHT_MANDIBLE_INIT = 0.16;
     static public double LEFT_GRIP_DROP = 0.2;
     static public double RIGHT_GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.58;
@@ -121,14 +122,14 @@ public class Intake
         try {
             leftMandible = hwMap.servo.get("landible");
             leftMandible.setDirection(Servo.Direction.REVERSE);
-            leftMandible.setPosition(MANDIBLE_INIT);
+            leftMandible.setPosition(LEFT_MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("landible not found", 0);
         }
         try {
             rightMandible =  hwMap.servo.get("randible");
             rightMandible.setDirection(Servo.Direction.FORWARD);
-            rightMandible.setPosition(MANDIBLE_INIT);
+            rightMandible.setPosition(RIGHT_MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("randible not found", 0);
         }

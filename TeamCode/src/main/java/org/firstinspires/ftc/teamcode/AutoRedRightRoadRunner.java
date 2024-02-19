@@ -8,47 +8,27 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
-import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 @Config
-public class RRTestRedRight extends OpMode {
+public class AutoRedRightRoadRunner extends OpMode {
 
     SampleMecanumDrive drive;
 
     int bot_w = 8;
     int tagNum = 2;
-    final int START_X = 12;
-    final int START_Y = -63;
 
-    final int END_X = -58;
-    final int END_Y = -58;
+    double spike_x;
+    double spike_y;
+    double spike_heading;
+    double spike_tangent;
 
-    final int SPIKE_L_X = -34;
-    final int SPIKE_M_X = -25 - bot_w;
-    final int SPIKE_R_X = 24;
-
-    final int SPIKE_L_Y = 0;
-    final int SPIKE_M_Y = -12;
-    final int SPIKE_R_Y = -34;
-
-    int spike_x;
-    int spike_y;
-
-    final int BACKDROP_L_X = -30;
-    final int BACKDROP_M_X = -36;
-    final int BACKDROP_R_X = -42;
-
-    final int BACKDROP_L_Y = -48;
-    final int BACKDROP_M_Y = -48;
-    final int BACKDROP_R_Y = -48;
-
-    int backdrop_x;
-    int backdrop_y;
+    double backdrop_x;
+    double backdrop_y;
 
     final int TRUSS_IN_X = -36;
     final int TRUSS_IN_Y = -2;
@@ -124,34 +104,41 @@ public class RRTestRedRight extends OpMode {
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
+        telemetry.addData("wrist pos: ", robot.delivery.wristPos);
     }
 
     @Override
     public void start(){
         switch(tagNum){
             case(1):
-                spike_x = SPIKE_L_X;
-                spike_y = SPIKE_L_Y;
-                backdrop_x = BACKDROP_L_X;
-                backdrop_y = BACKDROP_L_Y;
+                spike_x = FieldConstants.RedRight.SPIKE_LEFT.x;
+                spike_y = FieldConstants.RedRight.SPIKE_LEFT.y;
+                spike_heading = FieldConstants.RedRight.SPIKE_LEFT.h;
+                backdrop_x = FieldConstants.RedRight.BACKDROP_LEFT.x;
+                backdrop_y = FieldConstants.RedRight.BACKDROP_LEFT.y;
+                spike_tangent = Math.toRadians(140);
                 break;
             case(2):
-                spike_x = SPIKE_M_X;
-                spike_y = SPIKE_M_Y;
-                backdrop_x = BACKDROP_M_X;
-                backdrop_y = BACKDROP_M_Y;
+                spike_x = FieldConstants.RedRight.SPIKE_CENTER.x;
+                spike_y = FieldConstants.RedRight.SPIKE_CENTER.y;
+                spike_heading = FieldConstants.RedRight.SPIKE_CENTER.h;
+                backdrop_x = FieldConstants.RedRight.BACKDROP_CENTER.x;
+                backdrop_y = FieldConstants.RedRight.BACKDROP_CENTER.y;
+                spike_tangent = Math.toRadians(100);
                 break;
             case(3):
-                spike_x = SPIKE_R_X;
-                spike_y = SPIKE_R_Y;
-                backdrop_x = BACKDROP_R_X;
-                backdrop_y = BACKDROP_R_Y;
+                spike_x = FieldConstants.RedRight.SPIKE_RIGHT.x;
+                spike_y = FieldConstants.RedRight.SPIKE_RIGHT.y;
+                spike_heading = FieldConstants.RedRight.SPIKE_RIGHT.h;
+                backdrop_x = FieldConstants.RedRight.BACKDROP_RIGHT.x;
+                backdrop_y = FieldConstants.RedRight.BACKDROP_RIGHT.y;
+                spike_tangent = Math.toRadians(100);
                 break;
 
 
         }
 
-        Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(90));
+        Pose2d start = new Pose2d(FieldConstants.RedRight.START.x ,FieldConstants.RedRight.START.y, FieldConstants.RedRight.START.h);
 
         drive.setPoseEstimate(start);
         origin_x = drive.trajectoryBuilder(start)
@@ -160,11 +147,11 @@ public class RRTestRedRight extends OpMode {
 
 
         purple = drive.trajectoryBuilder(start)
-                .splineTo(new Vector2d(spike_x, spike_y), Math.toRadians(-45))
+                .splineToLinearHeading(new Pose2d(spike_x, spike_y, spike_heading), spike_tangent)
                 .build();
 
-        yellow = drive.trajectoryBuilder(purple.end())
-                .lineToSplineHeading(new Pose2d(backdrop_x, backdrop_y, Math.toRadians(-90)))
+        yellow = drive.trajectoryBuilder(purple.end(), true)
+                .splineToLinearHeading(new Pose2d(backdrop_x, backdrop_y, FieldConstants.RedRight.BACKDROP_RIGHT.h), Math.toRadians(0))
                 .build();
 
         truss1 = drive.trajectoryBuilder(yellow.end())
@@ -173,25 +160,52 @@ public class RRTestRedRight extends OpMode {
                 .splineToSplineHeading(new Pose2d(STACK_X, STACK_Y, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
-        park = drive.trajectoryBuilder(start)
-                .strafeTo(new Vector2d(END_X, END_Y))
+        park = drive.trajectoryBuilder(yellow.end())
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK.x, FieldConstants.RedRight.PARK.y), Math.toRadians(0))
                 .build();
 
-        drive.followTrajectoryAsync(origin_x);
+        drive.followTrajectoryAsync(purple);
     }
     @Override
     public void loop(){
         switch (step){
             case PURPLE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                robot.intake.mandibleOpen();
                 if(!drive.isBusy()){
                     step = State.SPIKE_DROP;
                     spiketimer.reset();
                 }
                 break;
             case SPIKE_DROP:
-                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-                if(spiketimer.seconds() >= 5){
+                robot.intake.dropBoth();
+                if(spiketimer.seconds() >= 0.5){
                     step = State.TO_BACKDROP;
+                    drive.followTrajectoryAsync(yellow);
+                }
+                break;
+            case TO_BACKDROP:
+                robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                if(!drive.isBusy()){
+                    robot.intake.mandibleClose();
+                    robot.delivery.dropBoth();
+                    step = State.DROP_ON_BACKDROP;
+                    spiketimer.reset();
+                }
+                break;
+            case DROP_ON_BACKDROP:
+                if(spiketimer.seconds() >= 1){
+                    step = State.PARK;
+                    spiketimer.reset();
+                    drive.followTrajectoryAsync(park);
+                }
+                break;
+            case PARK:
+                if(spiketimer.seconds() >= 0.5){
+                    robot.delivery.goTo(Delivery.Positions.TELE_INIT);
+                }
+                if(!drive.isBusy()){
+                    step = State.IDLE;
                 }
                 break;
             default:

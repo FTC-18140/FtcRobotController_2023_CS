@@ -276,6 +276,18 @@ public class Intake
         setLeftMandiblePos(LEFT_MANDIBLE_CLOSE);
         setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
     }
+    public void leftMandibleOpen(){
+        setLeftMandiblePos(LEFT_MANDIBLE_OPEN);
+    }
+    public void leftMandibleClose(){
+        setLeftMandiblePos(LEFT_MANDIBLE_CLOSE);
+    }
+    public void rightMandibleOpen(){
+        setRightMandiblePos(RIGHT_MANDIBLE_OPEN);
+    }
+    public void rightMandibleClose(){
+        setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
+    }
     public void leftMandibleToggle() {
         if (leftMandiblePos== LEFT_MANDIBLE_OPEN) { mandibleClose();}
         else {  mandibleOpen(); }

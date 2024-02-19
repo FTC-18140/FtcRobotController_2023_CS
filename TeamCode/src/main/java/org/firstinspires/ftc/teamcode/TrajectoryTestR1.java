@@ -32,16 +32,16 @@ public class TrajectoryTestR1 extends LinearOpMode {
     int spike_x;
     int spike_y;
 
-    final int BACKDROP_L_X = FieldConstants.RedRight.BACKDROP_LEFT.x;
-    final int BACKDROP_M_X = FieldConstants.RedRight.BACKDROP_CENTER.x;
-    final int BACKDROP_R_X = FieldConstants.RedRight.BACKDROP_RIGHT.x;
+    final double BACKDROP_L_X = FieldConstants.RedRight.BACKDROP_LEFT.x;
+    final double BACKDROP_M_X = FieldConstants.RedRight.BACKDROP_CENTER.x;
+    final double BACKDROP_R_X = FieldConstants.RedRight.BACKDROP_RIGHT.x;
 
-    final int BACKDROP_L_Y = FieldConstants.RedRight.BACKDROP_LEFT.y;
+    final double BACKDROP_L_Y = FieldConstants.RedRight.BACKDROP_LEFT.y;
     final int BACKDROP_M_Y = -48;
     final int BACKDROP_R_Y = -48;
 
-    int backdrop_x;
-    int backdrop_y;
+    double backdrop_x;
+    double backdrop_y;
 
     final int TRUSS_IN_X = -36;
     final int TRUSS_IN_Y = -12;

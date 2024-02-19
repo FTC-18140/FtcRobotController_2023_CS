@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 public class FieldConstants {
     public enum RedRight {
-        START(-63,-12, 0),
-        SPIKE_LEFT(-23,-3,0),
-        SPIKE_CENTER(-17,-12,0),
-        SPIKE_RIGHT(-23,-21,0),
+        START(12,-63, 0),
+        SPIKE_LEFT(3,-23,0),
+        SPIKE_CENTER(12,-17,0),
+        SPIKE_RIGHT(21,-23,0),
         BACKDROP_LEFT(-30,-48,90),
         BACKDROP_CENTER(-36,-48,90),
         BACKDROP_RIGHT(-42,-48,Math.toRadians(90)),

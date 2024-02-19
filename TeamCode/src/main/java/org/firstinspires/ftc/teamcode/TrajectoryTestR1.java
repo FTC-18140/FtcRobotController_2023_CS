@@ -32,11 +32,11 @@ public class TrajectoryTestR1 extends LinearOpMode {
     int spike_x;
     int spike_y;
 
-    final int BACKDROP_L_X = -30;
-    final int BACKDROP_M_X = -36;
-    final int BACKDROP_R_X = -42;
+    final int BACKDROP_L_X = FieldConstants.RedRight.BACKDROP_LEFT.x;
+    final int BACKDROP_M_X = FieldConstants.RedRight.BACKDROP_CENTER.x;
+    final int BACKDROP_R_X = FieldConstants.RedRight.BACKDROP_RIGHT.x;
 
-    final int BACKDROP_L_Y = -48;
+    final int BACKDROP_L_Y = FieldConstants.RedRight.BACKDROP_LEFT.y;
     final int BACKDROP_M_Y = -48;
     final int BACKDROP_R_Y = -48;
 
@@ -112,7 +112,7 @@ public class TrajectoryTestR1 extends LinearOpMode {
 
         drive.followTrajectory(purple);
         drive.followTrajectory(yellow);
-        //drive.followTrajectory(truss1);
+        drive.followTrajectory(truss1);
 
         //drive.followTrajectory(step2);
     }

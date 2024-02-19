@@ -6,7 +6,9 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -20,19 +22,19 @@ public class RRTestRedRight extends OpMode {
 
     int bot_w = 8;
     int tagNum = 2;
-    final int START_X = -70 + bot_w;
-    final int START_Y = -12;
+    final int START_X = 12;
+    final int START_Y = -63;
 
     final int END_X = -58;
     final int END_Y = -58;
 
     final int SPIKE_L_X = -34;
     final int SPIKE_M_X = -25 - bot_w;
-    final int SPIKE_R_X = -34;
+    final int SPIKE_R_X = 24;
 
     final int SPIKE_L_Y = 0;
     final int SPIKE_M_Y = -12;
-    final int SPIKE_R_Y = -24;
+    final int SPIKE_R_Y = -34;
 
     int spike_x;
     int spike_y;
@@ -56,7 +58,18 @@ public class RRTestRedRight extends OpMode {
     final int STACK_X = -36;
     final int STACK_Y = 60;
 
+    enum State{
+        PURPLE,
+        SPIKE_DROP,
+        TO_BACKDROP,
+        DROP_ON_BACKDROP,
+        PARK,
+        IDLE
+    }
+
     boolean done = false;
+
+    ElapsedTime spiketimer;
 
     /*
      * START
@@ -82,7 +95,7 @@ public class RRTestRedRight extends OpMode {
     Trajectory truss1;
     Trajectory park;
 
-    int step = 0;
+    State step = State.PURPLE;
 
     String tag = "RIGHT";
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
@@ -92,6 +105,7 @@ public class RRTestRedRight extends OpMode {
 
         robot.init(hardwareMap, telemetry, false);
         drive = robot.drive;
+        spiketimer = new ElapsedTime();
         //0.9083333
     }
 
@@ -137,12 +151,13 @@ public class RRTestRedRight extends OpMode {
 
         }
 
-        Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(0));
+        Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(90));
 
         drive.setPoseEstimate(start);
         origin_x = drive.trajectoryBuilder(start)
-                .lineTo(new Vector2d(0,START_Y))
+                .splineToLinearHeading(new Pose2d(24, -34, Math.toRadians(120)), Math.toRadians(100))
                 .build();
+
 
         purple = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(spike_x, spike_y), Math.toRadians(-45))
@@ -162,15 +177,27 @@ public class RRTestRedRight extends OpMode {
                 .strafeTo(new Vector2d(END_X, END_Y))
                 .build();
 
-
+        drive.followTrajectoryAsync(origin_x);
     }
     @Override
     public void loop(){
-
-        if(!drive.isBusy() && !done){
-            drive.followTrajectoryAsync(purple);
-            done = true;
+        switch (step){
+            case PURPLE:
+                if(!drive.isBusy()){
+                    step = State.SPIKE_DROP;
+                    spiketimer.reset();
+                }
+                break;
+            case SPIKE_DROP:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                if(spiketimer.seconds() >= 5){
+                    step = State.TO_BACKDROP;
+                }
+                break;
+            default:
+                break;
         }
+
         //drive.update();
         robot.update();
 

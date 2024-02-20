@@ -129,7 +129,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
 
         to_stack = drive.trajectoryBuilder(align_to_stack.end())
                 .splineToSplineHeading(new Pose2d(-44, -10, Math.toRadians(180)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-57.5, -10), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-58.5, -10), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end())

@@ -32,7 +32,7 @@ public class FieldConstants {
         SPIKE_LEFT(-38,-24, Math.toRadians(90)),
         SPIKE_CENTER(23,-32.5, Math.toRadians(120)),
         SPIKE_RIGHT(26,-40, Math.toRadians(120)),
-        BACKDROP_LEFT(48,-33.5,90),
+        BACKDROP_LEFT(48,-32,90),
         BACKDROP_CENTER(48,-40.5,90),
         BACKDROP_RIGHT(48,-46.5,Math.toRadians(179.9)),
         TRUSS_IN(-36,-12,Math.toRadians(90)),

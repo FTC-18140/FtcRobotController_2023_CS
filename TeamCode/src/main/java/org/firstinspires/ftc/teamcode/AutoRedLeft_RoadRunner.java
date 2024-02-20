@@ -35,7 +35,9 @@ public class AutoRedLeft_RoadRunner extends OpMode {
     TrajectorySequence purple;
     Trajectory align_to_stack;
     Trajectory to_stack;
+    Trajectory move_to_transfer;
     Trajectory yellow;
+    Trajectory to_backdrop;
     Trajectory park;
 
     enum State{
@@ -44,7 +46,13 @@ public class AutoRedLeft_RoadRunner extends OpMode {
         ALIGN_TO_STACK,
         TO_STACK,
         GRAB_FROM_STACK,
+        MOVE_TO_TRANSFER,
+        TRANSFER_INTAKE,
+        INTAKE_RELEASE,
+        TRANSFER_DELIVERY,
+        DELIVERY_GRIP,
         TO_BACKDROP,
+        DELIVERY_LIFT,
         DROP_ON_BACKDROP,
         PARK,
         IDLE
@@ -123,6 +131,21 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 .splineToSplineHeading(new Pose2d(-44, -10, Math.toRadians(180)), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-57.5, -10), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+
+        move_to_transfer = drive.trajectoryBuilder(to_stack.end())
+                .lineTo(new Vector2d(-52, -12))
+                .build();
+
+        yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
+                .splineToConstantHeading(new Vector2d(32, -10), Math.toRadians(0))
+                        .build();
+        to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
+                .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
+                .build();
+
+        park = drive.trajectoryBuilder(to_backdrop.end())
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK.x, FieldConstants.RedRight.PARK.y), Math.toRadians(0))
+                .build();
         drive.followTrajectorySequenceAsync(purple);
     }
     @Override
@@ -161,16 +184,67 @@ public class AutoRedLeft_RoadRunner extends OpMode {
             case GRAB_FROM_STACK:
                 if(spiketimer.seconds() >= 0.5){
                     robot.intake.rightMandibleClose();
-                    step = State.IDLE;
+                    step = State.MOVE_TO_TRANSFER;
+                    drive.followTrajectoryAsync(move_to_transfer);
+                }
+                break;
+            case MOVE_TO_TRANSFER:
+                if(!drive.isBusy()){
+                    robot.intake.goTo(Intake.Positions.DOWN_TO_PIXEL, false);
+                    step = State.TRANSFER_INTAKE;
+                    spiketimer.reset();
+                }
+                break;
+            case TRANSFER_INTAKE:
+                if(spiketimer.seconds() >= 0.75){
+                    robot.intake.holdPixelRight();
+                    spiketimer.reset();
+                    step = State.INTAKE_RELEASE;
+                }
+                break;
+            case INTAKE_RELEASE:
+                if(spiketimer.seconds() >= 1){
+                    robot.intake.goTo(Intake.Positions.TRANSFER, false);
+                    robot.delivery.dropLeft();
+                    spiketimer.reset();
+                    step = State.TRANSFER_DELIVERY;
+                }
+                break;
+            case TRANSFER_DELIVERY:
+                if(spiketimer.seconds() >= 2){
+                    robot.intake.dropBoth();
+                    spiketimer.reset();
+                    step = State.DELIVERY_GRIP;
+                }
+                break;
+            case DELIVERY_GRIP:
+                if (spiketimer.seconds() >= 0.5){
+                    robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+                    robot.delivery.holdPixelsBoth();
+                    drive.followTrajectoryAsync(yellow);
+                    spiketimer.reset();
+                    step = State.TO_BACKDROP;
+
                 }
                 break;
             case TO_BACKDROP:
-                robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                if(spiketimer.seconds() >= 5){
+                    //robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                }
                 if(!drive.isBusy()){
                     robot.intake.mandibleClose();
-                    robot.delivery.dropBoth();
-                    step = State.DROP_ON_BACKDROP;
+                    robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                    step = State.DELIVERY_LIFT;
                     spiketimer.reset();
+                    drive.followTrajectoryAsync(to_backdrop);
+
+                }
+                break;
+            case DELIVERY_LIFT:
+                if(!drive.isBusy()){
+                    robot.delivery.dropBoth();
+                    spiketimer.reset();
+                    step = State.DROP_ON_BACKDROP;
                 }
                 break;
             case DROP_ON_BACKDROP:

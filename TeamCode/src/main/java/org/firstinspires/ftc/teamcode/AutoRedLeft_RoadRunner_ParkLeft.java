@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
-public class AutoRedLeft_RoadRunner extends OpMode {
+public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
 
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     SampleMecanumDrive drive;
@@ -166,7 +166,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 .build();
 
         park = drive.trajectoryBuilder(to_backdrop.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK.x, FieldConstants.RedRight.PARK.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK_LEFT.x, FieldConstants.RedRight.PARK_LEFT.y), Math.toRadians(0))
                 .build();
         drive.followTrajectorySequenceAsync(purple);
     }

@@ -35,7 +35,7 @@ public class Intake
     static public double LEFT_GRIP_DROP = 0.2;
     static public double RIGHT_GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.58;
-    static public double RIGHT_GRIP_HOLD = 0.35;
+    static public double RIGHT_GRIP_HOLD = 0.45;
     static public double LEFT_MANDIBLE_OPEN = 0.58;
     static public double RIGHT_MANDIBLE_OPEN = 0.58;
     static public double LEFT_MANDIBLE_CLOSE = 0.18;

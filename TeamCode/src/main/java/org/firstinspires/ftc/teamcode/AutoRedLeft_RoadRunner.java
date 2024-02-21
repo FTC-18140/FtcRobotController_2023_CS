@@ -30,7 +30,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
 
     ElapsedTime spiketimer;
     int tagNum = 2;
-    String tag = "LEFT";
+    String tag = "RIGHT";
 
     TrajectorySequence purple;
     Trajectory align_to_stack;
@@ -109,7 +109,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 spike_heading = FieldConstants.RedLeft.SPIKE_RIGHT.h;
                 backdrop_x = FieldConstants.RedLeft.BACKDROP_RIGHT.x;
                 backdrop_y = FieldConstants.RedLeft.BACKDROP_RIGHT.y;
-                spike_tangent = Math.toRadians(100);
+                spike_tangent = Math.toRadians(90);
                 break;
 
 
@@ -118,18 +118,19 @@ public class AutoRedLeft_RoadRunner extends OpMode {
 
         drive.setPoseEstimate(start);
         purple = drive.trajectorySequenceBuilder(start)
-                .lineTo(new Vector2d(-38, -38))
-                .splineToConstantHeading(new Vector2d(-45, -22), spike_tangent)
-                .turn(Math.toRadians(150))
+                .lineTo(new Vector2d(FieldConstants.RedLeft.SPIKE_ALIGN.x, FieldConstants.RedLeft.SPIKE_ALIGN.y))
+                .splineToConstantHeading(new Vector2d(spike_x, spike_y), spike_tangent)
+                .turn(spike_heading)
                 .build();
 
         align_to_stack = drive.trajectoryBuilder(purple.end(), true)
-                .splineToSplineHeading(new Pose2d(-30, -8, Math.toRadians(210)), Math.toRadians(0))
+                .splineToConstantHeading(((tagNum == 3) ? new Vector2d(-38, -36): new Vector2d(purple.end().getX(), purple.end().getY())), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-42, -8, Math.toRadians(210)), Math.toRadians(0))
                 .build();
 
         to_stack = drive.trajectoryBuilder(align_to_stack.end())
-                .splineToSplineHeading(new Pose2d(-44, -10, Math.toRadians(180)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-58.5, -10), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToSplineHeading(new Pose2d(FieldConstants.RedLeft.ALIGN_TO_STACK.x, FieldConstants.RedLeft.ALIGN_TO_STACK.y, Math.toRadians(180)), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft.STACK.x, FieldConstants.RedLeft.STACK.y), FieldConstants.RedLeft.STACK.h, SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end())
@@ -137,7 +138,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 .build();
 
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(32, -10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft.DOOR.x, FieldConstants.RedLeft.DOOR.y), Math.toRadians(0))
                         .build();
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))

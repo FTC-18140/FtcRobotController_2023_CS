@@ -29,15 +29,16 @@ public class FieldConstants {
 
     public enum RedLeft {
         START(-36,-63, Math.toRadians(90)),
-        SPIKE_LEFT(-38,-24, Math.toRadians(90)),
-        SPIKE_CENTER(23,-32.5, Math.toRadians(120)),
-        SPIKE_RIGHT(26,-40, Math.toRadians(120)),
+        SPIKE_ALIGN(-38,-38, Math.toRadians(90)),
+        SPIKE_LEFT(-45,-22, Math.toRadians(150)),
+        SPIKE_CENTER(-38,-20, Math.toRadians(150)),
+        SPIKE_RIGHT(-34,-36.5, Math.toRadians(-100)),
         BACKDROP_LEFT(48,-30,90),
-        BACKDROP_CENTER(48,-40.5,90),
+        BACKDROP_CENTER(48,-38,90),
         BACKDROP_RIGHT(48,-46.5,Math.toRadians(179.9)),
-        DOOR(-36,-12,Math.toRadians(90)),
-        ALIGN_TO_STACK(-36,36,Math.toRadians(90)),
-        STACK(-24,52,Math.toRadians(90)),
+        DOOR(32,-10,Math.toRadians(90)),
+        ALIGN_TO_STACK(-44,-10,Math.toRadians(90)),
+        STACK(-58,-10,Math.toRadians(180)),
         PARK(54,-62,Math.toRadians(0));
 
         public final double x;

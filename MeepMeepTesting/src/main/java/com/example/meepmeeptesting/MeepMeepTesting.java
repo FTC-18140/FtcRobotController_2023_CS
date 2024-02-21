@@ -10,7 +10,7 @@ public class MeepMeepTesting
 
     static int bot_w = 8;
     int tagNum = 2;
-    static final int START_X = 12;
+    static final int START_X = -36;
     static final int START_Y = -63;
 
     final int END_X = -58;
@@ -59,8 +59,8 @@ public class MeepMeepTesting
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
-                                                       .splineToLinearHeading(new Pose2d(30, -38, Math.toRadians(120)), Math.toRadians(100))
-                                                          .splineToLinearHeading( new Pose2d(46, -40, Math.toRadians(179.9)), Math.toRadians(0))
+                                                       .lineTo(new Vector2d(-38, -38))
+                                                          .splineToConstantHeading( new Vector2d(-38, -18), Math.toRadians(0))
                                                           .splineToConstantHeading( new Vector2d( 54, -60), 0)
                                                        .build()
                                          );
@@ -81,11 +81,14 @@ public class MeepMeepTesting
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
-                                                       .splineToLinearHeading(new Pose2d(12, -38, Math.toRadians(130)), Math.toRadians(120))
-                                                       .splineToLinearHeading( new Pose2d(46, -32, Math.toRadians(179.9)), Math.toRadians(0))
-                                                       .splineToConstantHeading( new Vector2d( 54, -60), 0)
+                                                          .lineTo(new Vector2d(-38, -38))
+                                                          .splineToConstantHeading( new Vector2d(-34, -35), Math.toRadians(0))
+                                                          .turn(Math.toRadians(-100))
+                                                          .splineToSplineHeading(new Pose2d(-30, -8, Math.toRadians(210)), Math.toRadians(0))
                                                        .build()
+
                                          );
+
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)

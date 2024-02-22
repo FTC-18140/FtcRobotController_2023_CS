@@ -48,7 +48,7 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
     @Override
     public void init(){
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry, true);
         drive = robot.drive;
         spiketimer = new ElapsedTime();
         //0.9083333
@@ -56,20 +56,24 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
 
     @Override
     public void init_loop(){
-        switch (tag)
+        super.init_loop();
+        switch (robot.eyes.getSpikePos())
         {
             case "LEFT":
+            case "NOT FOUND":
                 tagNum = 1;
+                telemetry.addData("ZONE = LEFT", 0);
                 break;
             case "RIGHT":
                 tagNum = 3;
+                telemetry.addData("ZONE = RIGHT", 0);
                 break;
             default: // default CENTER
                 tagNum = 2;
+                telemetry.addData("ZONE = CENTER", 0);
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
-        telemetry.addData("wrist pos: ", robot.delivery.wristPos);
     }
 
     @Override

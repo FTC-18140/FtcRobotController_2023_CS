@@ -24,8 +24,8 @@ public class Intake
     public double leftMandiblePos = 0;
     public double rightMandiblePos = 0;
 
-    static public double LEFTGRIP_INIT = 0.2;
-    static public double RIGHTGRIP_INIT = 0;
+    static public double LEFTGRIP_INIT = 0.6;
+    static public double RIGHTGRIP_INIT = 0.45;
     static public double INTAKEELBOW_INIT = 0.045;
     // 0.185 is the down position ready to pick up the pixel
     // 0.225 is the inside the pixel and ready to activate the grippers
@@ -34,7 +34,7 @@ public class Intake
     static public double MANDIBLE_INIT = 0;
     static public double LEFT_GRIP_DROP = 0.2;
     static public double RIGHT_GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.58;
+    static public double LEFT_GRIP_HOLD = 0.55;
     static public double RIGHT_GRIP_HOLD = 0.45;
     static public double LEFT_MANDIBLE_OPEN = 0.58;
     static public double RIGHT_MANDIBLE_OPEN = 0.58;

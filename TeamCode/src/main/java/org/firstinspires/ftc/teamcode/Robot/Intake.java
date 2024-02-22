@@ -50,7 +50,7 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.02, 0.02, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
+        TRANSFER( 0.03, 0.03, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, 0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to

@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
@@ -34,18 +36,21 @@ public class Intake
     static public double MANDIBLE_INIT = 0;
     static public double LEFT_GRIP_DROP = 0.2;
     static public double RIGHT_GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.55;
-    static public double RIGHT_GRIP_HOLD = 0.45;
+    static public double LEFT_GRIP_HOLD = 0.6;
+    static public double RIGHT_GRIP_HOLD = 0.35;
     static public double LEFT_MANDIBLE_OPEN = 0.58;
     static public double RIGHT_MANDIBLE_OPEN = 0.58;
-    static public double LEFT_MANDIBLE_CLOSE = 0.18;
-    static public double RIGHT_MANDIBLE_CLOSE = 0.16;
+    static public double LEFT_MANDIBLE_CLOSE = 0.15;
+    static public double RIGHT_MANDIBLE_CLOSE = 0.17;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
     private boolean clearOfTransferZone = true;
     private boolean leftGripperClosed = false;
     private boolean rightGripperClosed = false;
+    ElapsedTime time = new ElapsedTime();
+    DigitalChannel beamBreakLeft;
+    DigitalChannel beamBreakRight;
 
     public enum Positions
     {
@@ -132,6 +137,12 @@ public class Intake
             rightMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("randible not found", 0);
+        }
+        try {
+            beamBreakLeft = hwMap.digitalChannel.get("bbrleft");
+            beamBreakRight = hwMap.digitalChannel.get("bbrright");
+        } catch(Exception e) {
+            telemetry.addData("beam break sensors not found", 0);
         }
         if (ifAuto) {
             goTo(Positions.INIT, true);
@@ -272,9 +283,10 @@ public class Intake
         setLeftMandiblePos(LEFT_MANDIBLE_OPEN);
         setRightMandiblePos(RIGHT_MANDIBLE_OPEN);
     }
-    public void mandibleClose() {
+    public boolean mandibleClose() {
         setLeftMandiblePos(LEFT_MANDIBLE_CLOSE);
         setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
+        return true;
     }
     public void leftMandibleOpen(){
         setLeftMandiblePos(LEFT_MANDIBLE_OPEN);
@@ -297,7 +309,52 @@ public class Intake
         if (rightMandiblePos != RIGHT_MANDIBLE_CLOSE) { mandibleClose();}
         else {  mandibleOpen(); }
     }
+    public void autoIntake () throws InterruptedException {
 
+        boolean leftloaded = !beamBreakLeft.getState();
+        boolean rightloaded = !beamBreakRight.getState();
+        telemetry.addData("beambreakright", beamBreakRight.getState());
+        telemetry.addData("beambreakleft", beamBreakLeft.getState());
+        // state machine
+        boolean cycleDone = false;
+
+        telemetry.addData("time", time.seconds());
+
+//        && mandibleClose()
+
+        // if both beams are broken
+        if (leftloaded && rightloaded ) {
+
+            //reset the time, because resetting it each step will make the whole thing restart
+            if (time.seconds() > 5) {
+                time.reset();
+            }
+
+            if (time.seconds() < 1) {
+                goTo(Positions.DOWN_TO_PIXEL, true);
+            }
+
+            //pickup pixels
+            if (time.seconds() >= 1 && time.seconds() < 2.5) {
+                goTo(Positions.INTAKE, true);
+            }
+        }
+
+        if (time.seconds() >= 2.5 && time.seconds() < 4) {
+            // go to just above the transfer point
+            goTo(Positions.READY_TO_TRANSFER, true);
+        }
+
+        if (time.seconds() >= 4 && time.seconds() <= 4.7) {
+            goTo(Positions.TRANSFER, true);
+            cycleDone = true;
+        }
+
+        if (cycleDone && time.seconds() >= 4.7) {
+            // go to just above intake and wait to go again
+            goTo(Positions.WAIT_TO_INTAKE, false);
+        }
+    }
 
     public void update()
     {

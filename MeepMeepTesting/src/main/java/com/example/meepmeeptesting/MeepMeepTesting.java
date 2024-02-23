@@ -13,7 +13,7 @@ public class MeepMeepTesting
     static int bot_w = 8;
     int tagNum = 2;
     static final int START_X = -36;
-    static final int START_Y = 63;
+    static final int START_Y = 62;
 
     final int END_X = -58;
     final int END_Y = -58;
@@ -81,13 +81,13 @@ public class MeepMeepTesting
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
-                                                          .lineTo(new Vector2d(-36, 38))
-                                                          .splineToConstantHeading(new Vector2d(-41, 22), Math.toRadians(180))
+                                                          .lineTo(new Vector2d(-38, 38))
+                                                          .splineToConstantHeading(new Vector2d(-38, 14), Math.toRadians(-30))
                                                           .turn(Math.toRadians(-160))
-                                                          .splineToConstantHeading(new Vector2d(-32, 12), Math.toRadians(-100))
-                                                          .splineToConstantHeading(new Vector2d(-30, 8), Math.toRadians(0))
-                                                          .splineToSplineHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))
-                                                          .splineToConstantHeading(new Vector2d(-58, 12), Math.toRadians(180))
+                                                          //.splineToConstantHeading(new Vector2d(-32, 12), Math.toRadians(-90))
+                                                          //.splineToConstantHeading(new Vector2d(-30, 8), Math.toRadians(0))
+                                                          //.splineToSplineHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))
+                                                          //.splineToConstantHeading(new Vector2d(-58, 12), Math.toRadians(180))
                                                        .build()
 
                                          );

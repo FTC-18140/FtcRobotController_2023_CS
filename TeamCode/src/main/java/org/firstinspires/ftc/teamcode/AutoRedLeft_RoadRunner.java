@@ -170,7 +170,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 .build();
 
         park = drive.trajectoryBuilder(to_backdrop.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK.x, FieldConstants.RedRight.PARK.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft.PARK.x, FieldConstants.RedLeft.PARK.y), Math.toRadians(0))
                 .build();
         drive.followTrajectorySequenceAsync(purple);
     }
@@ -189,7 +189,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 break;
             case SPIKE_DROP:
                 robot.intake.dropBoth();
-                if(spiketimer.seconds() >= 0.5){
+                if(spiketimer.seconds() >= 0.3){
                     step = State.BACKUP;
                     drive.followTrajectoryAsync(backup);
 
@@ -215,7 +215,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 }
                 break;
             case GRAB_FROM_STACK:
-                if(spiketimer.seconds() >= 0.5){
+                if(spiketimer.seconds() >= 0.4){
                     robot.intake.rightMandibleClose();
                     step = State.MOVE_TO_TRANSFER;
                     drive.followTrajectoryAsync(move_to_transfer);
@@ -229,7 +229,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 }
                 break;
             case TRANSFER_INTAKE:
-                if(spiketimer.seconds() >= 0.75){
+                if(spiketimer.seconds() >= 0.6){
                     robot.intake.holdPixelRight();
                     spiketimer.reset();
                     step = State.INTAKE_RELEASE;

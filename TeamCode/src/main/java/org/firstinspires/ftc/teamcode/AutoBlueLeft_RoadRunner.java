@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-import kotlin.properties.ObservableProperty;
-
 @Autonomous
 public class AutoBlueLeft_RoadRunner extends OpMode {
     SampleMecanumDrive drive;
@@ -40,7 +38,7 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
     Trajectory purple;
     Trajectory yellow;
     Trajectory park;
-    AutoRedRightRoadRunner.State step = AutoRedRightRoadRunner.State.PURPLE;
+    State step = State.PURPLE;
 
     String tag = "RIGHT";
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
@@ -133,14 +131,14 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
                 robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
                 robot.intake.mandibleOpen();
                 if(!drive.isBusy()){
-                    step = AutoRedRightRoadRunner.State.SPIKE_DROP;
+                    step = State.SPIKE_DROP;
                     spiketimer.reset();
                 }
                 break;
             case SPIKE_DROP:
                 robot.intake.dropBoth();
                 if(spiketimer.seconds() >= 0.5){
-                    step = AutoRedRightRoadRunner.State.TO_BACKDROP;
+                    step = State.TO_BACKDROP;
                     drive.followTrajectoryAsync(yellow);
                 }
                 break;
@@ -149,13 +147,13 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
                 if(!drive.isBusy()){
                     robot.intake.mandibleClose();
                     robot.delivery.dropBoth();
-                    step = AutoRedRightRoadRunner.State.DROP_ON_BACKDROP;
+                    step = State.DROP_ON_BACKDROP;
                     spiketimer.reset();
                 }
                 break;
             case DROP_ON_BACKDROP:
                 if(spiketimer.seconds() >= 1){
-                    step = AutoRedRightRoadRunner.State.PARK;
+                    step = State.PARK;
                     spiketimer.reset();
                     drive.followTrajectoryAsync(park);
                 }
@@ -165,7 +163,7 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
                     robot.delivery.goTo(Delivery.Positions.TELE_INIT);
                 }
                 if(!drive.isBusy()){
-                    step = AutoRedRightRoadRunner.State.IDLE;
+                    step = State.IDLE;
                 }
                 break;
             default:

@@ -5,10 +5,10 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class FieldConstants {
     public enum RedRight {
-        START(14,-63, Math.toRadians(90)),
-        SPIKE_LEFT(7,-36,Math.toRadians(130)),
+        START(12,-63, Math.toRadians(90)),
+        SPIKE_LEFT(10,-36,Math.toRadians(140)),
         SPIKE_CENTER(23,-32.5,Math.toRadians(120)),
-        SPIKE_RIGHT(26,-40,Math.toRadians(120)),
+        SPIKE_RIGHT(26,-40,Math.toRadians(100)),
         BACKDROP_LEFT(47,-33.5,90),
         BACKDROP_CENTER(47,-40.5,90),
         BACKDROP_RIGHT(47,-46.5,Math.toRadians(179.9)),
@@ -59,11 +59,11 @@ public class FieldConstants {
     public enum BlueLeft {
         START(12,63, Math.toRadians(-90)),
         SPIKE_RIGHT(8,41,Math.toRadians(-150)),
-        SPIKE_CENTER(23,32.5,Math.toRadians(120)),
-        SPIKE_LEFT(26,40,Math.toRadians(120)),
-        BACKDROP_RIGHT(50,31,Math.toRadians(180)),
-        BACKDROP_CENTER(48,40.5,90),
-        BACKDROP_LEFT(48,46.5,Math.toRadians(179.9)),
+        SPIKE_CENTER(22,32.5,Math.toRadians(-120)),
+        SPIKE_LEFT(26,40,Math.toRadians(-130)),
+        BACKDROP_RIGHT(46,31,Math.toRadians(180)),
+        BACKDROP_CENTER(46,37.5,90),
+        BACKDROP_LEFT(48,42.5,Math.toRadians(179.9)),
         TRUSS_IN(-36,-12,Math.toRadians(90)),
         TRUSS_OUT(-36,36,Math.toRadians(90)),
         STACK(-24,52,Math.toRadians(90)),
@@ -93,7 +93,7 @@ public class FieldConstants {
         BACKDROP_CENTER(48,38,90),
         BACKDROP_RIGHT(48,46.5,Math.toRadians(179.9)),
         DOOR(32,10,Math.toRadians(90)),
-        ALIGN_TO_STACK(48,10,Math.toRadians(90)),
+        ALIGN_TO_STACK(-48,10,Math.toRadians(90)),
         STACK(-58,10,Math.toRadians(180)),
         PARK(54,62,Math.toRadians(0));
 

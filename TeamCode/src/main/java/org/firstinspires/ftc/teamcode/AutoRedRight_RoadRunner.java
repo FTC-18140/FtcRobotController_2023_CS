@@ -52,23 +52,6 @@ public class AutoRedRight_RoadRunner extends OpMode {
 
     ElapsedTime spiketimer;
 
-    /*
-     * START
-     * Place Purple^
-     * Place Yellow^+>
-     * >BONUS:
-     *  Go through truss
-     *  Exit truss
-     *  Go to pixel stack
-     *  run into stack
-     *  grab pixel(s)
-     *  transfer pixel(s)
-     *  travel through stage door
-     *  go to backdrop
-     *  place pixel
-     * PARK
-     * */
-
     Trajectory origin_x;
     Trajectory purple;
     Trajectory yellow;
@@ -83,13 +66,8 @@ public class AutoRedRight_RoadRunner extends OpMode {
 
     @Override
     public void init(){
-
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRedRightRoadRunner.java
         robot.init(hardwareMap, telemetry, true);
-=======
-        robot.init(hardwareMap, telemetry, false);
         TGEVisionProcessor.theColor = "RED";
->>>>>>> b1678e9 (Adding templates):TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRedRight_RoadRunner.java
         drive = robot.drive;
         spiketimer = new ElapsedTime();
         //0.9083333
@@ -144,8 +122,6 @@ public class AutoRedRight_RoadRunner extends OpMode {
                 backdrop_y = FieldConstants.RedRight.BACKDROP_RIGHT.y;
                 spike_tangent = Math.toRadians(100);
                 break;
-
-
         }
 
         Pose2d start = new Pose2d(FieldConstants.RedRight.START.x ,FieldConstants.RedRight.START.y, FieldConstants.RedRight.START.h);

@@ -35,12 +35,13 @@ public class Intake
     //
     static public double MANDIBLE_INIT = 0;
     static public double LEFT_GRIP_DROP = 0.2;
+
     static public double RIGHT_GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.6;
     static public double RIGHT_GRIP_HOLD = 0.35;
     static public double LEFT_MANDIBLE_OPEN = 0.58;
     static public double RIGHT_MANDIBLE_OPEN = 0.58;
-    static public double LEFT_MANDIBLE_CLOSE = 0.15;
+    static public double LEFT_MANDIBLE_CLOSE = 0.13;
     static public double RIGHT_MANDIBLE_CLOSE = 0.17;
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
@@ -286,6 +287,11 @@ public class Intake
     public boolean mandibleClose() {
         setLeftMandiblePos(LEFT_MANDIBLE_CLOSE);
         setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
+        return true;
+    }
+    public boolean mandibleHalf() {
+        setLeftMandiblePos(0.25);
+        setRightMandiblePos(0.25);
         return true;
     }
     public void leftMandibleOpen(){

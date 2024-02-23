@@ -131,12 +131,15 @@ public class Teleop extends OpMode  {
 //        }
         if (tbdGamepad1.getButton(LEFT_BUMPER)) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
-        } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
-            robot.intake.goTo(TRANSFER, false);
+        } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
+            robot.intake.mandibleHalf();
             robot.delivery.setElbowPosition(0.92);
+        } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
+            robot.intake.goTo(TRANSFER, false);
         } else if (tbdGamepad1.getButtonPressed(B)) {
              robot.intake.goTo( DOWN_TO_PIXEL, false);
         }
+
 
 
         ////////////////////

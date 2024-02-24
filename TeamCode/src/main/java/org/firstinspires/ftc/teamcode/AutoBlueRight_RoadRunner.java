@@ -44,6 +44,8 @@ public class AutoBlueRight_RoadRunner extends OpMode {
     Trajectory yellow;
     Trajectory to_backdrop;
     Trajectory park;
+    Trajectory through_door;
+    Trajectory to_backdrop_left;
 
     Trajectory backup;
 
@@ -52,6 +54,8 @@ public class AutoBlueRight_RoadRunner extends OpMode {
         SPIKE_DROP,
         BACKUP,
         ALIGN_TO_STACK,
+        THROUGH_DOOR_LEFT,
+        TO_BACKDROP_LEFT,
         TO_STACK,
         GRAB_FROM_STACK,
         MOVE_TO_TRANSFER,
@@ -135,8 +139,6 @@ public class AutoBlueRight_RoadRunner extends OpMode {
 
                 spike_tangent = Math.toRadians(90);
                 break;
-
-
         }
         Pose2d start = new Pose2d(FieldConstants.BlueRight.START.x ,FieldConstants.BlueRight.START.y, FieldConstants.BlueRight.START.h);
 
@@ -167,6 +169,15 @@ public class AutoBlueRight_RoadRunner extends OpMode {
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
                 .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.DOOR.x, FieldConstants.BlueRight.DOOR.y), Math.toRadians(0))
                 .build();
+
+        through_door = drive.trajectoryBuilder(align_to_stack.end(), true)
+                .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.DOOR.x, FieldConstants.BlueRight.DOOR.y), Math.toRadians(0))
+                .build();
+
+        to_backdrop_left = drive.trajectoryBuilder(through_door.end(), true)
+                .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
+                .build();
+
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
                 .build();
@@ -199,8 +210,29 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 break;
             case BACKUP:
                 if(!drive.isBusy()){
-                    step = State.ALIGN_TO_STACK;
+
                     drive.followTrajectoryAsync(align_to_stack);
+                    if(tagNum == 1){
+                        step = State.THROUGH_DOOR_LEFT;
+                    }else{
+                        step = State.ALIGN_TO_STACK;
+                    }
+                }
+                break;
+            case THROUGH_DOOR_LEFT:
+                if(!drive.isBusy()){
+                    drive.followTrajectoryAsync(through_door);
+                    step = State.TO_BACKDROP_LEFT;
+                }
+                break;
+            case TO_BACKDROP_LEFT:
+                if(!drive.isBusy()){
+                    robot.intake.mandibleClose();
+                    robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
+                    step = State.DELIVERY_LIFT;
+                    spiketimer.reset();
+                    drive.followTrajectoryAsync(to_backdrop);
+
                 }
                 break;
             case ALIGN_TO_STACK:
@@ -231,14 +263,14 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 }
                 break;
             case TRANSFER_INTAKE:
-                if(spiketimer.seconds() >= 0.3){
+                if(spiketimer.seconds() >= 0.5){
                     robot.intake.holdPixelLeft();
                     spiketimer.reset();
                     step = State.INTAKE_RELEASE;
                 }
                 break;
             case INTAKE_RELEASE:
-                if(spiketimer.seconds() >= 0.7){
+                if(spiketimer.seconds() >= 0.5){
                     robot.intake.goTo(Intake.Positions.TRANSFER, false);
                     robot.delivery.dropRight();
                     spiketimer.reset();
@@ -249,7 +281,7 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 if(spiketimer.seconds() >= 2){
                     robot.intake.dropBoth();
                     spiketimer.reset();
-                    step = State.IDLE;
+                    step = State.DELIVERY_GRIP;
                 }
                 break;
             case DELIVERY_GRIP:

@@ -82,19 +82,19 @@ public class FieldConstants {
     public enum BlueRight {
         START(-36,62, Math.toRadians(-90)),
         SPIKE_ALIGN(-38,38, Math.toRadians(-90)),
-        SPIKE_LEFT(-45,22, Math.toRadians(-100)),
+        SPIKE_LEFT(-33,36, Math.toRadians(100)),
         SPIKE_CENTER(-37,13.5, Math.toRadians(-160)),
-        SPIKE_RIGHT(-40,20, Math.toRadians(-160)),
-        BACKUP_RIGHT(-38,36, Math.toRadians(-100)),
+        SPIKE_RIGHT(-42,16, Math.toRadians(-160)),
+        BACKUP_RIGHT(-38,10, Math.toRadians(-100)),
         BACKUP_CENTER(-38,10, Math.toRadians(-100)),
-        BACKUP_LEFT(-42,18, Math.toRadians(-100)),
+        BACKUP_LEFT(-38,36, Math.toRadians(-100)),
 
-        BACKDROP_LEFT(48,30,90),
-        BACKDROP_CENTER(48,38,90),
-        BACKDROP_RIGHT(48,46.5,Math.toRadians(179.9)),
-        DOOR(32,10,Math.toRadians(90)),
-        ALIGN_TO_STACK(-48,10,Math.toRadians(90)),
-        STACK(-56.5,16,Math.toRadians(180)),
+        BACKDROP_LEFT(48,40,90),
+        BACKDROP_CENTER(48,36,90),
+        BACKDROP_RIGHT(48,32, Math.toRadians(179.9)),
+        DOOR(32,10, Math.toRadians(90)),
+        ALIGN_TO_STACK(-48,12,Math.toRadians(90)),
+        STACK(-57,16,Math.toRadians(180)),
         PARK(54,62,Math.toRadians(0));
 
         public final double x;

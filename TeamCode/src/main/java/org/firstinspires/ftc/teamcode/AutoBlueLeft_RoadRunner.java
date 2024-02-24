@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
+import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -48,6 +49,7 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
 
         robot.init(hardwareMap, telemetry, true);
         drive = robot.drive;
+        TGEVisionProcessor.theColor = "BLUE";
         spiketimer = new ElapsedTime();
         //0.9083333
     }

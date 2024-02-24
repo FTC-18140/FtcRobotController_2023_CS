@@ -125,6 +125,7 @@ public class AutoBlueRight_RoadRunner extends OpMode {
 
                 backup_x = FieldConstants.BlueRight.BACKUP_CENTER.x;
                 backup_y = FieldConstants.BlueRight.BACKUP_CENTER.y;
+                backup_heading = Math.toRadians(-90);
                 spike_tangent = Math.toRadians(-30);
                 break;
             case(3):
@@ -136,7 +137,7 @@ public class AutoBlueRight_RoadRunner extends OpMode {
 
                 backup_x = FieldConstants.BlueRight.BACKUP_RIGHT.x;
                 backup_y = FieldConstants.BlueRight.BACKUP_RIGHT.y;
-
+                backup_heading = Math.toRadians(-90);
                 spike_tangent = Math.toRadians(90);
                 break;
         }
@@ -168,14 +169,6 @@ public class AutoBlueRight_RoadRunner extends OpMode {
 
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
                 .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.DOOR.x, FieldConstants.BlueRight.DOOR.y), Math.toRadians(0))
-                .build();
-
-        through_door = drive.trajectoryBuilder(align_to_stack.end(), true)
-                .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.DOOR.x, FieldConstants.BlueRight.DOOR.y), Math.toRadians(0))
-                .build();
-
-        to_backdrop_left = drive.trajectoryBuilder(through_door.end(), true)
-                .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
                 .build();
 
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
@@ -210,29 +203,8 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 break;
             case BACKUP:
                 if(!drive.isBusy()){
-
                     drive.followTrajectoryAsync(align_to_stack);
-                    if(tagNum == 1){
-                        step = State.THROUGH_DOOR_LEFT;
-                    }else{
-                        step = State.ALIGN_TO_STACK;
-                    }
-                }
-                break;
-            case THROUGH_DOOR_LEFT:
-                if(!drive.isBusy()){
-                    drive.followTrajectoryAsync(through_door);
-                    step = State.TO_BACKDROP_LEFT;
-                }
-                break;
-            case TO_BACKDROP_LEFT:
-                if(!drive.isBusy()){
-                    robot.intake.mandibleClose();
-                    robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
-                    step = State.DELIVERY_LIFT;
-                    spiketimer.reset();
-                    drive.followTrajectoryAsync(to_backdrop);
-
+                    step = State.ALIGN_TO_STACK;
                 }
                 break;
             case ALIGN_TO_STACK:

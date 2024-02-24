@@ -93,7 +93,7 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
                 spike_heading = FieldConstants.BlueLeft.SPIKE_CENTER.h;
                 backdrop_x = FieldConstants.BlueLeft.BACKDROP_CENTER.x;
                 backdrop_y = FieldConstants.BlueLeft.BACKDROP_CENTER.y;
-                spike_tangent = Math.toRadians(100);
+                spike_tangent = Math.toRadians(-90);
                 break;
             case(3):
                 spike_x = FieldConstants.BlueLeft.SPIKE_RIGHT.x;

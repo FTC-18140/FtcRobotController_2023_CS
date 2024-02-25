@@ -627,13 +627,11 @@ public class Thunderbot2023
         rightRear.setVelocity(0);
     }
 
-    public void resetIMUYaw()
-    {
+    public void resetIMUYaw() {
         imu.resetYaw();
     }
 
-    public String getSpikePos()
-    {
+    public String getSpikePos() {
         if ( eyes != null ) { return eyes.getSpikePos(); }
         else { return "No Vision System Initialized."; }
     }

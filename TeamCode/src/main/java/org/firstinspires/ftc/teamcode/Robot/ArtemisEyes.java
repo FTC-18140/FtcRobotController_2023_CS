@@ -47,43 +47,64 @@ public class ArtemisEyes
             telemetry.addData("Webcam 2 not found -- theRearCamera", 0);
         }
 
-        if ( theFrontCamera != null && theBackCamera != null )
+        try
         {
-            CameraName switchableCamera = ClassFactory.getInstance().getCameraManager().nameForSwitchableCamera(
-                    theFrontCamera, theBackCamera);
-            aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
-            tgeFinder = new TGEVisionProcessor();
-            thePortal = VisionPortal.easyCreateWithDefaults(switchableCamera, aprilTagFinder, tgeFinder);
-            aprilTagFinder.setDecimation(2);
-            thePortal.setActiveCamera(theFrontCamera);
+            if ( theFrontCamera != null && theBackCamera != null )
+            {
+                CameraName switchableCamera = ClassFactory.getInstance().getCameraManager().nameForSwitchableCamera(
+                        theFrontCamera, theBackCamera);
+                aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+                tgeFinder = new TGEVisionProcessor();
+                thePortal = VisionPortal.easyCreateWithDefaults(switchableCamera, aprilTagFinder, tgeFinder);
+                aprilTagFinder.setDecimation(2);
+               // thePortal.setActiveCamera(theFrontCamera);
+            }
+            else if ( theBackCamera == null)
+            {
+                aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+                aprilTagFinder.setDecimation(2);
+
+                tgeFinder = new TGEVisionProcessor();
+                tgeFinder.setTelemetry(telemetry);
+
+                thePortal = new VisionPortal.Builder()
+                        .setCamera(theFrontCamera)
+                        .addProcessors(aprilTagFinder, tgeFinder)
+                        .build();
+//                thePortal = VisionPortal.easyCreateWithDefaults(theFrontCamera, aprilTagFinder, tgeFinder);
+               // thePortal.setActiveCamera(theFrontCamera);
+            }
+            else
+            {
+                aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
+                tgeFinder = new TGEVisionProcessor();
+                tgeFinder.setTelemetry(telemetry);
+                thePortal = VisionPortal.easyCreateWithDefaults(theBackCamera, aprilTagFinder, tgeFinder);
+                aprilTagFinder.setDecimation(2);
+                //thePortal.setActiveCamera(theBackCamera);
+            }
+            thePortal.stopLiveView();
         }
-        else if ( theBackCamera == null)
+        catch (Exception e)
         {
-            aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
-            tgeFinder = new TGEVisionProcessor();
-            thePortal = VisionPortal.easyCreateWithDefaults(theFrontCamera, aprilTagFinder, tgeFinder);
-            aprilTagFinder.setDecimation(2);
-            thePortal.setActiveCamera(theFrontCamera);
+            telemetry.addData("exception:  ", e.getMessage());
         }
-        else
-        {
-            aprilTagFinder = new AprilTagProcessor.Builder().setDrawTagOutline(true).build();
-            tgeFinder = new TGEVisionProcessor();
-            thePortal = VisionPortal.easyCreateWithDefaults(theBackCamera, aprilTagFinder, tgeFinder);
-            aprilTagFinder.setDecimation(2);
-            thePortal.setActiveCamera(theBackCamera);
-        }
-        thePortal.stopLiveView();
 
 
     }
 
     public String getSpikePos() {
         if (tgeFinder != null) {
+            if (thePortal.getProcessorEnabled(tgeFinder)){
+                telemetry.addData("TGE Enabled YES!!", 0);
+            }
             return tgeFinder.getSpikePos();
+
         } else {
             return "TGEFINDER NOT INITIALIZED";
         }
+
+
     }
 
     @SuppressLint("DefaultLocale")

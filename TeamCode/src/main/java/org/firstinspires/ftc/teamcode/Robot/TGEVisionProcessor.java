@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Rect;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
@@ -31,12 +32,12 @@ public class TGEVisionProcessor implements VisionProcessor
 {
 
     //Outputs
-    private final Mat cvCvtcolorOutput = new Mat();
-    private final Mat cvExtractchannelOutput = new Mat();
-    private final Mat cvThresholdOutput = new Mat();
-    private final Mat cvDilate0Output = new Mat();
-    private final Mat cvErodeOutput = new Mat();
-    private final Mat cvDilate1Output = new Mat();
+    private  Mat cvCvtcolorOutput = new Mat();
+    private  Mat cvExtractchannelOutput = new Mat();
+    private  Mat cvThresholdOutput = new Mat();
+    private  Mat cvDilate0Output = new Mat();
+    private  Mat cvErodeOutput = new Mat();
+    private  Mat cvDilate1Output = new Mat();
 
     Mat cvCvtcolorSrc;
     Mat cvExtractchannelSrc;
@@ -71,6 +72,13 @@ public class TGEVisionProcessor implements VisionProcessor
 
     public static String theColor = "RED";
     public static int extractChannel = 1;
+
+    public void setTelemetry(Telemetry telemetry)
+    {
+        this.telemetry = telemetry;
+    }
+
+    Telemetry telemetry;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration)
@@ -234,44 +242,53 @@ public class TGEVisionProcessor implements VisionProcessor
                 break;
         }
 
-        myBitmap = createBitmap( myMat.width(), myMat.height(), Bitmap.Config.ARGB_8888);
 
-        Utils.matToBitmap(myMat, myBitmap);
-        Rect drawRegion = new Rect(0, 0, onscreenWidth, onscreenHeight);
-        canvas.drawBitmap(myBitmap, null, drawRegion, null);
-
-        Paint bitmapTextPaint = new Paint();
-        bitmapTextPaint.setColor(Color.YELLOW);
-        bitmapTextPaint.setAntiAlias(true);
-        bitmapTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        bitmapTextPaint.setTextSize(50);
-        canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
-
-        Paint textPaint = new Paint();
-        textPaint.setColor(Color.YELLOW);
-        textPaint.setAntiAlias(true);
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        textPaint.setTextSize(50);
-        canvas.drawText( spikePos, 100, 450, textPaint );
-
-        Paint circlePaint = new Paint();
-        circlePaint.setColor(Color.CYAN);
-        circlePaint.setStrokeWidth(5);
-        canvas.drawCircle( (float) xPos, (float) yPos, 25, circlePaint);
-
-        Paint contourPaint = new Paint();
-        contourPaint.setColor(Color.MAGENTA);
-        contourPaint.setStrokeWidth(10);
-
-        if ( contourPts != null )
+        try
         {
-            for (int j = 0; j < numPts; j++)
-            {
-                canvas.drawPoint((float) contourPts[j].x, (float) contourPts[j].y,
-                                 contourPaint);
-            }
-        }
+            myBitmap = createBitmap( myMat.width(), myMat.height(), Bitmap.Config.ARGB_8888);
 
+            Utils.matToBitmap(myMat, myBitmap);
+            Rect drawRegion = new Rect(0, 0, onscreenWidth, onscreenHeight);
+            canvas.drawBitmap(myBitmap, null, drawRegion, null);
+
+            Paint bitmapTextPaint = new Paint();
+            bitmapTextPaint.setColor(Color.YELLOW);
+            bitmapTextPaint.setAntiAlias(true);
+            bitmapTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
+            bitmapTextPaint.setTextSize(50);
+            canvas.drawText( bitmapText, 400, 600, bitmapTextPaint );
+
+            Paint textPaint = new Paint();
+            textPaint.setColor(Color.YELLOW);
+            textPaint.setAntiAlias(true);
+            textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+            textPaint.setTextSize(50);
+            canvas.drawText( spikePos, 100, 450, textPaint );
+
+            Paint circlePaint = new Paint();
+            circlePaint.setColor(Color.CYAN);
+            circlePaint.setStrokeWidth(5);
+            canvas.drawCircle( (float) xPos, (float) yPos, 25, circlePaint);
+
+            Paint contourPaint = new Paint();
+            contourPaint.setColor(Color.MAGENTA);
+            contourPaint.setStrokeWidth(10);
+
+            if ( contourPts != null )
+            {
+                for (int j = 0; j < numPts; j++)
+                {
+                    canvas.drawPoint((float) contourPts[j].x, (float) contourPts[j].y,
+                                     contourPaint);
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            telemetry.addData("myMat: ", bitmapText);
+            telemetry.update();
+        }
 
 //        canvas.drawText( Integer.toString(cvCvtcolorOutput.width()), 300, 300, textPaint );
 //        canvas.drawText( Integer.toString(cvCvtcolorOutput.height()), 500, 300, textPaint );

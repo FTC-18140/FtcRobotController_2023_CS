@@ -124,14 +124,22 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
+//        try {
+//            robot.intake.autoIntake();
+//        } catch (Exception e) {
+//            telemetry.addData("auto intake not working", 0);
+//        }
         if (tbdGamepad1.getButton(LEFT_BUMPER)) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
-        } else if (tbdGamepad1.getButton(RIGHT_BUMPER)) {
-            robot.intake.goTo(TRANSFER, false);
+        } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
+            robot.intake.mandibleHalf();
             robot.delivery.setElbowPosition(0.92);
+        } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
+            robot.intake.goTo(TRANSFER, false);
         } else if (tbdGamepad1.getButtonPressed(B)) {
              robot.intake.goTo( DOWN_TO_PIXEL, false);
         }
+
 
 
         ////////////////////
@@ -157,16 +165,14 @@ public class Teleop extends OpMode  {
         ////////////////////
         // PULL-UP
         ////////////////////
-        if (tbdGamepad1.getButton(BACK) || getRuntime() > 90)
-        {
-            if (tbdGamepad1.getButton(Y)) {
+            if (tbdGamepad1.getButton(DPAD_UP)) {
                 robot.endGame.pullUp(1);
-            } else if (tbdGamepad1.getButton(A)) {
+            } else if (tbdGamepad1.getButton(DPAD_DOWN)) {
                 robot.endGame.pullUp(-1);
             } else {
                 robot.endGame.pullUp(0);
             }
-        }
+
 
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
 

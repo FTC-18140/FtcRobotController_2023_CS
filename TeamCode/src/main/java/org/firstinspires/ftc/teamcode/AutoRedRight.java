@@ -66,37 +66,10 @@ public class AutoRedRight extends OpMode {
     private int tagNum;
 
 
-    /*
-     Manually set the camera gain and exposure.
-     This can only be called AFTER calling initAprilTag(), and only works for Webcams;
-    */
-//    private void    setManualExposure(int exposureMS, int gain) {
-//        // Wait for the camera to be open, then use the controls
-//
-//
-//        // Make sure camera is streaming before we try to set the exposure controls
-//        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-//            telemetry.addData("Camera", "Ready");
-//            telemetry.update();
-//        }
-//
-//        // Set camera controls unless we are stopping.
-//        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-//        if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-//            exposureControl.setMode(ExposureControl.Mode.Manual);
-//        }
-//        exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-//        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-//        gainControl.setGain(gain);
-//    }
-
     @Override
     public void init() {
         robot.init(hardwareMap, telemetry, true, true);
         TGEVisionProcessor.theColor = "RED";
-//        if (USE_WEBCAM) {
-//            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-//        }
     }
 
     /**

@@ -119,7 +119,8 @@ public class AutoRedLeft_RoadRunner extends OpMode {
 
                 backup_x = FieldConstants.RedLeft.BACKUP_CENTER.x;
                 backup_y = FieldConstants.RedLeft.BACKUP_CENTER.y;
-                spike_tangent = Math.toRadians(100);
+                backup_heading = Math.toRadians(-15);
+                spike_tangent = Math.toRadians(0);
                 break;
             case(3):
                 spike_x = FieldConstants.RedLeft.SPIKE_RIGHT.x;
@@ -284,7 +285,7 @@ public class AutoRedLeft_RoadRunner extends OpMode {
                 if(spiketimer.seconds() >= 1){
                     step = State.PARK;
                     spiketimer.reset();
-                    drive.followTrajectoryAsync(park);
+                    //drive.followTrajectoryAsync(park);
                 }
                 break;
             case PARK:

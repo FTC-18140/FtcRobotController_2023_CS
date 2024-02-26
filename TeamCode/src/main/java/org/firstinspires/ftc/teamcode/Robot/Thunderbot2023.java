@@ -255,7 +255,7 @@ public class Thunderbot2023
 
     public void orientedDrive(double forward, double right, double clockwise)
     {
-        double theta = toRadians(heading);
+        double theta = toRadians(heading + 90);
         double vx = (forward * cos(theta)) - (right * sin(theta));
         double vy = (forward * sin(theta)) + (right * cos(theta));
 
@@ -263,6 +263,7 @@ public class Thunderbot2023
 
         joystickDrive(vy, vx, clockwise);
     }
+
     public boolean driveToTag(int tagID, double speed, double distanceAway)
     {
         if (!moving)
@@ -520,15 +521,10 @@ public class Thunderbot2023
             moving = false;
             return true;
         }
-        else
-        {
-            // Continues to turn if not at the specified angle
-            joystickDrive(0, 0, power);
-            telemetry.addData("power", power);
-            telemetry.addData("angle error", angleError);
-            telemetry.addData("target heading", targetHeading);
+        else {
             return false;
         }
+
     }
 
 
@@ -554,7 +550,7 @@ public class Thunderbot2023
      * Positive angles (+) are counterclockwise/CCW, negative angles (-) are clockwise/CW.
      * @return the current heading of the robot.
      */
-    private double getHeading()
+    public double getHeading()
     {
         double rawImuAngle =  -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         double delta = rawImuAngle - lastAngle;

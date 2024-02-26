@@ -13,8 +13,10 @@ import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_LEFT;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_RIGHT;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.LEFT_BUMPER;
+import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.OPTIONS;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.RIGHT_BUMPER;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.RIGHT_STICK_BUTTON;
+import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.SHARE;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.X;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.Y;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.LEFT_STICK_BUTTON;
@@ -110,13 +112,11 @@ public class Teleop extends OpMode  {
 //            if (robot.intake.intakeElbowPos > 0.185) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                     tbdGamepad1.getRightX() * 0.1);
-//        } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
-//            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
-//                    tbdGamepad1.getRightX());
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.25, tbdGamepad1.getLeftX() * 0.25,
                     tbdGamepad1.getRightX() * 0.25);
         } else {
+            // for field centric drive, change right to negative
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
                     tbdGamepad1.getRightX() * 0.9);
         }
@@ -124,11 +124,14 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
-//        try {
-//            robot.intake.autoIntake();
-//        } catch (Exception e) {
-//            telemetry.addData("auto intake not working", 0);
+//        if (!tbdGamepad1.getButton(OPTIONS)) {
+//            try {
+//                robot.intake.autoIntake();
+//            } catch (Exception e) {
+//                telemetry.addData("autoIntake", "Not working");
+//            }
 //        }
+
         if (tbdGamepad1.getButton(LEFT_BUMPER)) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
         } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {

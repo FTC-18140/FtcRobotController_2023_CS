@@ -321,42 +321,36 @@ public class Intake
         boolean rightloaded = !beamBreakRight.getState();
         telemetry.addData("beambreakright", beamBreakRight.getState());
         telemetry.addData("beambreakleft", beamBreakLeft.getState());
-        // state machine
-        boolean cycleDone = false;
-
         telemetry.addData("time", time.seconds());
 
-//        && mandibleClose()
-
         // if both beams are broken
-        if (leftloaded && rightloaded ) {
+        if (leftloaded && rightloaded && mandibleClose()) {
 
             //reset the time, because resetting it each step will make the whole thing restart
-            if (time.seconds() > 5) {
+            if (time.seconds() > 0.8) {
                 time.reset();
             }
 
-            if (time.seconds() < 1) {
-                goTo(Positions.DOWN_TO_PIXEL, true);
+            if (time.seconds() < 0.15) {
+                goTo(Positions.DOWN_TO_PIXEL, false);
             }
 
             //pickup pixels
-            if (time.seconds() >= 1 && time.seconds() < 2.5) {
+            if (time.seconds() >= 0.15 && time.seconds() < 0.49) {
                 goTo(Positions.INTAKE, true);
             }
         }
 
-        if (time.seconds() >= 2.5 && time.seconds() < 4) {
+        if (time.seconds() >= 0.49 && time.seconds() < 1.6) {
             // go to just above the transfer point
-            goTo(Positions.READY_TO_TRANSFER, true);
+            goTo(Positions.TRANSFER, false);
         }
 
-        if (time.seconds() >= 4 && time.seconds() <= 4.7) {
-            goTo(Positions.TRANSFER, true);
-            cycleDone = true;
+        if (time.seconds() >= 1.6 && time.seconds() <= 1.65) {
+            dropBoth();
         }
 
-        if (cycleDone && time.seconds() >= 4.7) {
+        if (time.seconds() >= 1.7) {
             // go to just above intake and wait to go again
             goTo(Positions.WAIT_TO_INTAKE, false);
         }

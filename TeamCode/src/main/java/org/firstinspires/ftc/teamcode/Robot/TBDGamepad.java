@@ -27,7 +27,7 @@ public class TBDGamepad
     public enum Button {
         A(0), B(1), X(2), Y(3), LEFT_BUMPER(4), RIGHT_BUMPER(5), BACK(6),
         START(7), DPAD_UP(8), DPAD_DOWN(9), DPAD_LEFT(10), DPAD_RIGHT(11),
-        LEFT_STICK_BUTTON(12), RIGHT_STICK_BUTTON(13);
+        LEFT_STICK_BUTTON(12), RIGHT_STICK_BUTTON(13), OPTIONS(14), SHARE(15);
         final int index;
         Button( int ind )
         {
@@ -100,6 +100,10 @@ public class TBDGamepad
             case RIGHT_STICK_BUTTON:
                 buttonValue = gamepad.right_stick_button;
                 break;
+            case OPTIONS:
+                buttonValue = gamepad.options;
+            case SHARE:
+                buttonValue = gamepad.share;
             default:
                 break;
         }

@@ -13,6 +13,7 @@ public class Delivery
 {
     public static boolean TELEM = false ;
     Telemetry telemetry;
+    Thunderbot2023 robot = new Thunderbot2023();
 
     // All the Attachment Defining
     public Servo wrist = null;
@@ -91,6 +92,13 @@ public class Delivery
         {
             leftGripPos = leftGrip;
             rightGripPos = rightGrip;
+        }
+    }
+
+    public void autoGrabIntake() {
+        double sec = robot.intake.time.seconds();
+        if (sec >= 1.68 && sec <= 1.8) {
+            holdPixelsBoth();
         }
     }
 

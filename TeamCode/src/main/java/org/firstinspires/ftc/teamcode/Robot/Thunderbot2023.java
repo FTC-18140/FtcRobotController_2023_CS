@@ -25,6 +25,7 @@ public class Thunderbot2023
 {
     // defines all variables
     public IMU imu = null;
+    public Sensors sensors = new Sensors();
 
     Orientation angles = new Orientation();
     DcMotorEx leftFront = null;
@@ -640,6 +641,23 @@ public class Thunderbot2023
     {
         if (eyes != null) { return eyes.getPropY(); }
         else  { return -1; }
+    }
+
+    public int getRed() {
+        return (sensors.colorleft.red() + sensors.colorright.red())/2;
+    }
+
+    public int getBlue() {
+        return (sensors.colorleft.blue() + sensors.colorright.blue())/2;
+    }
+
+    public boolean colorSense () {
+        boolean colorSensed = false;
+        if ((sensors.colorright.blue() >= 100 && sensors.colorleft.blue() >= 100)
+                || (sensors.colorleft.red() >= 50 && sensors.colorright.red() >= 50)) {
+            colorSensed = true;
+        }
+        return colorSensed;
     }
 
     public boolean notifyDriver1() { return notifyTheDriver1; }

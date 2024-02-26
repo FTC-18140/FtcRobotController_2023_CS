@@ -115,7 +115,11 @@ public class Teleop extends OpMode  {
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.25, tbdGamepad1.getLeftX() * 0.25,
                     tbdGamepad1.getRightX() * 0.25);
-        } else {
+        }
+//        else if (tbdGamepad1.getButton(OPTIONS) && robot.colorSense()) {
+//            robot.joystickDrive(0,0,tbdGamepad1.getLeftX() * 0.4);
+//        }
+        else {
             // for field centric drive, change right to negative
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
                     tbdGamepad1.getRightX() * 0.9);

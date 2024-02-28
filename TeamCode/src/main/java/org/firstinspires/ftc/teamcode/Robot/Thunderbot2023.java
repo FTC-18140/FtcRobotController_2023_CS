@@ -265,6 +265,27 @@ public class Thunderbot2023
         joystickDrive(vy, vx, clockwise);
     }
 
+    // put in left stick x for the input, it will handle the 0.5 power.
+    public void tapeStrafeDrive (double right, boolean button) {
+        if (button) {
+            if (!colorSense()) {
+                joystickDrive(0,0,0);
+            }
+
+            // blue
+            if (getHeading() >= 87 && getHeading() <= 93) {
+                right = right * 0.5;
+            }
+
+            // red
+            if (getHeading() >= -93 && getHeading() <= -87) {
+                right = right * 0.5;
+            }
+
+            joystickDrive(0, right, 0);
+        }
+    }
+
     public boolean driveToTag(int tagID, double speed, double distanceAway)
     {
         if (!moving)
@@ -652,12 +673,7 @@ public class Thunderbot2023
     }
 
     public boolean colorSense () {
-        boolean colorSensed = false;
-        if ((sensors.colorright.blue() >= 100 && sensors.colorleft.blue() >= 100)
-                || (sensors.colorleft.red() >= 50 && sensors.colorright.red() >= 50)) {
-            colorSensed = true;
-        }
-        return colorSensed;
+        return getBlue() >= 100 || getRed() >= 50;
     }
 
     public boolean notifyDriver1() { return notifyTheDriver1; }

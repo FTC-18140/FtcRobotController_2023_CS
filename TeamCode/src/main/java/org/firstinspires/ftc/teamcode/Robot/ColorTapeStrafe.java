@@ -8,12 +8,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 public class ColorTapeStrafe extends OpMode {
     Thunderbot2023 robot = new Thunderbot2023();
     TBDGamepad gp1;
-    
+
     public void init() {
         gp1 = new TBDGamepad(gamepad1);
     }
 
     public void loop() {
-        robot.tapeStrafeDrive(gp1.getLeftX(), gp1.getButton(TBDGamepad.Button.A));
+        robot.tapeStrafeDrive(gp1.getLeftY(), gp1.getRightY(), gp1.getRightX(), gp1.getButton(TBDGamepad.Button.A));
     }
 }

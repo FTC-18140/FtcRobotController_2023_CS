@@ -266,10 +266,10 @@ public class Thunderbot2023
     }
 
     // put in left stick x for the input, it will handle the 0.5 power.
-    public void tapeStrafeDrive (double right, boolean button) {
+    public void tapeStrafeDrive (double forward, double right, double clockwise, boolean button) {
         if (button) {
             if (!colorSense()) {
-                joystickDrive(0,0,0);
+                joystickDrive(forward * 0.9,right * 0.9,clockwise * 0.9);
             }
 
             // blue

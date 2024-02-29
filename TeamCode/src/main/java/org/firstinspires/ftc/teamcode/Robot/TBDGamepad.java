@@ -239,6 +239,4 @@ public class TBDGamepad
             changed[i] = oldButtons[i] != buttons[i];
         }
     }
-
-
 }

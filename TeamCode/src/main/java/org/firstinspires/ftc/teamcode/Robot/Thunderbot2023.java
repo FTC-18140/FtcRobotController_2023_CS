@@ -265,24 +265,53 @@ public class Thunderbot2023
         joystickDrive(vy, vx, clockwise);
     }
 
-    // put in left stick x for the input, it will handle the 0.5 power.
-    public void tapeStrafeDrive (double forward, double right, double clockwise, boolean button) {
-        if (button) {
-            if (!colorSense()) {
-                joystickDrive(forward * 0.9,right * 0.9,clockwise * 0.9);
-            }
+//    private boolean facingRedBackdrop () {
+//        return (getHeading() >= 87 && getHeading() <= 93);
+//    }
+//
+//    private boolean facingBlueBackdrop () {
+//        return (getHeading() >= -93 && getHeading() <= -87);
+//    }
 
-            // blue
-            if (getHeading() >= 87 && getHeading() <= 93) {
-                right = right * 0.5;
-            }
+    public void turnToBackdrop (double forward, double right, double lefttrigger, double righttrigger) {
 
-            // red
-            if (getHeading() >= -93 && getHeading() <= -87) {
-                right = right * 0.5;
-            }
+        if (facingBackdrop()) {
+            return;
+        }
 
-            joystickDrive(0, right, 0);
+        double setTurnPower = 0.5;
+        double turnRemaining = Math.abs(getHeading());
+
+        if (turnRemaining >= 5) {
+            setTurnPower = Range.clip((turnRemaining/15 * setTurnPower), 0.1, 0.5);
+        } else if (turnRemaining <= 5 && turnRemaining >= 1) {
+            setTurnPower = 0.05;
+        } else if (turnRemaining <= 1) {
+            setTurnPower = 0;
+        }
+
+        // if we get here, facingABackdrop() is false
+        if (lefttrigger >= 0.1) {
+            joystickDrive(forward * 0.9,right * 0.9,lefttrigger * -setTurnPower);
+        }
+
+        if (righttrigger >= 0.1) {
+            joystickDrive(forward * 0.9,right * 0.9,righttrigger * setTurnPower);
+        }
+    }
+
+    private boolean facingBackdrop () {
+        return ((getHeading() >= -1 && getHeading() <= 1) && colorSense());
+    }
+
+    // input the joysticks and right and left triggers, it should handle the power.
+    public void tapeStrafeDrive (double forward, double right, double clockwise, boolean toggleState) {
+
+        // facing the backdrop to place pixel
+        if (facingBackdrop() && colorSense() && !toggleState) {
+            joystickDrive(0, right * 0.5, 0);
+        } else {
+            joystickDrive(forward * 0.9, right * 0.9, clockwise * 0.9);
         }
     }
 
@@ -354,7 +383,7 @@ public class Thunderbot2023
         if (distanceMovedInCM <= 0.1 * distance){
             currentPower += 0.00001;
             currentPower = Range.clip(currentPower, 0.1, 1.0);
-        } else if (distanceMovedInCM > 0.9 * distance){
+        } else if (distanceMovedInCM > 0.9 * distance) {
             currentPower -= 0.00001;
             currentPower = Range.clip(currentPower, 0.1, 1.0);
         } else {

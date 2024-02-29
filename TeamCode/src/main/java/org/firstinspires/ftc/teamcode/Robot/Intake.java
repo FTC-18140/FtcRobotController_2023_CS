@@ -320,7 +320,7 @@ public class Intake
         boolean leftloaded = !beamBreakLeft.getState();
         boolean rightloaded = !beamBreakRight.getState();
 
-        boolean intakeDone = false;
+        // boolean intakeDone = false;
 
         telemetry.addData("beambreakright", beamBreakRight.getState());
         telemetry.addData("beambreakleft", beamBreakLeft.getState());
@@ -342,25 +342,25 @@ public class Intake
             if (time.seconds() >= 0.15 && time.seconds() < 0.49) {
                 mandibleHalf();
                 goTo(Positions.INTAKE, true);
-                intakeDone = true;
+                //intakeDone = true;
             }
         }
 
-        if (intakeDone) {
-            if (time.seconds() >= 0.49 && time.seconds() < 1.6) {
-                // go to just above the transfer point
-                goTo(Positions.TRANSFER, false);
-            }
-
-            if (time.seconds() >= 1.6 && time.seconds() <= 1.65) {
-                dropBoth();
-            }
-
-            if (time.seconds() >= 1.7) {
-                // go to just above intake and wait to go again
-                goTo(Positions.WAIT_TO_INTAKE, false);
-            }
+        // if (intakeDone) {
+        if (time.seconds() >= 0.49 && time.seconds() < 1.6) {
+            // go to just above the transfer point
+            goTo(Positions.TRANSFER, false);
         }
+
+        if (time.seconds() >= 1.6 && time.seconds() <= 1.65) {
+            dropBoth();
+        }
+
+        if (time.seconds() >= 1.7) {
+            // go to just above intake and wait to go again
+            goTo(Positions.WAIT_TO_INTAKE, false);
+        }
+        // }
     }
 
     public void update()

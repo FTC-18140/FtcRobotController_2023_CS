@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
+@Autonomous(group = "redleft")
 public class AutoRedLeft_RoadRunner extends OpMode {
 
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();

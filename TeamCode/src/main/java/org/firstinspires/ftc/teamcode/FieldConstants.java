@@ -29,7 +29,7 @@ public class FieldConstants {
     }
 
     public enum RedLeft {
-        START(-36,-63, Math.toRadians(90)),
+        START(-36,-62, Math.toRadians(90)),
         SPIKE_ALIGN(-45,-38, Math.toRadians(90)),
         SPIKE_LEFT(-45,-22, Math.toRadians(150)),
         SPIKE_CENTER(-38,-17, Math.toRadians(150)),
@@ -50,6 +50,33 @@ public class FieldConstants {
         public final double y;
         public final double h;
         RedLeft(double x_val, double y_val, double head){
+            x=x_val;
+            y=y_val;
+            h=head;
+        }
+    }
+    public enum RedLeft2 {
+        START(-39.5,-61.5, Math.toRadians(90)),
+        SPIKE_ALIGN(-45,-38, Math.toRadians(90)),
+        SPIKE_LEFT(-45,-22, Math.toRadians(150)),
+        SPIKE_CENTER(-38,-17, Math.toRadians(150)),
+        SPIKE_RIGHT(-34,-36.5, Math.toRadians(-100)),
+        BACKUP_RIGHT(-38,-36, Math.toRadians(-100)),
+        BACKUP_CENTER(-38,-14, Math.toRadians(-100)),
+        BACKUP_LEFT(-42,-18, Math.toRadians(-100)),
+
+        BACKDROP_LEFT(48,-30,90),
+        BACKDROP_CENTER(48,-42,90),
+        BACKDROP_RIGHT(48,-46.5,Math.toRadians(179.9)),
+        DOOR(32,-12,Math.toRadians(90)),
+        ALIGN_TO_STACK(-48,-14,Math.toRadians(90)),
+        STACK(-58,-14,Math.toRadians(180)),
+        PARK(54,-64,Math.toRadians(0));
+
+        public final double x;
+        public final double y;
+        public final double h;
+        RedLeft2(double x_val, double y_val, double head){
             x=x_val;
             y=y_val;
             h=head;

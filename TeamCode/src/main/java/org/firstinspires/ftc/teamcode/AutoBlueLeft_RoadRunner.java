@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous
+@Autonomous(group = "blueleft")
 public class AutoBlueLeft_RoadRunner extends OpMode {
     SampleMecanumDrive drive;
     int tagNum = 2;

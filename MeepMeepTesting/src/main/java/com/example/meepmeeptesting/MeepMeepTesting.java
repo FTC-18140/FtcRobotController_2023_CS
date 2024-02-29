@@ -13,7 +13,7 @@ public class MeepMeepTesting
     static int bot_w = 8;
     int tagNum = 2;
     static final int START_X = -36;
-    static final int START_Y = 62;
+    static final int START_Y = -62;
 
     final int END_X = -58;
     final int END_Y = -58;
@@ -50,7 +50,7 @@ public class MeepMeepTesting
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
-        Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(-90));
+        Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(90));
         spike_x = SPIKE_R_X;
         spike_y = SPIKE_R_Y;
 
@@ -81,9 +81,10 @@ public class MeepMeepTesting
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
-                                                          .lineTo(new Vector2d(-38, 38))
-                                                          .splineToConstantHeading(new Vector2d(-38, 14), Math.toRadians(-30))
-                                                          .turn(Math.toRadians(-160))
+                                                          .lineTo(new Vector2d(-50, -36))
+                                                          .splineToConstantHeading(new Vector2d(-42, -14), Math.toRadians(0))
+                                                          .splineToConstantHeading(new Vector2d(-38, -18), Math.toRadians(90))
+                                                          .turn(Math.toRadians(150))
                                                           //.splineToConstantHeading(new Vector2d(-32, 12), Math.toRadians(-90))
                                                           //.splineToConstantHeading(new Vector2d(-30, 8), Math.toRadians(0))
                                                           //.splineToSplineHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))

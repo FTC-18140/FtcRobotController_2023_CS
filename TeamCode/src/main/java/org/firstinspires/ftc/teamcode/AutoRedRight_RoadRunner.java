@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous
+@Autonomous(group = "redright")
 @Config
 public class AutoRedRight_RoadRunner extends OpMode {
 

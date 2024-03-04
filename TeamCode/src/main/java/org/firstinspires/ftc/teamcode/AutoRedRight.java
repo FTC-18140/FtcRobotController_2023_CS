@@ -60,7 +60,7 @@ public class AutoRedRight extends OpMode {
     double stepParkRight = 65;
     double stepForward = 10;
     double stepForwardLeft = 5;
-    double stepForwardCenter = 7.5;
+double stepForwardCenter = 7.5;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;

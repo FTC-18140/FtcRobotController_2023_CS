@@ -124,11 +124,13 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
-//        try {
-//            robot.intake.autoIntake();
-//        } catch (Exception e) {
-//            telemetry.addData("auto intake not working", 0);
-//        }
+
+            try {
+                robot.intake.autoIntake(tbdGamepad1.getButton(B));
+            } catch (Exception e) {
+                telemetry.addData("auto intake not working", 0);
+            }
+
         if (tbdGamepad1.getButton(LEFT_BUMPER)) {
            robot.intake.goTo(WAIT_TO_INTAKE, false);
         } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
@@ -136,13 +138,13 @@ public class Teleop extends OpMode  {
             robot.delivery.setElbowPosition(0.92);
         } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
             robot.intake.goTo(TRANSFER, false);
-        } else if (tbdGamepad1.getButtonPressed(B)) {
-             robot.intake.goTo( DOWN_TO_PIXEL, false);
-        }
+        } //else if (tbdGamepad1.getButtonPressed(B)) {
+            // robot.intake.goTo( DOWN_TO_PIXEL, false);
+        //}
 
 
 
-        ////////////////////
+        ////////////////////`
         // INTAKE GRIPPER
         ////////////////////
         if (tbdGamepad1.getButtonPressed(X)) {
@@ -193,6 +195,10 @@ public class Teleop extends OpMode  {
             ELBOW_POSITION = 0.8;
             robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_1);
             robot.intake.mandibleClose();
+        } else if (tbdGamepad2.getButton(BACK) && tbdGamepad2.getButton(LEFT_BUMPER)) {
+            robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_0);
+        } else if (tbdGamepad2.getButton(BACK) && tbdGamepad2.getButton(RIGHT_BUMPER)) {
+            robot.linearSlide.goToLinear(LinearSlide.Positions.LEVEL_3);
         }
 
 

@@ -11,6 +11,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Intake
 {
     public static boolean TELEM = false ;
+    boolean done = false;
+    int state = 0;
+
     Telemetry telemetry;
     Servo leftGripper = null;
     Servo rightGripper = null;
@@ -33,16 +36,18 @@ public class Intake
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
-    static public double MANDIBLE_INIT = 0;
     static public double LEFT_GRIP_DROP = 0.2;
 
     static public double RIGHT_GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.6;
     static public double RIGHT_GRIP_HOLD = 0.35;
-    static public double LEFT_MANDIBLE_OPEN = 0.58;
-    static public double RIGHT_MANDIBLE_OPEN = 0.58;
-    static public double LEFT_MANDIBLE_CLOSE = 0.13;
-    static public double RIGHT_MANDIBLE_CLOSE = 0.17;
+
+    static public double MANDIBLE_INIT = 0;
+    static public double LEFT_MANDIBLE_OPEN = 0.75;
+    static public double RIGHT_MANDIBLE_OPEN = 0.5;
+    static public double LEFT_MANDIBLE_CLOSE = 0.15;
+    static public double RIGHT_MANDIBLE_CLOSE = 0.075;
+
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
     private boolean moveSlowly = false;
@@ -52,11 +57,13 @@ public class Intake
     ElapsedTime time = new ElapsedTime();
     DigitalChannel beamBreakLeft;
     DigitalChannel beamBreakRight;
+    private boolean autoIntakeOverride =  false;
+    boolean toggle = false;
 
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.03, 0.03, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
+        TRANSFER( 0.0325, 0.0325, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, 0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
@@ -127,14 +134,14 @@ public class Intake
         }
         try {
             leftMandible = hwMap.servo.get("landible");
-            leftMandible.setDirection(Servo.Direction.REVERSE);
+            leftMandible.setDirection(Servo.Direction.FORWARD);
             leftMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("landible not found", 0);
         }
         try {
             rightMandible =  hwMap.servo.get("randible");
-            rightMandible.setDirection(Servo.Direction.FORWARD);
+            rightMandible.setDirection(Servo.Direction.REVERSE);
             rightMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("randible not found", 0);
@@ -315,7 +322,11 @@ public class Intake
         if (rightMandiblePos != RIGHT_MANDIBLE_CLOSE) { mandibleClose();}
         else {  mandibleOpen(); }
     }
-    public void autoIntake (int blips) throws InterruptedException {
+
+    //for autointake
+
+
+    public void autoIntake (boolean button) throws InterruptedException {
 
         boolean leftloaded = !beamBreakLeft.getState();
         boolean rightloaded = !beamBreakRight.getState();
@@ -325,39 +336,131 @@ public class Intake
         telemetry.addData("beambreakleft", beamBreakLeft.getState());
         telemetry.addData("time", time.seconds());
 
+
         // if both beams are broken
-        if (leftloaded && rightloaded && mandibleClose()) {
+        if ((leftloaded && rightloaded) || button) {
 
             //reset the time, because resetting it each step will make the whole thing restart
-            if (time.seconds() > 0.8) {
+            if (time.seconds() > 1.7 || button) {
                 time.reset();
             }
+        }
 
-            if (time.seconds() < 0.15) {
-                goTo(Positions.DOWN_TO_PIXEL, false);
-            }
+        if (time.seconds() < 0.15) {
+            goTo(Positions.DOWN_TO_PIXEL, false);
+            mandibleClose();
+        }
 
+        if (!button) {
             //pickup pixels
             if (time.seconds() >= 0.15 && time.seconds() < 0.49) {
-                mandibleHalf();
                 goTo(Positions.INTAKE, true);
+                mandibleHalf();
+            }
+
+            if (time.seconds() >= 0.49 && time.seconds() < 1.6) {
+                // go to just above the transfer point
+                goTo(Positions.TRANSFER, false);
+            }
+
+            if (time.seconds() >= 1.6 && time.seconds() <= 1.65) {
+                dropBoth();
+            }
+
+            if (time.seconds() >= 1.7) {
+                // go to just above intake and wait to go again
+                goTo(Positions.WAIT_TO_INTAKE, false);
             }
         }
-        if (time.seconds() >= 0.49 && time.seconds() < 1.6) {
-            // go to just above the transfer point
-            goTo(Positions.TRANSFER, false);
-        }
-
-        if (time.seconds() >= 1.6 && time.seconds() <= 1.65) {
-            dropBoth();
-        }
-
-        if (time.seconds() >= 1.7) {
-            // go to just above intake and wait to go again
-            goTo(Positions.WAIT_TO_INTAKE, false);
-        }
-
     }
+        public void autoIntakeState(boolean button) throws InterruptedException{
+            boolean leftloaded = !beamBreakLeft.getState();
+            boolean rightloaded = !beamBreakRight.getState();
+
+
+            telemetry.addData("beambreakright", beamBreakRight.getState());
+            telemetry.addData("beambreakleft", beamBreakLeft.getState());
+            telemetry.addData("time", time.seconds());
+            telemetry.addData("state = ", state);
+
+            if ((leftloaded && rightloaded) || button) {
+                time.reset();
+                switch (state) {
+                    case 0:
+                        if (!done) {
+                            if (time.seconds() < 1) {
+                                goTo(Positions.DOWN_TO_PIXEL, false);
+                                mandibleClose();
+                            } else {
+                                done = true;
+                            }
+                        } else {
+                            done = false;
+                            time.reset();
+                            state++;
+                        }
+                        break;
+                    case 1:
+                        if (!done) {
+                            if (time.seconds() < 1) {
+                                goTo(Positions.INTAKE, true);
+                                mandibleHalf();
+                            } else {
+                                done = true;
+                            }
+                        } else {
+                            done = false;
+                            time.reset();
+                            state++;
+                        }
+                        break;
+                    case 2:
+                        if (!done) {
+                            if (time.seconds() < 1) {
+                                goTo(Positions.TRANSFER, false);
+                            } else {
+                                done = true;
+                            }
+                        } else {
+                            done = false;
+                            time.reset();
+                            state++;
+                        }
+                        break;
+                    case 3:
+                        if (!done) {
+                            if (time.seconds() < 0.05) {
+                                dropBoth();
+                            } else {
+                                done = true;
+                            }
+                        } else {
+                            done = false;
+                            time.reset();
+                            state++;
+                        }
+                        break;
+                    case 4:
+                        if (!done) {
+                            if (time.seconds() < 1) {
+                                goTo(Positions.WAIT_TO_INTAKE, true);
+                            } else {
+                                done = true;
+                            }
+                        } else {
+                            done = false;
+                            time.reset();
+                            state = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+
 
     public void update()
     {

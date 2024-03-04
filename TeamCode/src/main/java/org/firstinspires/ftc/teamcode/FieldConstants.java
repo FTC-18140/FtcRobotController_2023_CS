@@ -56,7 +56,7 @@ public class FieldConstants {
         }
     }
     public enum RedLeft2 {
-        START(-39.5,-61.5, Math.toRadians(90)),
+        START(-36,-61.5, Math.toRadians(90)),
         SPIKE_ALIGN(-45,-38, Math.toRadians(90)),
         SPIKE_LEFT(-45,-22, Math.toRadians(150)),
         SPIKE_CENTER(-38,-17, Math.toRadians(150)),

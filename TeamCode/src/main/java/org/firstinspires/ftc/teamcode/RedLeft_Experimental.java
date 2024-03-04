@@ -37,6 +37,8 @@ public class RedLeft_Experimental extends OpMode {
     double backdrop_x;
     double backdrop_y;
 
+    Trajectory origin_test;
+
     TrajectorySequence purple;
     Trajectory align_to_stack;
     Trajectory to_stack;
@@ -50,6 +52,7 @@ public class RedLeft_Experimental extends OpMode {
     Trajectory backfromstack;
 
     enum State{
+        TEST,
         PURPLE,
         SPIKE_DROP,
         BACKUP,
@@ -122,15 +125,22 @@ public class RedLeft_Experimental extends OpMode {
         }
 
         drive.setPoseEstimate(start);
-        purple = drive.trajectorySequenceBuilder(start)
-                .lineTo(new Vector2d(-50, -32))
-                .splineToConstantHeading(new Vector2d(-42, -14), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(-38, -19), Math.toRadians(90))
-                .turn(Math.toRadians(150))
+
+        origin_test = drive.trajectoryBuilder(start)
+                .lineTo(new Vector2d(-36, 0))
                 .build();
 
-        backup = drive.trajectoryBuilder(purple.end(), true)
-                .splineToConstantHeading(new Vector2d(-34, -14), Math.toRadians(45))
+        purple = drive.trajectorySequenceBuilder(start)
+                .lineTo(new Vector2d(-46, -30))
+                .lineTo(new Vector2d(-36, -32))
+                .lineTo(new Vector2d(-36, -39))
+                .turn(Math.toRadians(90))
+                .build();
+
+        backup = drive.trajectoryBuilder(purple.end())
+                .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-56, -38), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+
                 .build();
 
         align_to_stack = drive.trajectoryBuilder(backup.end(), true)
@@ -148,12 +158,13 @@ public class RedLeft_Experimental extends OpMode {
                 .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.ALIGN_TO_STACK.x, FieldConstants.RedLeft2.ALIGN_TO_STACK.y), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-54, -24), Math.toRadians(180))
                 .build();
-        move_to_transfer = drive.trajectoryBuilder(backfromstack.end())
-                .lineTo(new Vector2d(-52, -12))
+
+        move_to_transfer = drive.trajectoryBuilder(backup.end())
+                .lineTo(new Vector2d(-48, -38))
                 .build();
 
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.DOOR.x, FieldConstants.RedLeft2.DOOR.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0))
                 .build();
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
@@ -163,10 +174,17 @@ public class RedLeft_Experimental extends OpMode {
                 .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.PARK.x, FieldConstants.RedLeft2.PARK.y), Math.toRadians(0))
                 .build();
         drive.followTrajectorySequenceAsync(purple);
+//        drive.followTrajectoryAsync(origin_test);
+//        step = State.TEST;
     }
     @Override
     public void loop() {
         switch (step){
+            case TEST:
+                if(!drive.isBusy()){
+                    step = State.IDLE;
+                }
+                break;
             case PURPLE:
                 robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
 
@@ -178,8 +196,8 @@ public class RedLeft_Experimental extends OpMode {
                 break;
             case SPIKE_DROP:
                 robot.intake.dropBoth();
-                if(spiketimer.seconds() >= 0.3){
-                    step = State.BACKUP;
+                if(!drive.isBusy()){
+                    step = State.TO_STACK;
                     drive.followTrajectoryAsync(backup);
 
                 }
@@ -200,7 +218,7 @@ public class RedLeft_Experimental extends OpMode {
                 if(!drive.isBusy()){
                     spiketimer.reset();
                     robot.intake.leftMandibleClose();
-                    step = State.KNOCK_OVER;
+                    step = State.GRAB_FROM_STACK;
                 }
                 break;
             case KNOCK_OVER:
@@ -216,7 +234,7 @@ public class RedLeft_Experimental extends OpMode {
                 }
                 break;
             case GRAB_FROM_STACK:
-                if(!drive.isBusy()){
+                if(spiketimer.seconds() >= 0.3){
                     robot.intake.rightMandibleClose();
                     step = State.MOVE_TO_TRANSFER;
                     drive.followTrajectoryAsync(move_to_transfer);
@@ -245,7 +263,7 @@ public class RedLeft_Experimental extends OpMode {
                 }
                 break;
             case TRANSFER_DELIVERY:
-                if(spiketimer.seconds() >= 2){
+                if(spiketimer.seconds() >= 1){
                     robot.intake.dropBoth();
                     spiketimer.reset();
                     step = State.DELIVERY_GRIP;
@@ -257,7 +275,7 @@ public class RedLeft_Experimental extends OpMode {
                     robot.delivery.holdPixelsBoth();
                     drive.followTrajectoryAsync(yellow);
                     spiketimer.reset();
-                    step = State.TO_BACKDROP;
+                    step = State.IDLE;
 
                 }
                 break;

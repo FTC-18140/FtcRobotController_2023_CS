@@ -109,16 +109,16 @@ public class Teleop extends OpMode  {
         if ( robot.intake.driveSlowly()) {
 //            if (robot.intake.intakeElbowPos > 0.185) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
-                    tbdGamepad1.getRightX() * 0.1);
+                    tbdGamepad1.getRightX() * 0.2);
 //        } else if(tbdGamepad1.getTrigger(LEFT_TRIGGER) > 0.1) {
 //            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
 //                    tbdGamepad1.getRightX());
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
-            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.25, tbdGamepad1.getLeftX() * 0.25,
-                    tbdGamepad1.getRightX() * 0.25);
+            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.5, tbdGamepad1.getLeftX() * 0.5,
+                    tbdGamepad1.getRightX() * 0.5);
         } else {
-            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.9, tbdGamepad1.getLeftX() * 0.9,
-                    tbdGamepad1.getRightX() * 0.9);
+            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
+                    tbdGamepad1.getRightX());
         }
 
         //////////////////////

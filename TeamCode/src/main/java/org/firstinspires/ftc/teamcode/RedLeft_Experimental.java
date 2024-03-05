@@ -132,14 +132,14 @@ public class RedLeft_Experimental extends OpMode {
 
         purple = drive.trajectorySequenceBuilder(start)
                 .lineTo(new Vector2d(-46, -30))
-                .lineTo(new Vector2d(-36, -32))
-                .lineTo(new Vector2d(-36, -39))
+                .lineTo(new Vector2d(-36, -33))
+                .lineTo(new Vector2d(-36, -42))
                 .turn(Math.toRadians(90))
                 .build();
 
         backup = drive.trajectoryBuilder(purple.end())
                 .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-56, -38), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-55.5, -40), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                 .build();
 
@@ -174,6 +174,7 @@ public class RedLeft_Experimental extends OpMode {
                 .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.PARK.x, FieldConstants.RedLeft2.PARK.y), Math.toRadians(0))
                 .build();
         drive.followTrajectorySequenceAsync(purple);
+        spiketimer.reset();
 //        drive.followTrajectoryAsync(origin_test);
 //        step = State.TEST;
     }
@@ -187,15 +188,18 @@ public class RedLeft_Experimental extends OpMode {
                 break;
             case PURPLE:
                 robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-
-                if(!drive.isBusy()){
+                if(spiketimer.seconds() >= 3.2){
                     robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                }
+                if(!drive.isBusy()){
+
                     step = State.SPIKE_DROP;
                     spiketimer.reset();
                 }
                 break;
             case SPIKE_DROP:
-                robot.intake.dropBoth();
+
                 if(!drive.isBusy()){
                     step = State.TO_STACK;
                     drive.followTrajectoryAsync(backup);

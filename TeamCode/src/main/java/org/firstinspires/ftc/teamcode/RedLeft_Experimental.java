@@ -51,6 +51,8 @@ public class RedLeft_Experimental extends OpMode {
     Trajectory knockover;
     Trajectory backfromstack;
 
+    TrajectorySequence back;
+
     enum State{
         TEST,
         PURPLE,
@@ -131,15 +133,18 @@ public class RedLeft_Experimental extends OpMode {
                 .build();
 
         purple = drive.trajectorySequenceBuilder(start)
-                .lineTo(new Vector2d(-46, -30))
-                .lineTo(new Vector2d(-36, -33))
-                .lineTo(new Vector2d(-36, -42))
+                .splineToConstantHeading(new Vector2d(-52, -34), Math.toRadians(90))
+                .lineTo(new Vector2d(-38, -33))
+                .build();
+
+        back = drive.trajectorySequenceBuilder(purple.end())
+                .lineTo(new Vector2d(-42, -42))
                 .turn(Math.toRadians(90))
                 .build();
 
-        backup = drive.trajectoryBuilder(purple.end())
+        backup = drive.trajectoryBuilder(back.end())
                 .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-55.5, -40), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-54, -40), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                 .build();
 
@@ -149,7 +154,7 @@ public class RedLeft_Experimental extends OpMode {
 
         to_stack = drive.trajectoryBuilder(align_to_stack.end())
                 .splineToSplineHeading(new Pose2d(FieldConstants.RedLeft2.ALIGN_TO_STACK.x, FieldConstants.RedLeft2.ALIGN_TO_STACK.y, Math.toRadians(180)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.STACK.x, FieldConstants.RedLeft2.STACK.y), FieldConstants.RedLeft2.STACK.h, SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-54, FieldConstants.RedLeft2.STACK.y), FieldConstants.RedLeft2.STACK.h, SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         knockover = drive.trajectoryBuilder(to_stack.end())
                 .strafeLeft(12)
@@ -188,13 +193,12 @@ public class RedLeft_Experimental extends OpMode {
                 break;
             case PURPLE:
                 robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-                if(spiketimer.seconds() >= 3.2){
+
+                if(!drive.isBusy()){
                     robot.intake.mandibleOpen();
                     robot.intake.dropBoth();
-                }
-                if(!drive.isBusy()){
-
                     step = State.SPIKE_DROP;
+                    drive.followTrajectorySequenceAsync(back);
                     spiketimer.reset();
                 }
                 break;

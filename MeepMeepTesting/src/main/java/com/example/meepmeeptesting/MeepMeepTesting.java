@@ -81,7 +81,7 @@ public class MeepMeepTesting
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
-                                                          .lineTo(new Vector2d(-56, -34))
+                                                          .splineToConstantHeading(new Vector2d(-58, -34), Math.toRadians(90))
                                                           .lineTo(new Vector2d(-42, -34))
                                                           .lineTo(new Vector2d(-42, -39))
                                                           .turn(Math.toRadians(90))

@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Autonomous(group = "test")
 public class RedLeft_Experimental extends OpMode {
 
+    boolean stepdone = false;
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     SampleMecanumDrive drive;
 
@@ -37,9 +38,15 @@ public class RedLeft_Experimental extends OpMode {
     double backdrop_x;
     double backdrop_y;
 
+
     Trajectory origin_test;
 
     TrajectorySequence purple;
+
+    TrajectorySequence stack_left;
+    TrajectorySequence stack_center;
+    TrajectorySequence stack_right;
+
     Trajectory align_to_stack;
     Trajectory to_stack;
     Trajectory move_to_transfer;
@@ -47,11 +54,11 @@ public class RedLeft_Experimental extends OpMode {
     Trajectory to_backdrop;
     Trajectory park;
 
-    Trajectory backup;
-    Trajectory knockover;
-    Trajectory backfromstack;
+    Trajectory go_to_stack;
 
-    TrajectorySequence back;
+    TrajectorySequence back_and_turn;
+
+    TrajectorySequence spike;
 
     enum State{
         TEST,
@@ -60,8 +67,6 @@ public class RedLeft_Experimental extends OpMode {
         BACKUP,
         ALIGN_TO_STACK,
         TO_STACK,
-        KNOCK_OVER,
-        BACK_TO_STACK,
         GRAB_FROM_STACK,
         MOVE_TO_TRANSFER,
         TRANSFER_INTAKE,
@@ -74,7 +79,57 @@ public class RedLeft_Experimental extends OpMode {
         PARK,
         IDLE
     }
-    State step = State.PURPLE;
+
+    enum Spike_Left {
+        TO_SPIKE,
+        DROP_PIXEL,
+        BACKUP,
+        IDLE
+    }
+
+    Spike_Left step_left;
+
+    enum Spike_Center {
+        TO_SPIKE,
+        DROP_PIXEL,
+        BACKUP,
+        IDLE
+    }
+
+    Spike_Center step_center;
+
+    enum Spike_Right {
+        TO_SPIKE,
+        DROP_PIXEL,
+        BACKUP,
+        IDLE
+    }
+
+    Spike_Right step_right;
+
+
+    State step = State.SPIKE_DROP;
+    @Override
+    public void init_loop(){
+        super.init_loop();
+        switch (robot.eyes.getSpikePos())
+        {
+            case "LEFT":
+            case "NOT FOUND":
+                tagNum = 1;
+                telemetry.addData("ZONE = LEFT", 0);
+                break;
+            case "RIGHT":
+                tagNum = 3;
+                telemetry.addData("ZONE = RIGHT", 0);
+                break;
+            default: // default CENTER
+                tagNum = 2;
+                telemetry.addData("ZONE = CENTER", 0);
+                break;
+        }
+        telemetry.addData("Tag Number: ", tagNum );
+    }
 
     @Override
     public void init() {
@@ -83,44 +138,123 @@ public class RedLeft_Experimental extends OpMode {
         spiketimer = new ElapsedTime();
     }
 
+    public boolean spike_drop_left() {
+        boolean done = false;
+        switch(step_left){
+            case TO_SPIKE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+
+                if(!drive.isBusy()){
+                    robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                    step_left = Spike_Left.DROP_PIXEL;
+                    drive.followTrajectorySequenceAsync(back_and_turn);
+                    spiketimer.reset();
+                }
+
+                break;
+            case DROP_PIXEL:
+                if(!drive.isBusy()){
+                    step_left = Spike_Left.BACKUP;
+                    drive.followTrajectoryAsync(go_to_stack);
+
+                }
+
+                break;
+            case BACKUP:
+                if(!drive.isBusy()){
+                    done = true;
+                }
+                break;
+            default:
+                break;
+        }
+        return done;
+    }
+
+    public boolean spike_drop_center() {
+        boolean done = false;
+        switch(step_center){
+            case TO_SPIKE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+
+                if(!drive.isBusy()){
+                    robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                    step_center = Spike_Center.DROP_PIXEL;
+                    drive.followTrajectorySequenceAsync(back_and_turn);
+                    spiketimer.reset();
+                }
+
+                break;
+            case DROP_PIXEL:
+                if(!drive.isBusy()){
+                    step_center = Spike_Center.BACKUP;
+                    drive.followTrajectoryAsync(go_to_stack);
+
+                }
+
+                break;
+            case BACKUP:
+                if(!drive.isBusy()){
+                    done = true;
+                }
+                break;
+            default:
+                break;
+        }
+        return done;
+    }
+
+    public boolean spike_drop_right() {
+        boolean done = false;
+        switch(step_right){
+            case TO_SPIKE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+
+                if(!drive.isBusy()){
+                    robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                    step_right = Spike_Right.DROP_PIXEL;
+                    drive.followTrajectorySequenceAsync(back_and_turn);
+                    spiketimer.reset();
+                }
+
+                break;
+            case DROP_PIXEL:
+                if(!drive.isBusy()){
+                    step_right = Spike_Right.BACKUP;
+                    drive.followTrajectoryAsync(go_to_stack);
+
+                }
+
+                break;
+            case BACKUP:
+                if(!drive.isBusy()){
+                    done = true;
+                }
+                break;
+            default:
+                break;
+        }
+        return done;
+    }
+
     @Override
     public void start() {
+
+        //Add in mini state machines
+        //conciceify!!
+
         switch(tagNum){
             case(1):
-                spike_x = FieldConstants.RedLeft2.SPIKE_LEFT.x;
-                spike_y = FieldConstants.RedLeft2.SPIKE_LEFT.y;
-                spike_heading = FieldConstants.RedLeft2.SPIKE_LEFT.h;
-                backdrop_x = FieldConstants.RedLeft2.BACKDROP_LEFT.x;
-                backdrop_y = FieldConstants.RedLeft2.BACKDROP_LEFT.y;
-
-                backup_x = FieldConstants.RedLeft2.BACKUP_LEFT.x;
-                backup_y = FieldConstants.RedLeft2.BACKUP_LEFT.y;
-
-                spike_tangent = Math.toRadians(180);
+                spike = stack_left;
                 break;
             case(2):
-                spike_x = FieldConstants.RedLeft2.SPIKE_CENTER.x;
-                spike_y = FieldConstants.RedLeft2.SPIKE_CENTER.y;
-                spike_heading = FieldConstants.RedLeft2.SPIKE_CENTER.h;
-                backdrop_x = FieldConstants.RedLeft2.BACKDROP_CENTER.x;
-                backdrop_y = FieldConstants.RedLeft2.BACKDROP_CENTER.y;
-
-                backup_x = FieldConstants.RedLeft2.BACKUP_CENTER.x;
-                backup_y = FieldConstants.RedLeft2.BACKUP_CENTER.y;
-                backup_heading = Math.toRadians(-15);
-                spike_tangent = Math.toRadians(0);
+                spike = stack_center;
                 break;
             case(3):
-                spike_x = FieldConstants.RedLeft2.SPIKE_RIGHT.x;
-                spike_y = FieldConstants.RedLeft2.SPIKE_RIGHT.y;
-                spike_heading = FieldConstants.RedLeft2.SPIKE_RIGHT.h;
-                backdrop_x = FieldConstants.RedLeft2.BACKDROP_RIGHT.x;
-                backdrop_y = FieldConstants.RedLeft2.BACKDROP_RIGHT.y;
-
-                backup_x = FieldConstants.RedLeft2.BACKUP_RIGHT.x;
-                backup_y = FieldConstants.RedLeft2.BACKUP_RIGHT.y;
-                backup_heading = Math.toRadians(180);
-                spike_tangent = Math.toRadians(90);
+                spike = stack_right;
                 break;
 
 
@@ -128,46 +262,54 @@ public class RedLeft_Experimental extends OpMode {
 
         drive.setPoseEstimate(start);
 
+        //test trajectory for tuning the starting position
+
         origin_test = drive.trajectoryBuilder(start)
                 .lineTo(new Vector2d(-36, 0))
                 .build();
 
+        //purple:
+        //drives around to the spike mark, pushing the game element out of the way.
         purple = drive.trajectorySequenceBuilder(start)
                 .splineToConstantHeading(new Vector2d(-56, -34), Math.toRadians(90))
                 .lineTo(new Vector2d(-44, -33))
                 .build();
 
-        back = drive.trajectorySequenceBuilder(purple.end())
+        stack_left = drive.trajectorySequenceBuilder(start)
+                .splineToConstantHeading(new Vector2d(-56, -34), Math.toRadians(90))
+                .lineTo(new Vector2d(-44, -33))
+                .build();
+
+        stack_center = drive.trajectorySequenceBuilder(start)
+                .splineToConstantHeading(new Vector2d(-56, -34), Math.toRadians(90))
+                .lineTo(new Vector2d(-44, -33))
+                .build();
+
+        stack_right = drive.trajectorySequenceBuilder(start)
+                .splineToConstantHeading(new Vector2d(-56, -34), Math.toRadians(90))
+                .lineTo(new Vector2d(-44, -33))
+                .build();
+
+
+
+        //backs up and aligns to the stack and backdrop
+        back_and_turn = drive.trajectorySequenceBuilder(spike.end())
                 .lineTo(new Vector2d(-42, -42))
                 .turn(Math.toRadians(90))
                 .build();
 
-        backup = drive.trajectoryBuilder(back.end())
+        //splines to the stack, then slows down as it aligns more accurately with the stack
+        go_to_stack = drive.trajectoryBuilder(back_and_turn.end())
                 .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-59, -41), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-
                 .build();
 
-        align_to_stack = drive.trajectoryBuilder(backup.end(), true)
-                .splineToSplineHeading(new Pose2d(-30, -12, Math.toRadians(210)), Math.toRadians(0))
-                .build();
-
-        to_stack = drive.trajectoryBuilder(align_to_stack.end())
-                .splineToSplineHeading(new Pose2d(FieldConstants.RedLeft2.ALIGN_TO_STACK.x, FieldConstants.RedLeft2.ALIGN_TO_STACK.y, Math.toRadians(180)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-54, FieldConstants.RedLeft2.STACK.y), FieldConstants.RedLeft2.STACK.h, SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
-        knockover = drive.trajectoryBuilder(to_stack.end())
-                .strafeLeft(12)
-                .build();
-        backfromstack = drive.trajectoryBuilder(knockover.end(), true)
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.ALIGN_TO_STACK.x, FieldConstants.RedLeft2.ALIGN_TO_STACK.y), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(-55.5, -24), Math.toRadians(180))
-                .build();
-
-        move_to_transfer = drive.trajectoryBuilder(backup.end())
+        //backs away to knock extra pixels less
+        move_to_transfer = drive.trajectoryBuilder(go_to_stack.end())
                 .lineTo(new Vector2d(-48, -38))
                 .build();
 
+        //aligns to the truss
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
                 .splineToConstantHeading(new Vector2d(-36, -58), Math.toRadians(0))
                 .build();
@@ -178,8 +320,11 @@ public class RedLeft_Experimental extends OpMode {
         park = drive.trajectoryBuilder(to_backdrop.end())
                 .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft2.PARK.x, FieldConstants.RedLeft2.PARK.y), Math.toRadians(0))
                 .build();
-        drive.followTrajectorySequenceAsync(purple);
+
+
+        drive.followTrajectorySequenceAsync(spike);
         spiketimer.reset();
+
 //        drive.followTrajectoryAsync(origin_test);
 //        step = State.TEST;
     }
@@ -191,53 +336,17 @@ public class RedLeft_Experimental extends OpMode {
                     step = State.IDLE;
                 }
                 break;
-            case PURPLE:
-                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-
-                if(!drive.isBusy()){
-                    robot.intake.mandibleOpen();
-                    robot.intake.dropBoth();
-                    step = State.SPIKE_DROP;
-                    drive.followTrajectorySequenceAsync(back);
-                    spiketimer.reset();
-                }
-                break;
             case SPIKE_DROP:
-
-                if(!drive.isBusy()){
-                    step = State.TO_STACK;
-                    drive.followTrajectoryAsync(backup);
-
-                }
-                break;
-            case BACKUP:
-                if(!drive.isBusy()){
-                    step = State.ALIGN_TO_STACK;
-                    drive.followTrajectoryAsync(align_to_stack);
-                }
-                break;
-            case ALIGN_TO_STACK:
-                if(!drive.isBusy()){
-                    step = State.TO_STACK;
-                    drive.followTrajectoryAsync(to_stack);
+                if(!stepdone){
+                    stepdone = spike_drop_left();
+                }else{
+                    step = State.IDLE;
                 }
                 break;
             case TO_STACK:
                 if(!drive.isBusy()){
                     spiketimer.reset();
                     robot.intake.leftMandibleClose();
-                    step = State.GRAB_FROM_STACK;
-                }
-                break;
-            case KNOCK_OVER:
-                if(spiketimer.seconds() >= 0.4){
-                    drive.followTrajectoryAsync(knockover);
-                    step = State.BACK_TO_STACK;
-                }
-                break;
-            case BACK_TO_STACK:
-                if(!drive.isBusy()){
-                    drive.followTrajectoryAsync(backfromstack);
                     step = State.GRAB_FROM_STACK;
                 }
                 break;
@@ -288,9 +397,7 @@ public class RedLeft_Experimental extends OpMode {
                 }
                 break;
             case TO_BACKDROP:
-                if(spiketimer.seconds() >= 5){
-                    //robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);
-                }
+
                 if(!drive.isBusy()){
                     robot.intake.mandibleClose();
                     robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);

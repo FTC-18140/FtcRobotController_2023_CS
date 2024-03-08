@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(group = "redleft")
-public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
+public class AutoRedLeft_RoadRunner extends OpMode {
 
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     SampleMecanumDrive drive;
@@ -119,7 +119,8 @@ public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
 
                 backup_x = FieldConstants.RedLeft.BACKUP_CENTER.x;
                 backup_y = FieldConstants.RedLeft.BACKUP_CENTER.y;
-                spike_tangent = Math.toRadians(100);
+                backup_heading = Math.toRadians(-15);
+                spike_tangent = Math.toRadians(0);
                 break;
             case(3):
                 spike_x = FieldConstants.RedLeft.SPIKE_RIGHT.x;
@@ -170,7 +171,7 @@ public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
                 .build();
 
         park = drive.trajectoryBuilder(to_backdrop.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK_LEFT.x, FieldConstants.RedRight.PARK_LEFT.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft.PARK.x, FieldConstants.RedLeft.PARK.y), Math.toRadians(0))
                 .build();
         drive.followTrajectorySequenceAsync(purple);
     }
@@ -189,7 +190,7 @@ public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
                 break;
             case SPIKE_DROP:
                 robot.intake.dropBoth();
-                if(spiketimer.seconds() >= 0.5){
+                if(spiketimer.seconds() >= 0.3){
                     step = State.BACKUP;
                     drive.followTrajectoryAsync(backup);
 
@@ -215,7 +216,7 @@ public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
                 }
                 break;
             case GRAB_FROM_STACK:
-                if(spiketimer.seconds() >= 0.5){
+                if(spiketimer.seconds() >= 0.4){
                     robot.intake.rightMandibleClose();
                     step = State.MOVE_TO_TRANSFER;
                     drive.followTrajectoryAsync(move_to_transfer);
@@ -229,7 +230,7 @@ public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
                 }
                 break;
             case TRANSFER_INTAKE:
-                if(spiketimer.seconds() >= 0.75){
+                if(spiketimer.seconds() >= 0.6){
                     robot.intake.holdPixelRight();
                     spiketimer.reset();
                     step = State.INTAKE_RELEASE;
@@ -284,7 +285,7 @@ public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
                 if(spiketimer.seconds() >= 1){
                     step = State.PARK;
                     spiketimer.reset();
-                    drive.followTrajectoryAsync(park);
+                    //drive.followTrajectoryAsync(park);
                 }
                 break;
             case PARK:

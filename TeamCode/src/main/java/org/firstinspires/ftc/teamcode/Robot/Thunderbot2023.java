@@ -37,6 +37,8 @@ public class Thunderbot2023
     public EndGame endGame = new EndGame();
     public Intake intake = new Intake();
     public ArtemisEyes eyes = new ArtemisEyes();
+
+    public Sensors sensors = new Sensors();
     List<LynxModule> allHubs;
 
     // Position Variables
@@ -201,6 +203,10 @@ public class Thunderbot2023
         try {  intake.init(ahwMap, telem, ifAuto); }
         catch(Exception e) { telemetry.addData("Intake not found", 0); }
 
+        try { sensors.init(ahwMap, telem); }
+        catch (Exception e) {
+            telemetry.addData("sensors not found", 0);
+        }
     }
 
     /**

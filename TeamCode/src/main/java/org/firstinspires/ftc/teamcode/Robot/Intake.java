@@ -298,8 +298,8 @@ public class Intake
     }
 
     public boolean mandibleHalf() {
-        setLeftMandiblePos(0.25);
-        setRightMandiblePos(0.1);
+        setLeftMandiblePos(0.325);
+        setRightMandiblePos(0.175);
         return true;
     }
     public void leftMandibleOpen(){
@@ -374,7 +374,7 @@ public class Intake
             }
         }
     }
-        public void autoIntakeState(boolean button) throws InterruptedException{
+        public void autoIntakeState(boolean button) {
             boolean leftloaded = !beamBreakLeft.getState();
             boolean rightloaded = !beamBreakRight.getState();
 
@@ -385,9 +385,9 @@ public class Intake
             telemetry.addData("state = ", state);
 
             if ((leftloaded && rightloaded) || button) {
-                time.reset();
                 switch (state) {
                     case 0:
+                        time.reset();
                         if (!done) {
                             if (time.seconds() < 1) {
                                 goTo(Positions.DOWN_TO_PIXEL, false);
@@ -404,8 +404,8 @@ public class Intake
                     case 1:
                         if (!done) {
                             if (time.seconds() < 1) {
-                                goTo(Positions.INTAKE, true);
                                 mandibleHalf();
+                                goTo(Positions.INTAKE, true);
                             } else {
                                 done = true;
                             }

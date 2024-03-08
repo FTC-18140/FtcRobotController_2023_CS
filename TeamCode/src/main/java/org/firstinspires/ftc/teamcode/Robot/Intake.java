@@ -63,7 +63,7 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.0325, 0.0325, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
+        TRANSFER( 0.0275, 0.0275, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, 0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
@@ -296,9 +296,10 @@ public class Intake
         setRightMandiblePos(RIGHT_MANDIBLE_CLOSE);
         return true;
     }
+
     public boolean mandibleHalf() {
         setLeftMandiblePos(0.25);
-        setRightMandiblePos(0.25);
+        setRightMandiblePos(0.1);
         return true;
     }
     public void leftMandibleOpen(){

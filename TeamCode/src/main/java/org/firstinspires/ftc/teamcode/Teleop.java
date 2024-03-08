@@ -114,8 +114,8 @@ public class Teleop extends OpMode  {
 //            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
 //                    tbdGamepad1.getRightX());
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
-            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.5, tbdGamepad1.getLeftX() * 0.5,
-                    tbdGamepad1.getRightX() * 0.5);
+            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.1, tbdGamepad1.getLeftX() * 0.1,
+                    tbdGamepad1.getRightX() * 0.1);
         } else {
             robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
                     tbdGamepad1.getRightX());

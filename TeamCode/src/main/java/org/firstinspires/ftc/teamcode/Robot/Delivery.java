@@ -41,9 +41,9 @@ public class Delivery
     static public double ELBOW_INIT = 0.92;
     static public double WRIST_INIT = 0.92;
     static public double LEFTGRIP_INIT = 0.25;
-    static public double RIGHTGRIP_INIT = 0.85;
+    static public double RIGHTGRIP_INIT = 0.75;
     static public double TWIST_INIT = 0.5;
-    static public double LEFT_GRIP_DROP = 0;
+    static public double LEFT_GRIP_DROP = 0.5;
     static public double RIGHT_GRIP_DROP = 0.5;
     //Initalization should be 0.46
     // 0.225 is the position to get ready to pick up
@@ -81,8 +81,8 @@ public class Delivery
     public enum GripperPositions
     {
         // IF ANY GRIP ISSUES CHANGE THE GRIP POSITIONS TO 0.8 INSTEAD OF 0.775 (ITS TIGHTER)
-        GRIPPED( 0.25,0.85),
-        RELEASED( 0, 0.5),
+        GRIPPED( 0.85,0.85),
+        RELEASED( 0.5, 0.5),
         INIT( LEFTGRIP_INIT, RIGHTGRIP_INIT);
 
         public final double leftGripPos;

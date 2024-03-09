@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+import java.util.Objects;
+
 @Autonomous(group = "test")
 public class RedLeft_Experimental extends OpMode {
 
@@ -24,7 +26,7 @@ public class RedLeft_Experimental extends OpMode {
     Pose2d start = new Pose2d(FieldConstants.RedLeft2.START.x,FieldConstants.RedLeft2.START.y, FieldConstants.RedLeft2.START.h);
 
     ElapsedTime spiketimer;
-    int tagNum = 2;
+    String spikePos = "LEFT";
 
     double spike_x;
     double spike_y;
@@ -58,7 +60,7 @@ public class RedLeft_Experimental extends OpMode {
 
     TrajectorySequence back_and_turn;
 
-    TrajectorySequence spike;
+    TrajectorySequence spikeTrajectory;
 
     enum State{
         TEST,
@@ -77,6 +79,7 @@ public class RedLeft_Experimental extends OpMode {
         DELIVERY_LIFT,
         DROP_ON_BACKDROP,
         PARK,
+        AUTO_INTAKE,
         IDLE
     }
 
@@ -109,27 +112,6 @@ public class RedLeft_Experimental extends OpMode {
 
 
     State step = State.SPIKE_DROP;
-    @Override
-    public void init_loop(){
-        super.init_loop();
-        switch (robot.eyes.getSpikePos())
-        {
-            case "LEFT":
-            case "NOT FOUND":
-                tagNum = 1;
-                telemetry.addData("ZONE = LEFT", 0);
-                break;
-            case "RIGHT":
-                tagNum = 3;
-                telemetry.addData("ZONE = RIGHT", 0);
-                break;
-            default: // default CENTER
-                tagNum = 2;
-                telemetry.addData("ZONE = CENTER", 0);
-                break;
-        }
-        telemetry.addData("Tag Number: ", tagNum );
-    }
 
     @Override
     public void init() {
@@ -137,133 +119,52 @@ public class RedLeft_Experimental extends OpMode {
         drive = robot.drive;
         spiketimer = new ElapsedTime();
     }
-
-    public boolean spike_drop_left() {
-        boolean done = false;
-        switch(step_left){
-            case TO_SPIKE:
-                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-
-                if(!drive.isBusy()){
-                    robot.intake.mandibleOpen();
-                    robot.intake.dropBoth();
-                    step_left = Spike_Left.DROP_PIXEL;
-                    drive.followTrajectorySequenceAsync(back_and_turn);
-                    spiketimer.reset();
-                }
-
+    @Override
+    public void init_loop(){
+        super.init_loop();
+        switch (robot.eyes.getSpikePos())
+        {
+            case "LEFT":
+            case "NOT FOUND": // not found hopefully means the prop is out of view to the left
+                spikePos = "LEFT";
+                telemetry.addData("ZONE = ", spikePos);
                 break;
-            case DROP_PIXEL:
-                if(!drive.isBusy()){
-                    step_left = Spike_Left.BACKUP;
-                    drive.followTrajectoryAsync(go_to_stack);
-
-                }
-
-                break;
-            case BACKUP:
-                if(!drive.isBusy()){
-                    done = true;
-                }
+            case "RIGHT":
+                spikePos = "RIGHT";
+                telemetry.addData("ZONE = RIGHT", spikePos);
                 break;
             default:
+            case "CENTER": // default CENTER
+                spikePos = "CENTER";
+                telemetry.addData("ZONE = CENTER", spikePos);
                 break;
         }
-        return done;
-    }
-
-    public boolean spike_drop_center() {
-        boolean done = false;
-        switch(step_center){
-            case TO_SPIKE:
-                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-
-                if(!drive.isBusy()){
-                    robot.intake.mandibleOpen();
-                    robot.intake.dropBoth();
-                    step_center = Spike_Center.DROP_PIXEL;
-                    drive.followTrajectorySequenceAsync(back_and_turn);
-                    spiketimer.reset();
-                }
-
-                break;
-            case DROP_PIXEL:
-                if(!drive.isBusy()){
-                    step_center = Spike_Center.BACKUP;
-                    drive.followTrajectoryAsync(go_to_stack);
-
-                }
-
-                break;
-            case BACKUP:
-                if(!drive.isBusy()){
-                    done = true;
-                }
-                break;
-            default:
-                break;
-        }
-        return done;
-    }
-
-    public boolean spike_drop_right() {
-        boolean done = false;
-        switch(step_right){
-            case TO_SPIKE:
-                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
-
-                if(!drive.isBusy()){
-                    robot.intake.mandibleOpen();
-                    robot.intake.dropBoth();
-                    step_right = Spike_Right.DROP_PIXEL;
-                    drive.followTrajectorySequenceAsync(back_and_turn);
-                    spiketimer.reset();
-                }
-
-                break;
-            case DROP_PIXEL:
-                if(!drive.isBusy()){
-                    step_right = Spike_Right.BACKUP;
-                    drive.followTrajectoryAsync(go_to_stack);
-
-                }
-
-                break;
-            case BACKUP:
-                if(!drive.isBusy()){
-                    done = true;
-                }
-                break;
-            default:
-                break;
-        }
-        return done;
     }
 
     @Override
     public void start() {
 
-        //Add in mini state machines
-        //conciceify!!
-
-        switch(tagNum){
-            case(1):
-                spike = stack_left;
+        // Select starting substate based on vision processing result.
+        // Also, initialize the substate step
+        switch(spikePos){
+            case("LEFT"):
+                spikeTrajectory = stack_left;
+                step_left = Spike_Left.TO_SPIKE;
                 break;
-            case(2):
-                spike = stack_center;
+            case("CENTER"):
+                spikeTrajectory = stack_center;
+                step_center = Spike_Center.TO_SPIKE;
                 break;
-            case(3):
-                spike = stack_right;
+            case("RIGHT"):
+                spikeTrajectory = stack_right;
+                step_right = Spike_Right.TO_SPIKE;
                 break;
-
-
         }
 
+        // Set start position
         drive.setPoseEstimate(start);
 
         //test trajectory for tuning the starting position
-
         origin_test = drive.trajectoryBuilder(start)
                 .lineTo(new Vector2d(-36, 0))
                 .build();
@@ -291,9 +192,8 @@ public class RedLeft_Experimental extends OpMode {
                 .build();
 
 
-
         //backs up and aligns to the stack and backdrop
-        back_and_turn = drive.trajectorySequenceBuilder(spike.end())
+        back_and_turn = drive.trajectorySequenceBuilder(spikeTrajectory.end())
                 .lineTo(new Vector2d(-42, -42))
                 .turn(Math.toRadians(90))
                 .build();
@@ -322,12 +222,113 @@ public class RedLeft_Experimental extends OpMode {
                 .build();
 
 
-        drive.followTrajectorySequenceAsync(spike);
+        drive.followTrajectorySequenceAsync(spikeTrajectory);
         spiketimer.reset();
 
 //        drive.followTrajectoryAsync(origin_test);
 //        step = State.TEST;
     }
+
+    // Sub state machine for dropping the pixel on the left spike mark
+    public boolean spike_drop_left() {
+        boolean done = false;
+        switch(step_left){
+            case TO_SPIKE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+
+                if(!drive.isBusy()){
+                    robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                    step_left = Spike_Left.DROP_PIXEL;
+                    spiketimer.reset();
+                }
+
+                break;
+            case DROP_PIXEL:
+                if ( spiketimer.seconds() > 0.5) {
+                    step_left = Spike_Left.BACKUP;
+                    drive.followTrajectorySequenceAsync(back_and_turn);
+                }
+
+                break;
+            case BACKUP:
+                if(!drive.isBusy()){
+                    step_left = Spike_Left.IDLE;
+                    done = true;
+                }
+                break;
+            default:
+                break;
+        }
+        return done;
+    }
+
+    // Sub state machine for dropping the pixel on the center spike mark
+    public boolean spike_drop_center() {
+        boolean done = false;
+        switch(step_center){
+            case TO_SPIKE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+
+                if(!drive.isBusy()){
+                    robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                    step_center = Spike_Center.DROP_PIXEL;
+                    spiketimer.reset();
+                }
+                break;
+            case DROP_PIXEL:
+                if ( spiketimer.seconds() > 0.5) {
+                    drive.followTrajectorySequenceAsync(back_and_turn);
+                    step_center = Spike_Center.BACKUP;
+                }
+                break;
+            case BACKUP:
+                if(!drive.isBusy()){
+                    step_center = Spike_Center.IDLE;
+                    done = true;
+                }
+                break;
+            default:
+                break;
+        }
+        return done;
+    }
+
+    // Sub state machine for dropping the pixel on the right spike mark
+    public boolean spike_drop_right() {
+        boolean done = false;
+        switch(step_right){
+            case TO_SPIKE:
+                robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+
+                if(!drive.isBusy()){
+                    robot.intake.mandibleOpen();
+                    robot.intake.dropBoth();
+                    step_right = Spike_Right.DROP_PIXEL;
+                    spiketimer.reset();
+                }
+                break;
+            case DROP_PIXEL:
+                if ( spiketimer.seconds() > 0.5) {
+                    drive.followTrajectorySequenceAsync(back_and_turn);
+                    step_right = Spike_Right.BACKUP;
+                    done = true;
+                }
+                break;
+            case BACKUP:
+                if(!drive.isBusy()){
+                    step_right = Spike_Right.IDLE;
+                    done = true;
+                }
+                break;
+            default:
+                break;
+        }
+        return done;
+    }
+
+
     @Override
     public void loop() {
         switch (step){
@@ -337,9 +338,21 @@ public class RedLeft_Experimental extends OpMode {
                 }
                 break;
             case SPIKE_DROP:
-                if(!stepdone){
-                    stepdone = spike_drop_left();
-                }else{
+                switch( spikePos) {
+                    case "LEFT":
+                        stepdone = spike_drop_left();
+                        break;
+                    case "CENTER":
+                        stepdone = spike_drop_center();
+                        break;
+                    case "RIGHT":
+                        stepdone = spike_drop_right();
+                        break;
+                }
+
+                if ( stepdone ) {
+//                    step = State.TO_STACK;
+//                    robot.drive.followTrajectoryAsync(go_to_stack);
                     step = State.IDLE;
                 }
                 break;
@@ -357,47 +370,63 @@ public class RedLeft_Experimental extends OpMode {
                     drive.followTrajectoryAsync(move_to_transfer);
                 }
                 break;
+//            case MOVE_TO_TRANSFER:
+//                if(!drive.isBusy()){
+//                    robot.intake.goTo(Intake.Positions.DOWN_TO_PIXEL, false);
+//                    step = State.TRANSFER_INTAKE;
+//                    spiketimer.reset();
+//                }
+//                break;
             case MOVE_TO_TRANSFER:
                 if(!drive.isBusy()){
-                    robot.intake.goTo(Intake.Positions.DOWN_TO_PIXEL, false);
-                    step = State.TRANSFER_INTAKE;
+                    step = State.AUTO_INTAKE;
+                    robot.intake.autoIntake(true);
                     spiketimer.reset();
                 }
                 break;
-            case TRANSFER_INTAKE:
-                if(spiketimer.seconds() >= 0.6){
-                    robot.intake.holdPixelRight();
-                    spiketimer.reset();
-                    step = State.INTAKE_RELEASE;
-                }
-                break;
-            case INTAKE_RELEASE:
-                if(spiketimer.seconds() >= 1){
-                    robot.intake.goTo(Intake.Positions.TRANSFER, false);
-                    robot.delivery.dropLeft();
-                    spiketimer.reset();
-                    step = State.TRANSFER_DELIVERY;
-                }
-                break;
-            case TRANSFER_DELIVERY:
-                if(spiketimer.seconds() >= 1){
-                    robot.intake.dropBoth();
-                    spiketimer.reset();
-                    step = State.DELIVERY_GRIP;
-                }
-                break;
-            case DELIVERY_GRIP:
-                if (spiketimer.seconds() >= 0.5){
-                    robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+            case AUTO_INTAKE:
+                stepdone = robot.intake.autoIntake(false);
+
+                if ( stepdone )  {
                     robot.delivery.holdPixelsBoth();
-                    drive.followTrajectoryAsync(yellow);
-                    spiketimer.reset();
                     step = State.IDLE;
-
+//                    step = State.TO_BACKDROP;
+//                    drive.followTrajectoryAsync(yellow);
                 }
-                break;
+            break;
+//            case TRANSFER_INTAKE:
+//                if(spiketimer.seconds() >= 0.6){
+//                    robot.intake.holdPixelRight();
+//                    spiketimer.reset();
+//                    step = State.INTAKE_RELEASE;
+//                }
+//                break;
+//            case INTAKE_RELEASE:
+//                if(spiketimer.seconds() >= 1){
+//                    robot.intake.goTo(Intake.Positions.TRANSFER, false);
+//                    robot.delivery.dropLeft();
+//                    spiketimer.reset();
+//                    step = State.TRANSFER_DELIVERY;
+//                }
+//                break;
+//            case TRANSFER_DELIVERY:
+//                if(spiketimer.seconds() >= 1){
+//                    robot.intake.dropBoth();
+//                    spiketimer.reset();
+//                    step = State.DELIVERY_GRIP;
+//                }
+//                break;
+//            case DELIVERY_GRIP:
+//                if (spiketimer.seconds() >= 0.5){
+//                    robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
+//                    robot.delivery.holdPixelsBoth();
+//                    drive.followTrajectoryAsync(yellow);
+//                    spiketimer.reset();
+//                    step = State.IDLE;
+//
+//                }
+//                break;
             case TO_BACKDROP:
-
                 if(!drive.isBusy()){
                     robot.intake.mandibleClose();
                     robot.delivery.goTo(Delivery.Positions.ALIGN_TO_BACKDROP);

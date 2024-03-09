@@ -327,7 +327,9 @@ public class Intake
     //for autointake
 
 
-    public void autoIntake (boolean button) throws InterruptedException {
+    public boolean autoIntake(boolean button) {
+
+        boolean done = false;
 
         boolean leftloaded = !beamBreakLeft.getState();
         boolean rightloaded = !beamBreakRight.getState();
@@ -371,8 +373,11 @@ public class Intake
             if (time.seconds() >= 1.7) {
                 // go to just above intake and wait to go again
                 goTo(Positions.WAIT_TO_INTAKE, false);
+                done = true;
             }
+
         }
+        return done;
     }
         public void autoIntakeState(boolean button) {
             boolean leftloaded = !beamBreakLeft.getState();

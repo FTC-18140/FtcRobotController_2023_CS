@@ -6,6 +6,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -289,7 +290,8 @@ public class Thunderbot2023
     }
     public boolean alignToBackdrop(double distance, double stickValue) {
 
-        double rangeError = (leftDistanceAway - distance);
+        double avgDistance = (leftDistanceAway + rightDistanceAway)/2.0;
+        double rangeError = (avgDistance - distance);
         double headingError = leftDistanceAway - rightDistanceAway;
 
         if (rangeError < 1 && headingError < 0.5) {
@@ -637,8 +639,21 @@ public class Thunderbot2023
 
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
-        leftDistanceAway = ((DistanceSensor) lDistance).getDistance(DistanceUnit.CM);
-        rightDistanceAway = ((DistanceSensor) rDistance).getDistance(DistanceUnit.CM);
+        leftDistanceAway = ((Rev2mDistanceSensor) lDistance).getDistance(DistanceUnit.CM);
+        rightDistanceAway = ((Rev2mDistanceSensor) rDistance).getDistance(DistanceUnit.CM);
+
+//        if (  ((Rev2mDistanceSensor) lDistance).didTimeoutOccur() ||
+//              ((Rev2mDistanceSensor) rDistance).didTimeoutOccur() ) {
+//            // don't use the values if a timeout occurred.
+//            leftDistanceAway = 10;
+//            rightDistanceAway = 10;
+//        }
+//        else {
+//            // no timeout.  OK to use.
+//            leftDistanceAway = ((Rev2mDistanceSensor) lDistance).getDistance(DistanceUnit.CM);
+//            rightDistanceAway = ((Rev2mDistanceSensor) rDistance).getDistance(DistanceUnit.CM);
+//        }
+
         telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();

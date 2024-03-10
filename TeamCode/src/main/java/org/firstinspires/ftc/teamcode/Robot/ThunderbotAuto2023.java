@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
 import java.util.List;
 
@@ -176,6 +177,8 @@ public class ThunderbotAuto2023
         telemetry.addData("Motor Position", drive.getPoseEstimate());
         telemetry.addData("Motor Velocities:", drive.getWheelVelocities());
         telemetry.addData("Heading: ", drive.getPoseEstimate().getHeading());
+
+        PoseStorage.currentPose = drive.getPoseEstimate();
 
         notifyTheDriver1 = false;
         notifyTheDriver2 = false;

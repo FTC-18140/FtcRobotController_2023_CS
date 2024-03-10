@@ -131,14 +131,14 @@ public class Teleop extends OpMode  {
                 telemetry.addData("auto intake not working", 0);
             }
 
-        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
-           robot.intake.goTo(WAIT_TO_INTAKE, false);
-        } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
-            robot.intake.mandibleHalf();
-            robot.delivery.setElbowPosition(0.92);
-        } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
-            robot.intake.goTo(TRANSFER, false);
-        } //else if (tbdGamepad1.getButtonPressed(B)) {
+//        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
+//           robot.intake.goTo(WAIT_TO_INTAKE, false);
+//        } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
+//            robot.intake.mandibleHalf();
+//            robot.delivery.setElbowPosition(0.92);
+//        } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
+//            robot.intake.goTo(TRANSFER, false);
+//        } //else if (tbdGamepad1.getButtonPressed(B)) {
             // robot.intake.goTo( DOWN_TO_PIXEL, false);
         //}
 
@@ -178,6 +178,10 @@ public class Teleop extends OpMode  {
 
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
 
+        ////////////////////
+        // AUTO ALIGN
+        ////////////////////
+            robot.alignToBackdrop(10, tbdGamepad1.getLeftX());
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////// GAMEPAD 2 //////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

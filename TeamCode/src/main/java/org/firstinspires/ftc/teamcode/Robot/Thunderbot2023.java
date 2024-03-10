@@ -7,15 +7,18 @@ import static java.lang.Math.toRadians;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.List;
@@ -31,6 +34,8 @@ public class Thunderbot2023
     DcMotorEx rightFront = null;
     DcMotorEx leftRear = null;
     DcMotorEx rightRear = null;
+    ColorSensor lDistance = null;
+    ColorSensor rDistance = null;
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
@@ -50,6 +55,8 @@ public class Thunderbot2023
     double heading = 0;
     double initRotation = 0;
     double lastAngle = 0;
+    double leftDistanceAway = 0;
+    double rightDistanceAway = 0;
 
     boolean moving = false;
 
@@ -68,7 +75,7 @@ public class Thunderbot2023
     static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (WHEEL_DIAMETER_CM * Math.PI);
 
-    public static double MAX_VELOCITY_CM = 600;
+    public static double MAX_VELOCITY_CM = 350;
     static final double MAX_VELOCITY_TICKS = MAX_VELOCITY_CM * COUNTS_PER_CM;
 
     private Telemetry telemetry = null;
@@ -190,6 +197,16 @@ public class Thunderbot2023
         {
             telemetry.addData("leftRear not found in config file", 0);
         }
+        try {
+            lDistance = ahwMap.get(ColorSensor.class, "lDistance");
+        } catch (Exception e) {
+            telemetry.addData("Left Distance Sensor not found", 0);
+        }
+        try {
+            rDistance = ahwMap.get(ColorSensor.class, "rDistance");
+        } catch (Exception e) {
+            telemetry.addData("Right Distance Sensor not found", 0);
+        };
 
         try { linearSlide.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Lift not found", 0); }
@@ -207,6 +224,7 @@ public class Thunderbot2023
         catch (Exception e) {
             telemetry.addData("sensors not found", 0);
         }
+
     }
 
     /**
@@ -268,6 +286,24 @@ public class Thunderbot2023
         vx *= 1.1;
 
         joystickDrive(vy, vx, clockwise);
+    }
+    public boolean alignToBackdrop(double distance, double stickValue) {
+
+        double rangeError = (leftDistanceAway - distance);
+        double headingError = leftDistanceAway - rightDistanceAway;
+
+        if (rangeError < 1 && headingError < 0.5) {
+            stop();
+            moving = false;
+            return true;
+        }
+        else {
+            double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+            double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+
+            joystickDrive(y, stickValue, turn);
+            return false;
+        }
     }
     public boolean driveToTag(int tagID, double speed, double distanceAway)
     {
@@ -601,6 +637,8 @@ public class Thunderbot2023
 
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
+        leftDistanceAway = ((DistanceSensor) lDistance).getDistance(DistanceUnit.CM);
+        rightDistanceAway = ((DistanceSensor) rDistance).getDistance(DistanceUnit.CM);
         telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();

@@ -216,13 +216,13 @@ public class AutoRedLeft_StageDoor extends OpMode {
         }
 //backs up and aligns to the stack and backdrop
         back_and_turn = drive.trajectorySequenceBuilder(spikeTrajectory.end())
-                .lineTo(new Vector2d(-42, -42))
+                .lineTo(new Vector2d(-44, -42))
                 .turn(Math.toRadians(90))
                 .build();
 
         back_and_turn_right = drive.trajectorySequenceBuilder(spikeTrajectory.end())
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-44, -42), Math.toRadians(-90))
                 .turn(Math.toRadians(180))
                 .build();
 //splines to the stack, then slows down as it aligns more accurately with the stack
@@ -241,14 +241,15 @@ public class AutoRedLeft_StageDoor extends OpMode {
 
         //backs away to knock extra pixels less
         move_to_transfer = drive.trajectoryBuilder(go_to_stack.end())
-                .lineTo(new Vector2d(-52, -38))
+                .lineTo(new Vector2d(-50, -38))
                 .build();
 
         //aligns to the truss
-        yellow = drive.trajectoryBuilder(move_to_transfer.end(), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-54, -24), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-36, -10), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, -10), Math.toRadians(0))
+        yellow = drive.trajectoryBuilder(move_to_transfer.end())
+                .splineToConstantHeading(new Vector2d(-55, -36), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-56, -20), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-42, -13), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, -13), Math.toRadians(0))
                 .build();
 
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
@@ -261,7 +262,7 @@ public class AutoRedLeft_StageDoor extends OpMode {
                 .splineToConstantHeading(new Vector2d(47.5, -44), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(47, -36), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(47.5, -36), Math.toRadians(0))
                 .build();
         switch(spikePos){
             case("LEFT"):
@@ -280,7 +281,7 @@ public class AutoRedLeft_StageDoor extends OpMode {
         }
         if (spikePos == "LEFT"){
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(47, -44), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48, -44), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
@@ -288,7 +289,7 @@ public class AutoRedLeft_StageDoor extends OpMode {
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(47, -31), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(47.5, -31), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())

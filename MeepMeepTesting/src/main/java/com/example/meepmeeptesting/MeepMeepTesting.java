@@ -82,7 +82,10 @@ public class MeepMeepTesting
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
                                                           .splineToConstantHeading(new Vector2d(-52, -42), Math.toRadians(90))
-                                                          .splineTo(new Vector2d(-34, -36), Math.toRadians(0))
+                                                          .splineToSplineHeading(new Pose2d(-34, -36, Math.toRadians(180)), Math.toRadians(0))
+                                                          .splineToConstantHeading(new Vector2d(47, -46), Math.toRadians(0))
+                                                          .setReversed(false)
+                                                          .splineToConstantHeading(new Vector2d(47, -32), Math.toRadians(0))
                                                           //.splineToConstantHeading(new Vector2d(-32, 12), Math.toRadians(-90))
                                                           //.splineToConstantHeading(new Vector2d(-30, 8), Math.toRadians(0))
                                                           //.splineToSplineHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))

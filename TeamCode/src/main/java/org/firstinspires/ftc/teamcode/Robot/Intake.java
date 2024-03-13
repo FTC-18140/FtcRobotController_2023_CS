@@ -36,15 +36,15 @@ public class Intake
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
-    static public double LEFT_GRIP_DROP = 0.2;
+    static public double LEFT_GRIP_DROP = 0.25;
 
     static public double RIGHT_GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.6;
+    static public double LEFT_GRIP_HOLD = 0.65;
     static public double RIGHT_GRIP_HOLD = 0.35;
 
     static public double MANDIBLE_INIT = 0;
-    static public double LEFT_MANDIBLE_OPEN = 0.75;
-    static public double RIGHT_MANDIBLE_OPEN = 0.5;
+    static public double LEFT_MANDIBLE_OPEN = 0.6;
+    static public double RIGHT_MANDIBLE_OPEN = 0.6;
     static public double LEFT_MANDIBLE_CLOSE = 0.15;
     static public double RIGHT_MANDIBLE_CLOSE = 0.05;
 
@@ -72,9 +72,9 @@ public class Intake
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
         WAIT_TO_INTAKE(0.1275, 0.1275, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // DOWN_TO_PIXEL is where the grippers are inside of the pixels and about to open to grab onto the pixels
-        DOWN_TO_PIXEL(0.15, 0.15, LEFT_GRIP_DROP, RIGHT_GRIP_DROP ),
+        DOWN_TO_PIXEL(0.145, 0.145, LEFT_GRIP_DROP, RIGHT_GRIP_DROP ),
         // INTAKE is where the grippers are in the pixels and open and holding onto the pixel
-        INTAKE( 0.15, 0.15, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
+        INTAKE( 0.145, 0.145, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
         public final double rElbowPos;
         public final double lElbowPos;

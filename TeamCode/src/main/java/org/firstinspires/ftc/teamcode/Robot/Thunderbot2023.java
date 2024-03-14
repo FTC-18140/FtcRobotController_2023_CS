@@ -6,6 +6,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -289,7 +290,8 @@ public class Thunderbot2023
     }
     public boolean alignToBackdrop(double distance, double stickValue) {
 
-        double rangeError = (leftDistanceAway - distance);
+        double avgDistance = (leftDistanceAway + rightDistanceAway)/2.0;
+        double rangeError = (avgDistance - distance);
         double headingError = leftDistanceAway - rightDistanceAway;
 
         if (rangeError < 1 && headingError < 0.5) {
@@ -639,6 +641,7 @@ public class Thunderbot2023
 
         leftDistanceAway = lDistance.getDistance(DistanceUnit.CM);
         rightDistanceAway = rDistance.getDistance(DistanceUnit.CM);
+
         telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());
         heading = getHeading();

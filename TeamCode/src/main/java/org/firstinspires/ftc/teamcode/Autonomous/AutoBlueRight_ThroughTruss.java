@@ -187,7 +187,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
                 .build();
 
         stack_center = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-50, 34), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-50, 36), Math.toRadians(-90))
                 .lineTo(new Vector2d(-36, 32))
                 .build();
 
@@ -236,7 +236,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
         }else{
             go_to_stack = drive.trajectoryBuilder(back_and_turn.end())
                     .splineToConstantHeading(new Vector2d(-52, 38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-54, 40), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-57.5, 40.5), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }
 
@@ -248,8 +248,8 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
 
         //aligns to the truss
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-36, 60), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, 60), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-36, 61.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, 61.5), Math.toRadians(0))
                 .build();
 
 //        to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
@@ -260,10 +260,10 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
                 .splineToConstantHeading(new Vector2d(48, 31), Math.toRadians(0))
                 .build();
         to_backdrop_right = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(47.5, 44), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 44), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(47, 36), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51, 34), Math.toRadians(0))
                 .build();
 
         switch(spikePos){
@@ -283,19 +283,19 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
         }
         if (spikePos == "RIGHT"){
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(47, 44), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(51, 44), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
-                    .splineToConstantHeading(new Vector2d(-48, 20), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48, 20), Math.toRadians(0))
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(47, 31), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(51, 31), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
-                    .splineToConstantHeading(new Vector2d(-48, 20), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48, 20), Math.toRadians(0))
                     .build();
         }
 
@@ -573,7 +573,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
 
                     spiketimer.reset();
                     step = State.SECOND_PIXEL;
-                    robot.delivery.dropRight();
+                    robot.delivery.dropLeft();
                 }
                 break;
             case SECOND_PIXEL:

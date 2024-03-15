@@ -35,8 +35,8 @@ public class Thunderbot2023
     DcMotorEx rightFront = null;
     DcMotorEx leftRear = null;
     DcMotorEx rightRear = null;
-    ColorSensor lDistance = null;
-    ColorSensor rDistance = null;
+    DistanceSensor lDistance = null;
+    DistanceSensor rDistance = null;
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
@@ -76,7 +76,7 @@ public class Thunderbot2023
     static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (WHEEL_DIAMETER_CM * Math.PI);
 
-    public static double MAX_VELOCITY_CM = 350;
+    public static double MAX_VELOCITY_CM = 300;
     static final double MAX_VELOCITY_TICKS = MAX_VELOCITY_CM * COUNTS_PER_CM;
 
     private Telemetry telemetry = null;
@@ -199,12 +199,12 @@ public class Thunderbot2023
             telemetry.addData("leftRear not found in config file", 0);
         }
         try {
-            lDistance = ahwMap.get(ColorSensor.class, "lDistance");
+            lDistance = ahwMap.get(DistanceSensor.class, "lDistance");
         } catch (Exception e) {
             telemetry.addData("Left Distance Sensor not found", 0);
         }
         try {
-            rDistance = ahwMap.get(ColorSensor.class, "rDistance");
+            rDistance = ahwMap.get(DistanceSensor.class, "rDistance");
         } catch (Exception e) {
             telemetry.addData("Right Distance Sensor not found", 0);
         };
@@ -639,20 +639,8 @@ public class Thunderbot2023
 
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
 
-        leftDistanceAway = ((Rev2mDistanceSensor) lDistance).getDistance(DistanceUnit.CM);
-        rightDistanceAway = ((Rev2mDistanceSensor) rDistance).getDistance(DistanceUnit.CM);
-
-//        if (  ((Rev2mDistanceSensor) lDistance).didTimeoutOccur() ||
-//              ((Rev2mDistanceSensor) rDistance).didTimeoutOccur() ) {
-//            // don't use the values if a timeout occurred.
-//            leftDistanceAway = 10;
-//            rightDistanceAway = 10;
-//        }
-//        else {
-//            // no timeout.  OK to use.
-//            leftDistanceAway = ((Rev2mDistanceSensor) lDistance).getDistance(DistanceUnit.CM);
-//            rightDistanceAway = ((Rev2mDistanceSensor) rDistance).getDistance(DistanceUnit.CM);
-//        }
+        leftDistanceAway = lDistance.getDistance(DistanceUnit.CM);
+        rightDistanceAway = rDistance.getDistance(DistanceUnit.CM);
 
         telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());

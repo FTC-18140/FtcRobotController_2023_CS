@@ -36,17 +36,16 @@ public class Intake
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
-    static public double LEFT_GRIP_DROP = 0.2;
-
+    static public double LEFT_GRIP_DROP = 0.3;
     static public double RIGHT_GRIP_DROP = 0;
     static public double LEFT_GRIP_HOLD = 0.6;
     static public double RIGHT_GRIP_HOLD = 0.35;
 
     static public double MANDIBLE_INIT = 0;
     static public double LEFT_MANDIBLE_OPEN = 0.75;
-    static public double RIGHT_MANDIBLE_OPEN = 0.5;
-    static public double LEFT_MANDIBLE_CLOSE = 0.15;
-    static public double RIGHT_MANDIBLE_CLOSE = 0.075;
+    static public double RIGHT_MANDIBLE_OPEN = 0.55;
+    static public double LEFT_MANDIBLE_CLOSE = 0.1;
+    static public double RIGHT_MANDIBLE_CLOSE = 0.05;
 
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;
@@ -298,8 +297,8 @@ public class Intake
     }
 
     public boolean mandibleHalf() {
-        setLeftMandiblePos(0.325);
-        setRightMandiblePos(0.175);
+        setLeftMandiblePos(0.3);
+        setRightMandiblePos(0.2);
         return true;
     }
     public void leftMandibleOpen(){
@@ -383,15 +382,16 @@ public class Intake
             telemetry.addData("beambreakleft", beamBreakLeft.getState());
             telemetry.addData("time", time.seconds());
             telemetry.addData("state = ", state);
-
+            if (button) {
+                time.reset();
+            }
             if ((leftloaded && rightloaded) || button) {
                 switch (state) {
                     case 0:
-                        time.reset();
                         if (!done) {
                             if (time.seconds() < 1) {
-                                goTo(Positions.DOWN_TO_PIXEL, false);
                                 mandibleClose();
+                                goTo(Positions.DOWN_TO_PIXEL, false);
                             } else {
                                 done = true;
                             }

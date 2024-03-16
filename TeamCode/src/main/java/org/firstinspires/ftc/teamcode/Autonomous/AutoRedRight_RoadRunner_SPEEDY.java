@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(group = "autoredright")
 @Config
-public class AutoRedRight_RoadRunner extends OpMode {
+public class AutoRedRight_RoadRunner_SPEEDY extends OpMode {
 
     SampleMecanumDrive drive;
 

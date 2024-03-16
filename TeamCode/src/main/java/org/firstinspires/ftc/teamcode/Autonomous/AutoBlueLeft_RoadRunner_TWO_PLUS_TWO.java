@@ -185,6 +185,7 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end(), true)
                 .splineToConstantHeading(new Vector2d(-50, 32), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(-48, 36), Math.toRadians(-45))
                 .build();
 
         truss2 = drive.trajectoryBuilder(move_to_transfer.end(), true)

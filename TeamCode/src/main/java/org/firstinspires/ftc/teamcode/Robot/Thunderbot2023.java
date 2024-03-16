@@ -61,12 +61,12 @@ public class Thunderbot2023
 
     boolean moving = false;
 
-    public static double SPEED_GAIN = 0.0075;
+    public static double SPEED_GAIN = 0.05;
     public static double STRAFE_GAIN = 0.0075;
     public static double  TURN_GAIN = 0.001;
     public static double MAX_SPEED = 0.25;
     public static double MAX_STRAFE = 0.1;
-    public static double MAX_TURN = 0.15;
+    public static double MAX_TURN = 0.25;
 
 
     // converts inches to motor ticks
@@ -278,8 +278,7 @@ public class Thunderbot2023
         rightRear.setVelocity( backRight * MAX_VELOCITY_TICKS );
     }
 
-    public void orientedDrive(double forward, double right, double clockwise)
-    {
+    public void orientedDrive(double forward, double right, double clockwise) {
         double theta = toRadians(heading);
         double vx = (forward * cos(theta)) - (right * sin(theta));
         double vy = (forward * sin(theta)) + (right * cos(theta));
@@ -288,10 +287,10 @@ public class Thunderbot2023
 
         joystickDrive(vy, vx, clockwise);
     }
-    public boolean alignToBackdrop(double distance, double stickValue) {
+    public boolean alignToBackdrop(double targetDistance, double stickValue) {
 
         double avgDistance = (leftDistanceAway + rightDistanceAway)/2.0;
-        double rangeError = (avgDistance - distance);
+        double rangeError = (avgDistance - targetDistance);
         double headingError = leftDistanceAway - rightDistanceAway;
 
         if (rangeError < 1 && headingError < 0.5) {
@@ -307,39 +306,39 @@ public class Thunderbot2023
             return false;
         }
     }
-    public boolean driveToTag(int tagID, double speed, double distanceAway)
-    {
-        if (!moving)
-        {
-            moving = true;
-        }
-
-        int tagNumber = eyes.getTagNumber(tagID);
-        double rangeError = (eyes.rangeError - distanceAway);
-        double headingError = eyes.headingError;
-        double yawError = eyes.yawError;
-
-        if (tagNumber == tagID) {
-
-            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
-                stop();
-                moving = false;
-                return true;
-            }
-            else {
-                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
-                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
-                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
-
-                joystickDrive(y, x, turn);
-                return false;
-            }
-        }
-        else {
-            stop();
-            return true;
-        }
-    }
+//    public boolean driveToTag(int tagID, double speed, double distanceAway)
+//    {
+//        if (!moving)
+//        {
+//            moving = true;
+//        }
+//
+//        int tagNumber = eyes.getTagNumber(tagID);
+//        double rangeError = (eyes.rangeError - distanceAway);
+//        double headingError = eyes.headingError;
+//        double yawError = eyes.yawError;
+//
+//        if (tagNumber == tagID) {
+//
+//            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
+//                stop();
+//                moving = false;
+//                return true;
+//            }
+//            else {
+//                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+//                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
+//                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+//
+//                joystickDrive(y, x, turn);
+//                return false;
+//            }
+//        }
+//        else {
+//            stop();
+//            return true;
+//        }
+//    }
 
 
     /**

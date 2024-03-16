@@ -51,6 +51,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 @TeleOp(name = "Concept: Scan Servo", group = "Teleop")
 @Config
+@Disabled
+
 public class ConceptScanServo extends LinearOpMode {
 
    public static  double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle

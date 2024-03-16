@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Delivery;
@@ -12,6 +13,7 @@ import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
 
 @Autonomous
+@Disabled
 public class AutoBlueLeft extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();

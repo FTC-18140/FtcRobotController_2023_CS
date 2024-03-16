@@ -5,6 +5,7 @@ import static com.qualcomm.robotcore.util.Range.clip;
 
 import static java.lang.Math.abs;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 
 @TeleOp(name = "Strafer", group = "teleop")
+@Disabled
 public class Strafer_Chassis extends OpMode{
 
     Thunderbot2023 robot = new Thunderbot2023();

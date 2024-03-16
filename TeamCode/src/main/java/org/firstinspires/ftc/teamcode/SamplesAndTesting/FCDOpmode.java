@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.SamplesAndTesting;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 
 @TeleOp
+@Disabled
+
 public class FCDOpmode extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();

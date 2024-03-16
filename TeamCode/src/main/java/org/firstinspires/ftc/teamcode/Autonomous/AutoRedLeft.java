@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
 
 @Autonomous
+@Disabled
 public class AutoRedLeft extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();

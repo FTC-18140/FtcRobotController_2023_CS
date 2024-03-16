@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(group = "autoblueleft")
-public class AutoBlueLeft_RoadRunner extends OpMode {
+public class AutoBlueLeft_RoadRunner_SPEEDY extends OpMode {
     SampleMecanumDrive drive;
     int tagNum = 2;
 

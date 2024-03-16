@@ -174,16 +174,8 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
                 .build();
 
         truss1 = drive.trajectoryBuilder(yellow.end())
-<<<<<<< HEAD
                 .splineToConstantHeading(new Vector2d(24, 57), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-40, 57), Math.toRadians(180))
-=======
-<<<<<<< HEAD
-                .splineToConstantHeading(new Vector2d(24, 57), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-40, 57), Math.toRadians(180))
-=======
->>>>>>> kris-sandbox
->>>>>>> 2175237efd521cfa4b2d2cda8a4f5376460f9489
                 .build();
 
         to_stack = drive.trajectoryBuilder(truss1.end())

@@ -79,7 +79,7 @@ public class AutoFeatureTestBackstage extends OpMode {
                 }
             case 3:
                 if (!done) {
-                    done = robot.driveToTag(tagNum, 0.25, 10);
+                    //done = robot.driveToTag(tagNum, 0.25, 10);
                 } else {
                     robot.stop();
                     state++;

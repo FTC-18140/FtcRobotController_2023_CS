@@ -15,9 +15,9 @@ import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(group = "autoredright")
+@Autonomous(group = "autoblueleft")
 @Config
-public class AutoRedRight_RoadRunner_TWO_PLUS_TWO extends OpMode {
+public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
 
     SampleMecanumDrive drive;
 
@@ -92,7 +92,7 @@ public class AutoRedRight_RoadRunner_TWO_PLUS_TWO extends OpMode {
     @Override
     public void init(){
         robot.init(hardwareMap, telemetry, true);
-        TGEVisionProcessor.theColor = "RED";
+        TGEVisionProcessor.theColor = "BLUE";
         drive = robot.drive;
         spiketimer = new ElapsedTime();
         //0.9083333
@@ -124,79 +124,79 @@ public class AutoRedRight_RoadRunner_TWO_PLUS_TWO extends OpMode {
     public void start(){
         switch(tagNum){
             case(1):
-                spike_x = FieldConstants.RedRight.SPIKE_LEFT.x;
-                spike_y = FieldConstants.RedRight.SPIKE_LEFT.y;
-                spike_heading = FieldConstants.RedRight.SPIKE_LEFT.h;
-                backdrop_x = FieldConstants.RedRight.BACKDROP_LEFT.x+0.5;
-                backdrop_y = FieldConstants.RedRight.BACKDROP_LEFT.y+2;
+                spike_x = FieldConstants.BlueLeft.SPIKE_LEFT.x;
+                spike_y = FieldConstants.BlueLeft.SPIKE_LEFT.y;
+                spike_heading = FieldConstants.BlueLeft.SPIKE_LEFT.h;
+                backdrop_x = FieldConstants.BlueLeft.BACKDROP_LEFT.x;
+                backdrop_y = FieldConstants.BlueLeft.BACKDROP_LEFT.y;
 
                 backdrop2_x = 51;
-                backdrop2_y = -45;
-                spike_tangent = Math.toRadians(140);
+                backdrop2_y = 45;
+                spike_tangent = Math.toRadians(-90);
                 break;
             case(2):
-                spike_x = FieldConstants.RedRight.SPIKE_CENTER.x-2;
-                spike_y = FieldConstants.RedRight.SPIKE_CENTER.y;
-                spike_heading = FieldConstants.RedRight.SPIKE_CENTER.h;
-                backdrop_x = FieldConstants.RedRight.BACKDROP_CENTER.x;
-                backdrop_y = FieldConstants.RedRight.BACKDROP_CENTER.y;
+                spike_x = FieldConstants.BlueLeft.SPIKE_CENTER.x;
+                spike_y = FieldConstants.BlueLeft.SPIKE_CENTER.y;
+                spike_heading = FieldConstants.BlueLeft.SPIKE_CENTER.h;
+                backdrop_x = FieldConstants.BlueLeft.BACKDROP_CENTER.x;
+                backdrop_y = FieldConstants.BlueLeft.BACKDROP_CENTER.y;
 
                 backdrop2_x = 50.5;
-                backdrop2_y = -32;
-                spike_tangent = Math.toRadians(100);
+                backdrop2_y = 32;
+                spike_tangent = Math.toRadians(-90);
                 break;
             case(3):
-                spike_x = FieldConstants.RedRight.SPIKE_RIGHT.x;
-                spike_y = FieldConstants.RedRight.SPIKE_RIGHT.y;
-                spike_heading = FieldConstants.RedRight.SPIKE_RIGHT.h;
-                backdrop_x = FieldConstants.RedRight.BACKDROP_RIGHT.x;
-                backdrop_y = FieldConstants.RedRight.BACKDROP_RIGHT.y;
+                spike_x = FieldConstants.BlueLeft.SPIKE_RIGHT.x;
+                spike_y = FieldConstants.BlueLeft.SPIKE_RIGHT.y;
+                spike_heading = FieldConstants.BlueLeft.SPIKE_RIGHT.h;
+                backdrop_x = FieldConstants.BlueLeft.BACKDROP_RIGHT.x;
+                backdrop_y = FieldConstants.BlueLeft.BACKDROP_RIGHT.y;
 
                 backdrop2_x = 50.5;
-                backdrop2_y = -32;
-                spike_tangent = Math.toRadians(100);
+                backdrop2_y = 32;
+                spike_tangent = Math.toRadians(180);
                 break;
         }
 
-        Pose2d start = new Pose2d(FieldConstants.RedRight.START.x+0.25 ,FieldConstants.RedRight.START.y, FieldConstants.RedRight.START.h);
-
+        Pose2d start = new Pose2d(FieldConstants.BlueLeft.START.x ,FieldConstants.BlueLeft.START.y, FieldConstants.BlueLeft.START.h);
         drive.setPoseEstimate(start);
 
         origin_test = drive.trajectoryBuilder(start)
                 .lineTo(new Vector2d(24, 0))
                 .build();
+
         purple = drive.trajectoryBuilder(start)
                 .splineToLinearHeading(new Pose2d(spike_x, spike_y, spike_heading), spike_tangent)
                 .build();
 
         yellow = drive.trajectoryBuilder(purple.end(), true)
-                .splineToLinearHeading(new Pose2d(backdrop_x, backdrop_y, FieldConstants.RedRight.BACKDROP_RIGHT.h), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(backdrop_x, backdrop_y, FieldConstants.BlueLeft.BACKDROP_RIGHT.h), Math.toRadians(0))
                 .build();
 
         truss1 = drive.trajectoryBuilder(yellow.end())
-                .splineToConstantHeading(new Vector2d(24, -63), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-40, -63), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(24, 56), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-40, 56), Math.toRadians(180))
                 .build();
 
         to_stack = drive.trajectoryBuilder(truss1.end())
-                .splineToConstantHeading(new Vector2d(-52, -42), Math.toRadians(100))
-                .splineToConstantHeading(new Vector2d(-58, -45), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-50, 26), Math.toRadians(100))
+                .splineToConstantHeading(new Vector2d(-54, 30), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end(), true)
-                .splineToConstantHeading(new Vector2d(-52, -52), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(-50, 32), Math.toRadians(-45))
                 .build();
 
         truss2 = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-40, -65), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(24, -65), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-40, 50), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(24, 50), Math.toRadians(0))
                 .build();
 
         backdrop2 = drive.trajectoryBuilder(truss2.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop2_x, backdrop2_y), Math.toRadians(0))
                 .build();
         park = drive.trajectoryBuilder(backdrop2.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK.x, FieldConstants.RedRight.PARK.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.BlueLeft.PARK.x, FieldConstants.BlueLeft.PARK.y), Math.toRadians(0))
                 .build();
 
         drive.followTrajectoryAsync(purple);

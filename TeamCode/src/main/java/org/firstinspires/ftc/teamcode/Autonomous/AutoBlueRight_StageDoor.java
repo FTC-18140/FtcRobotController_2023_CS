@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(group = "autoredleft")
+@Autonomous(group = "autoblueright")
 public class AutoBlueRight_StageDoor extends OpMode {
 
     boolean stepdone = false;

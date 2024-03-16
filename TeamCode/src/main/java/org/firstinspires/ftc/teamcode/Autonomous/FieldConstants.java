@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -9,13 +9,13 @@ public class FieldConstants {
         SPIKE_LEFT(8,-37,Math.toRadians(140)),
         SPIKE_CENTER(23,-31.5,Math.toRadians(120)),
         SPIKE_RIGHT(25,-39,Math.toRadians(100)),
-        BACKDROP_LEFT(48.5,-32.5,90),
+        BACKDROP_LEFT(50,-32.5,90),
         BACKDROP_CENTER(49,-38,90),
         BACKDROP_RIGHT(50,-45,Math.toRadians(179.9)),
         TRUSS_IN(-36,-12,Math.toRadians(90)),
         TRUSS_OUT(-36,36,Math.toRadians(90)),
         STACK(-24,52,Math.toRadians(90)),
-        PARK(54,-61,Math.toRadians(0)),
+        PARK(54,-63,Math.toRadians(0)),
         PARK_LEFT(54,-10,Math.toRadians(0));
 
         public final double x;
@@ -29,7 +29,7 @@ public class FieldConstants {
     }
 
     public enum RedLeft {
-        START(-36,-63, Math.toRadians(90)),
+        START(-36,-62, Math.toRadians(90)),
         SPIKE_ALIGN(-45,-38, Math.toRadians(90)),
         SPIKE_LEFT(-45,-22, Math.toRadians(150)),
         SPIKE_CENTER(-38,-17, Math.toRadians(150)),
@@ -50,6 +50,35 @@ public class FieldConstants {
         public final double y;
         public final double h;
         RedLeft(double x_val, double y_val, double head){
+            x=x_val;
+            y=y_val;
+            h=head;
+        }
+    }
+    public enum RedLeft2 {
+        START(-36,-61.5, Math.toRadians(90)),
+        SPIKE_ALIGN(-46,-30, Math.toRadians(90)),
+        SPIKE_LEFT(-45,-22, Math.toRadians(150)),
+        SPIKE_CENTER(-36,-33, Math.toRadians(150)),
+        SPIKE_RIGHT(-34,-36.5, Math.toRadians(-100)),
+        BACKUP_RIGHT(-38,-36, Math.toRadians(-100)),
+        BACKUP_CENTER(-36,-42, Math.toRadians(-100)),
+        BACKUP_LEFT(-42,-18, Math.toRadians(-100)),
+
+        BACKDROP_LEFT(48,-30,90),
+        BACKDROP_CENTER(48,-42,90),
+        BACKDROP_RIGHT(48,-46.5,Math.toRadians(179.9)),
+        DOOR(32,-12,Math.toRadians(90)),
+        TRUSS_IN(-36, -57,Math.toRadians(90)),
+        TRUSS_OUT(32,-12,Math.toRadians(90)),
+        ALIGN_TO_STACK(-52, -38,Math.toRadians(90)),
+        STACK(-55.5, -40,Math.toRadians(180)),
+        PARK(54,-64,Math.toRadians(0));
+
+        public final double x;
+        public final double y;
+        public final double h;
+        RedLeft2(double x_val, double y_val, double head){
             x=x_val;
             y=y_val;
             h=head;

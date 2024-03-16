@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,7 +12,7 @@ import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.LEFT
 import static org.firstinspires.ftc.teamcode.Robot.Thunderbot2023.Direction.RIGHT;
 
 @Autonomous
-public class AutoBlueLeft extends OpMode {
+public class AutoRedRight extends OpMode {
 
     Thunderbot2023 robot = new Thunderbot2023();
     int state = -1;
@@ -28,87 +28,48 @@ public class AutoBlueLeft extends OpMode {
     final double MAX_AUTO_SPEED = 0.5;
     final double MAX_AUTO_STRAFE = 0.5;
     final double MAX_AUTO_TURN = 0.3;
-    // STEPS FOR OLD CODE
-//    double stepB = 0;
-//    public static double stepBLeft = -90;
-//    public static double stepBCenter = 0;
-//    public static double stepBRight = -90;
-//    public static double stepStrafe = 0;
-//    public static double stepStrafeRight = 125;
-//    public static double driveToBackDrop = 75;
-//    public static double driveToBackDropRight = 30;
-//    public static double strafeToPlace = 0;
-//    public static double strafeToPlaceLeft = 10;
-//    public static double strafeToPlaceRight = 40;
-//    public static double stepBBack = 50;
-//    public static double stepBBackLeft = 40;
-//    public static double stepBBackRight = 25;
-    double step0 = 10;
-    double step0Left = 70;
+
+    double step0 = 5;
+    double step0Left = 60;
     double stepA = 0;
-    double stepALeft = 45;
-    double  stepARight = -27;
+    double stepALeft = -45;
+    double  stepARight = 30;
     double stepBDistance = 0;
     double stepBAngle = 0;
     double stepBLDistance = 0;
-    double stepBLAngle = 45;
-    double stepBRAngle = -27;
+    double stepBLAngle = -45;
+    double stepBRAngle = 30;
     double stepBRDistance = 0;
-    double stepD = 70;
-    double stepDLeft = 10;
-    double stepDRight = 60;
-    double stepAwayPixel = 5;
+    double stepD = 75;
+    double stepDLeft = 20;
+    double stepDRight = 45;
+    double stepAwayPixel = 35;
     double stepAwayPixelLeft = 40;
+    double stepAwayPixelRight = 40;
     double stepToBackboard = 125;
-    double stepToBackboardLeft = 145;
-    double stepToBackboardRight = 125;
+    double stepToBackboardLeft = 140;
+    double stepToBackboardRight = 122.5;
     Thunderbot2023.Direction stepStrafe = RIGHT;
-    Thunderbot2023.Direction stepStrafeLeft = LEFT;
-    Thunderbot2023.Direction stepStrafeRight = LEFT;
+    Thunderbot2023.Direction stepStrafeLeft = RIGHT;
+    Thunderbot2023.Direction stepStrafeRight = RIGHT;
     double stepStrafeDistance = 2.5;
-    double stepStrafeDistanceLeft = 40;
-    double stepStrafeDistanceRight = 2.5;
+    double stepStrafeDistanceLeft = 60;
+    double stepStrafeDistanceRight = 15;
     double stepPark = 100;
-    double stepParkLeft = 160;
+    double stepParkLeft = 130;
     double stepParkRight = 65;
     double stepForward = 10;
-    double stepForwardCenter = 5;
+    double stepForwardLeft = 5;
+double stepForwardCenter = 7.5;
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private int tagNum;
 
 
-    /*
-     Manually set the camera gain and exposure.
-     This can only be called AFTER calling initAprilTag(), and only works for Webcams;
-    */
-//    private void    setManualExposure(int exposureMS, int gain) {
-//        // Wait for the camera to be open, then use the controls
-//
-//
-//        // Make sure camera is streaming before we try to set the exposure controls
-//        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-//            telemetry.addData("Camera", "Ready");
-//            telemetry.update();
-//        }
-//
-//        // Set camera controls unless we are stopping.
-//        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-//        if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-//            exposureControl.setMode(ExposureControl.Mode.Manual);
-//        }
-//        exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-//        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-//        gainControl.setGain(gain);
-//    }
-
     @Override
     public void init() {
         robot.init(hardwareMap, telemetry, true, true);
-        TGEVisionProcessor.theColor = "BLUE";
-//        if (USE_WEBCAM) {
-//            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-//        }
+        TGEVisionProcessor.theColor = "RED";
     }
 
     /**
@@ -128,21 +89,6 @@ public class AutoBlueLeft extends OpMode {
         {
             case "LEFT":
             case "NOT FOUND":
-                step0 = 15;
-                stepA = stepARight;
-                stepBAngle = stepBRAngle;
-                stepBDistance = stepBRDistance;
-                stepD = stepDRight;
-                stepToBackboard = stepToBackboardRight;
-                stepStrafe = stepStrafeRight;
-                stepStrafeDistance = stepStrafeDistanceRight;
-                stepPark = stepParkRight;
-                stepAwayPixel = 40;
-                stepForward = 10;
-                tagNum = 6;
-                telemetry.addData("ZONE = ", "LEFT");
-                break;
-            case "RIGHT":
                 step0 = step0Left;
                 stepA = stepALeft;
                 stepD = stepDLeft;
@@ -153,24 +99,39 @@ public class AutoBlueLeft extends OpMode {
                 stepStrafeDistance = stepStrafeDistanceLeft;
                 stepPark = stepParkLeft;
                 stepAwayPixel = stepAwayPixelLeft;
-                stepForward = stepForwardCenter;
+                stepForward = stepForwardLeft;
                 tagNum = 4;
-                telemetry.addData("ZONE = ", "RIGHT");
+                telemetry.addData("ZONE = LEFT", 0);
+                break;
+            case "RIGHT":
+                step0 = 15;
+                stepA = stepARight;
+                stepBAngle = stepBRAngle;
+                stepBDistance = stepBRDistance;
+                stepD = stepDRight;
+                stepToBackboard = stepToBackboardRight;
+                stepStrafe = stepStrafeRight;
+                stepStrafeDistance = stepStrafeDistanceRight;
+                stepPark = stepParkRight;
+                stepAwayPixel = stepAwayPixelRight;
+                stepForward = 10;
+                tagNum = 6;
+                telemetry.addData("ZONE = RIGHT", 0);
                 break;
             default: // default CENTER
                 step0 = 15;
                 stepA = 0;
                 stepBAngle = 0;
                 stepBDistance = 0;
-                stepD = 75.5;
-                stepToBackboard = 140;
+                stepD = 77.5;
+                stepToBackboard = 137.5;
                 stepStrafe = LEFT;
                 stepStrafeDistance = 0;
                 stepPark = 105;
                 stepAwayPixel = 20;
-                tagNum = 5;
                 stepForward = stepForwardCenter;
-                telemetry.addData("ZONE = ", "CENTER");
+                tagNum = 5;
+                telemetry.addData("ZONE = CENTER", 0);
                 break;
         }
         telemetry.addData("Tag Number: ", tagNum );
@@ -179,7 +140,7 @@ public class AutoBlueLeft extends OpMode {
     @Override
     public void start() {
         robot.resetIMUYaw();
-        //  robot.eyes.activateBackCamera();
+      //  robot.eyes.activateBackCamera();
     }
 
     @Override
@@ -264,10 +225,10 @@ public class AutoBlueLeft extends OpMode {
                 }
                 break;
             case 7:
-                if (!done) {
+                if ( !done) {
                     robot.intake.mandibleClose();
                     done = true;
-                }  else {
+                } else {
                     robot.stop();
                     done = false;
                     state++;
@@ -275,7 +236,7 @@ public class AutoBlueLeft extends OpMode {
                 break;
             case 8:
                 if (!done) {
-                    done = robot.gyroDrive(stepBAngle, 10, 0.5);
+                    done = robot.gyroDrive(stepBAngle, stepForward, 0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -283,8 +244,9 @@ public class AutoBlueLeft extends OpMode {
                 }
                 break;
             case 9:
+
                 if (!done) {
-                    done = robot.turnTo(90, 0.25);
+                    done = robot.turnTo(-90, 0.25);
                 } else {
                     robot.stop();
                     done = false;
@@ -303,7 +265,7 @@ public class AutoBlueLeft extends OpMode {
                 break;
             case 11:
                 if (!done) {
-                    done = robot.gyroDrive(90, stepToBackboard, -0.5);
+                    done = robot.gyroDrive(-90, stepToBackboard, -0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -334,7 +296,7 @@ public class AutoBlueLeft extends OpMode {
                 break;
             case 14:
                 if (!done) {
-                    done = robot.gyroDrive(90, stepForward, 0.5);
+                    done = robot.gyroDrive(-90, 7.5, 0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -343,7 +305,7 @@ public class AutoBlueLeft extends OpMode {
                 break;
             case 15:
                 if (!done) {
-                    done = robot.strafe(RIGHT, stepPark, 0.5);
+                    done = robot.strafe(LEFT, stepPark, 0.5);
                 } else {
                     robot.stop();
                     done = false;
@@ -362,7 +324,7 @@ public class AutoBlueLeft extends OpMode {
                 break;
             case 17:
                 if (!done) {
-                    done = robot.gyroDrive(90, 25, -0.5);
+                    done = robot.gyroDrive(-90, 25, -0.5);
                 } else {
                     robot.stop();
                     done = false;

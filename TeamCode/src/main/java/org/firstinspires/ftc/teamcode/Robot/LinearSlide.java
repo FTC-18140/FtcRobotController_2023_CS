@@ -89,7 +89,7 @@ public class LinearSlide
 
     }
 
-    private void linearPower(double power) {
+    public void linearPower(double power) {
         if (leftLinear != null ) {leftLinear.setPower(power);}
         else { telemetry.addData("linear slide left motor not initialized.", 0); }
         if (rightLinear != null ) { rightLinear.setPower(power); }
@@ -175,6 +175,8 @@ public class LinearSlide
 
             if ( TELEM )
             {
+                telemetry.addData("left Slide Position = ", leftSlidePosition);
+                telemetry.addData("Right Slide Position = ", rightSlidePosition);
                 telemetry.addData("Left Lift Current AMPS: ", leftLinear.getCurrent(AMPS));
                 telemetry.addData("Right Lift Current AMPS: ", rightLinear.getCurrent(AMPS));
                 telemetry.addData("Target Counts: ", targetCounts);

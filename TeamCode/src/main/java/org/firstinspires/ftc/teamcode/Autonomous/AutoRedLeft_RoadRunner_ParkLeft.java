@@ -1,22 +1,23 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
-import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
-public class AutoBlueRight_RoadRunner extends OpMode {
+@Autonomous(group = "redleft")
+@Disabled
+public class AutoRedLeft_RoadRunner_ParkLeft extends OpMode {
 
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     SampleMecanumDrive drive;
@@ -28,7 +29,7 @@ public class AutoBlueRight_RoadRunner extends OpMode {
 
     double backup_x;
     double backup_y;
-    double backup_heading = Math.toRadians(-90);
+    double backup_heading = Math.toRadians(90);
 
     double backdrop_x;
     double backdrop_y;
@@ -44,8 +45,6 @@ public class AutoBlueRight_RoadRunner extends OpMode {
     Trajectory yellow;
     Trajectory to_backdrop;
     Trajectory park;
-    Trajectory through_door;
-    Trajectory to_backdrop_left;
 
     Trajectory backup;
 
@@ -54,8 +53,6 @@ public class AutoBlueRight_RoadRunner extends OpMode {
         SPIKE_DROP,
         BACKUP,
         ALIGN_TO_STACK,
-        THROUGH_DOOR_LEFT,
-        TO_BACKDROP_LEFT,
         TO_STACK,
         GRAB_FROM_STACK,
         MOVE_TO_TRANSFER,
@@ -77,7 +74,6 @@ public class AutoBlueRight_RoadRunner extends OpMode {
         robot.init(hardwareMap, telemetry, true);
         drive = robot.drive;
         spiketimer = new ElapsedTime();
-        TGEVisionProcessor.theColor = "BLUE";
     }
 
     @Override
@@ -105,47 +101,48 @@ public class AutoBlueRight_RoadRunner extends OpMode {
     public void start() {
         switch(tagNum){
             case(1):
-                spike_x = FieldConstants.BlueRight.SPIKE_LEFT.x;
-                spike_y = FieldConstants.BlueRight.SPIKE_LEFT.y;
-                spike_heading = FieldConstants.BlueRight.SPIKE_LEFT.h;
-                backdrop_x = FieldConstants.BlueRight.BACKDROP_LEFT.x;
-                backdrop_y = FieldConstants.BlueRight.BACKDROP_LEFT.y;
+                spike_x = FieldConstants.RedLeft.SPIKE_LEFT.x;
+                spike_y = FieldConstants.RedLeft.SPIKE_LEFT.y;
+                spike_heading = FieldConstants.RedLeft.SPIKE_LEFT.h;
+                backdrop_x = FieldConstants.RedLeft.BACKDROP_LEFT.x;
+                backdrop_y = FieldConstants.RedLeft.BACKDROP_LEFT.y;
 
-                backup_x = FieldConstants.BlueRight.BACKUP_LEFT.x;
-                backup_y = FieldConstants.BlueRight.BACKUP_LEFT.y;
-                backup_heading = Math.toRadians(180);
+                backup_x = FieldConstants.RedLeft.BACKUP_LEFT.x;
+                backup_y = FieldConstants.RedLeft.BACKUP_LEFT.y;
+
                 spike_tangent = Math.toRadians(180);
                 break;
             case(2):
-                spike_x = FieldConstants.BlueRight.SPIKE_CENTER.x;
-                spike_y = FieldConstants.BlueRight.SPIKE_CENTER.y;
-                spike_heading = FieldConstants.BlueRight.SPIKE_CENTER.h;
-                backdrop_x = FieldConstants.BlueRight.BACKDROP_CENTER.x;
-                backdrop_y = FieldConstants.BlueRight.BACKDROP_CENTER.y;
+                spike_x = FieldConstants.RedLeft.SPIKE_CENTER.x;
+                spike_y = FieldConstants.RedLeft.SPIKE_CENTER.y;
+                spike_heading = FieldConstants.RedLeft.SPIKE_CENTER.h;
+                backdrop_x = FieldConstants.RedLeft.BACKDROP_CENTER.x;
+                backdrop_y = FieldConstants.RedLeft.BACKDROP_CENTER.y;
 
-                backup_x = FieldConstants.BlueRight.BACKUP_CENTER.x;
-                backup_y = FieldConstants.BlueRight.BACKUP_CENTER.y;
-                backup_heading = Math.toRadians(-90);
-                spike_tangent = Math.toRadians(-30);
+                backup_x = FieldConstants.RedLeft.BACKUP_CENTER.x;
+                backup_y = FieldConstants.RedLeft.BACKUP_CENTER.y;
+                spike_tangent = Math.toRadians(100);
                 break;
             case(3):
-                spike_x = FieldConstants.BlueRight.SPIKE_RIGHT.x;
-                spike_y = FieldConstants.BlueRight.SPIKE_RIGHT.y;
-                spike_heading = FieldConstants.BlueRight.SPIKE_RIGHT.h;
-                backdrop_x = FieldConstants.BlueRight.BACKDROP_RIGHT.x;
-                backdrop_y = FieldConstants.BlueRight.BACKDROP_RIGHT.y;
+                spike_x = FieldConstants.RedLeft.SPIKE_RIGHT.x;
+                spike_y = FieldConstants.RedLeft.SPIKE_RIGHT.y;
+                spike_heading = FieldConstants.RedLeft.SPIKE_RIGHT.h;
+                backdrop_x = FieldConstants.RedLeft.BACKDROP_RIGHT.x;
+                backdrop_y = FieldConstants.RedLeft.BACKDROP_RIGHT.y;
 
-                backup_x = FieldConstants.BlueRight.BACKUP_RIGHT.x;
-                backup_y = FieldConstants.BlueRight.BACKUP_RIGHT.y;
-                backup_heading = Math.toRadians(-90);
+                backup_x = FieldConstants.RedLeft.BACKUP_RIGHT.x;
+                backup_y = FieldConstants.RedLeft.BACKUP_RIGHT.y;
+                backup_heading = Math.toRadians(180);
                 spike_tangent = Math.toRadians(90);
                 break;
+
+
         }
-        Pose2d start = new Pose2d(FieldConstants.BlueRight.START.x ,FieldConstants.BlueRight.START.y, FieldConstants.BlueRight.START.h);
+        Pose2d start = new Pose2d(FieldConstants.RedLeft.START.x ,FieldConstants.RedLeft.START.y, FieldConstants.RedLeft.START.h);
 
         drive.setPoseEstimate(start);
         purple = drive.trajectorySequenceBuilder(start)
-                .lineTo(new Vector2d(FieldConstants.BlueRight.SPIKE_ALIGN.x, FieldConstants.BlueRight.SPIKE_ALIGN.y))
+                .lineTo(new Vector2d(FieldConstants.RedLeft.SPIKE_ALIGN.x, FieldConstants.RedLeft.SPIKE_ALIGN.y))
                 .splineToConstantHeading(new Vector2d(spike_x, spike_y), spike_tangent)
                 .turn(spike_heading)
                 .build();
@@ -155,28 +152,27 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 .build();
 
         align_to_stack = drive.trajectoryBuilder(backup.end(), true)
-                .splineToSplineHeading(new Pose2d(-30, 8, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-30, -8, Math.toRadians(210)), Math.toRadians(0))
                 .build();
 
         to_stack = drive.trajectoryBuilder(align_to_stack.end())
-                .splineToSplineHeading(new Pose2d(FieldConstants.BlueRight.ALIGN_TO_STACK.x, FieldConstants.BlueRight.ALIGN_TO_STACK.y, Math.toRadians(180)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.STACK.x, FieldConstants.BlueRight.STACK.y), FieldConstants.BlueRight.STACK.h, SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToSplineHeading(new Pose2d(FieldConstants.RedLeft.ALIGN_TO_STACK.x, FieldConstants.RedLeft.ALIGN_TO_STACK.y, Math.toRadians(180)), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft.STACK.x, FieldConstants.RedLeft.STACK.y), FieldConstants.RedLeft.STACK.h, SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end())
-                .lineTo(new Vector2d(-52, 12))
+                .lineTo(new Vector2d(-52, -12))
                 .build();
 
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.DOOR.x, FieldConstants.BlueRight.DOOR.y), Math.toRadians(0))
-                .build();
-
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedLeft.DOOR.x, FieldConstants.RedLeft.DOOR.y), Math.toRadians(0))
+                        .build();
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
                 .build();
 
         park = drive.trajectoryBuilder(to_backdrop.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.BlueRight.PARK.x, FieldConstants.BlueRight.PARK.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK_LEFT.x, FieldConstants.RedRight.PARK_LEFT.y), Math.toRadians(0))
                 .build();
         drive.followTrajectorySequenceAsync(purple);
     }
@@ -195,16 +191,16 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 break;
             case SPIKE_DROP:
                 robot.intake.dropBoth();
-                if(spiketimer.seconds() >= 0.3){
+                if(spiketimer.seconds() >= 0.5){
                     step = State.BACKUP;
                     drive.followTrajectoryAsync(backup);
 
                 }
                 break;
-            case BACKUP:
+                case BACKUP:
                 if(!drive.isBusy()){
-                    drive.followTrajectoryAsync(align_to_stack);
                     step = State.ALIGN_TO_STACK;
+                    drive.followTrajectoryAsync(align_to_stack);
                 }
                 break;
             case ALIGN_TO_STACK:
@@ -216,13 +212,13 @@ public class AutoBlueRight_RoadRunner extends OpMode {
             case TO_STACK:
                 if(!drive.isBusy()){
                     spiketimer.reset();
-                    robot.intake.rightMandibleClose();
+                    robot.intake.leftMandibleClose();
                     step = State.GRAB_FROM_STACK;
                 }
                 break;
             case GRAB_FROM_STACK:
-                if(spiketimer.seconds() >= 0.4){
-                    robot.intake.leftMandibleClose();
+                if(spiketimer.seconds() >= 0.5){
+                    robot.intake.rightMandibleClose();
                     step = State.MOVE_TO_TRANSFER;
                     drive.followTrajectoryAsync(move_to_transfer);
                 }
@@ -235,16 +231,16 @@ public class AutoBlueRight_RoadRunner extends OpMode {
                 }
                 break;
             case TRANSFER_INTAKE:
-                if(spiketimer.seconds() >= 0.5){
-                    robot.intake.holdPixelLeft();
+                if(spiketimer.seconds() >= 0.75){
+                    robot.intake.holdPixelRight();
                     spiketimer.reset();
                     step = State.INTAKE_RELEASE;
                 }
                 break;
             case INTAKE_RELEASE:
-                if(spiketimer.seconds() >= 0.5){
+                if(spiketimer.seconds() >= 1){
                     robot.intake.goTo(Intake.Positions.TRANSFER, false);
-                    robot.delivery.dropRight();
+                    robot.delivery.dropLeft();
                     spiketimer.reset();
                     step = State.TRANSFER_DELIVERY;
                 }
@@ -310,5 +306,4 @@ public class AutoBlueRight_RoadRunner extends OpMode {
         telemetry.addData("step: ", step);
 
     }
-
 }

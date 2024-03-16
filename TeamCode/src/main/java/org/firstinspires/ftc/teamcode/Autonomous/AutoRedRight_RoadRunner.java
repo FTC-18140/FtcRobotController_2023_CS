@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -13,9 +14,13 @@ import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous
-public class AutoBlueLeft_RoadRunner extends OpMode {
+@Autonomous(group = "autoredright")
+@Config
+public class AutoRedRight_RoadRunner extends OpMode {
+
     SampleMecanumDrive drive;
+
+    int bot_w = 8;
     int tagNum = 2;
 
     double spike_x;
@@ -26,6 +31,14 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
     double backdrop_x;
     double backdrop_y;
 
+    final int TRUSS_IN_X = -36;
+    final int TRUSS_IN_Y = -2;
+    final int TRUSS_OUT_X = -36;
+    final int TRUSS_OUT_Y = 26;
+
+    final int STACK_X = -36;
+    final int STACK_Y = 60;
+
     enum State{
         PURPLE,
         SPIKE_DROP,
@@ -34,11 +47,18 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
         PARK,
         IDLE
     }
+
+    boolean done = false;
+
     ElapsedTime spiketimer;
 
+    Trajectory origin_x;
     Trajectory purple;
     Trajectory yellow;
+
+    Trajectory truss1;
     Trajectory park;
+
     State step = State.PURPLE;
 
     String tag = "RIGHT";
@@ -46,10 +66,9 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
 
     @Override
     public void init(){
-
         robot.init(hardwareMap, telemetry, true);
+        TGEVisionProcessor.theColor = "RED";
         drive = robot.drive;
-        TGEVisionProcessor.theColor = "BLUE";
         spiketimer = new ElapsedTime();
         //0.9083333
     }
@@ -80,48 +99,45 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
     public void start(){
         switch(tagNum){
             case(1):
-                spike_x = FieldConstants.BlueLeft.SPIKE_LEFT.x;
-                spike_y = FieldConstants.BlueLeft.SPIKE_LEFT.y;
-                spike_heading = FieldConstants.BlueLeft.SPIKE_LEFT.h;
-                backdrop_x = FieldConstants.BlueLeft.BACKDROP_LEFT.x;
-                backdrop_y = FieldConstants.BlueLeft.BACKDROP_LEFT.y;
-                spike_tangent = Math.toRadians(-90);
+                spike_x = FieldConstants.RedRight.SPIKE_LEFT.x;
+                spike_y = FieldConstants.RedRight.SPIKE_LEFT.y;
+                spike_heading = FieldConstants.RedRight.SPIKE_LEFT.h;
+                backdrop_x = FieldConstants.RedRight.BACKDROP_LEFT.x;
+                backdrop_y = FieldConstants.RedRight.BACKDROP_LEFT.y;
+                spike_tangent = Math.toRadians(140);
                 break;
             case(2):
-                spike_x = FieldConstants.BlueLeft.SPIKE_CENTER.x;
-                spike_y = FieldConstants.BlueLeft.SPIKE_CENTER.y;
-                spike_heading = FieldConstants.BlueLeft.SPIKE_CENTER.h;
-                backdrop_x = FieldConstants.BlueLeft.BACKDROP_CENTER.x;
-                backdrop_y = FieldConstants.BlueLeft.BACKDROP_CENTER.y;
-                spike_tangent = Math.toRadians(-90);
+                spike_x = FieldConstants.RedRight.SPIKE_CENTER.x;
+                spike_y = FieldConstants.RedRight.SPIKE_CENTER.y;
+                spike_heading = FieldConstants.RedRight.SPIKE_CENTER.h;
+                backdrop_x = FieldConstants.RedRight.BACKDROP_CENTER.x;
+                backdrop_y = FieldConstants.RedRight.BACKDROP_CENTER.y;
+                spike_tangent = Math.toRadians(100);
                 break;
             case(3):
-                spike_x = FieldConstants.BlueLeft.SPIKE_RIGHT.x;
-                spike_y = FieldConstants.BlueLeft.SPIKE_RIGHT.y;
-                spike_heading = FieldConstants.BlueLeft.SPIKE_RIGHT.h;
-                backdrop_x = FieldConstants.BlueLeft.BACKDROP_RIGHT.x;
-                backdrop_y = FieldConstants.BlueLeft.BACKDROP_RIGHT.y;
-                spike_tangent = Math.toRadians(180);
+                spike_x = FieldConstants.RedRight.SPIKE_RIGHT.x;
+                spike_y = FieldConstants.RedRight.SPIKE_RIGHT.y;
+                spike_heading = FieldConstants.RedRight.SPIKE_RIGHT.h;
+                backdrop_x = FieldConstants.RedRight.BACKDROP_RIGHT.x;
+                backdrop_y = FieldConstants.RedRight.BACKDROP_RIGHT.y;
+                spike_tangent = Math.toRadians(100);
                 break;
-
-
         }
 
-        Pose2d start = new Pose2d(FieldConstants.BlueLeft.START.x ,FieldConstants.BlueLeft.START.y, FieldConstants.BlueLeft.START.h);
+        Pose2d start = new Pose2d(FieldConstants.RedRight.START.x ,FieldConstants.RedRight.START.y, FieldConstants.RedRight.START.h);
 
         drive.setPoseEstimate(start);
-
 
         purple = drive.trajectoryBuilder(start)
                 .splineToLinearHeading(new Pose2d(spike_x, spike_y, spike_heading), spike_tangent)
                 .build();
 
         yellow = drive.trajectoryBuilder(purple.end(), true)
-                .splineToLinearHeading(new Pose2d(backdrop_x, backdrop_y, FieldConstants.BlueLeft.BACKDROP_RIGHT.h), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(backdrop_x, backdrop_y, FieldConstants.RedRight.BACKDROP_RIGHT.h), Math.toRadians(0))
                 .build();
 
         park = drive.trajectoryBuilder(yellow.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.BlueLeft.PARK.x, FieldConstants.BlueLeft.PARK.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.RedRight.PARK.x, FieldConstants.RedRight.PARK.y), Math.toRadians(0))
                 .build();
 
         drive.followTrajectoryAsync(purple);
@@ -177,3 +193,4 @@ public class AutoBlueLeft_RoadRunner extends OpMode {
 
     }
 }
+

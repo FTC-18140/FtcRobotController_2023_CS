@@ -12,8 +12,8 @@ public class MeepMeepTesting
 
     static int bot_w = 8;
     int tagNum = 2;
-    static final int START_X = -36;
-    static final int START_Y = 62;
+    static final double START_X = 12;
+    static final double START_Y = 62;
 
     final int END_X = -58;
     final int END_Y = -58;
@@ -49,7 +49,7 @@ public class MeepMeepTesting
     final int STACK_Y = 60;
 
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(600);
         Pose2d start = new Pose2d(START_X ,START_Y, Math.toRadians(-90));
         spike_x = SPIKE_R_X;
         spike_y = SPIKE_R_Y;
@@ -81,9 +81,22 @@ public class MeepMeepTesting
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                                   drive.trajectorySequenceBuilder(start)
-                                                          .lineTo(new Vector2d(-38, 38))
-                                                          .splineToConstantHeading(new Vector2d(-38, 14), Math.toRadians(-30))
-                                                          .turn(Math.toRadians(-160))
+                                                          .splineToLinearHeading(new Pose2d(22, 30, Math.toRadians(-120)), Math.toRadians(-90))
+                                                          .setReversed(true)
+                                                          .splineToLinearHeading(new Pose2d(52.5, 37.5, Math.toRadians(180)), Math.toRadians(0))
+                                                          .setReversed(false)
+                                                          .splineToConstantHeading(new Vector2d(24, 63), Math.toRadians(180))
+                                                          .splineToConstantHeading(new Vector2d(-40, 63), Math.toRadians(180))
+                                                          .splineToConstantHeading(new Vector2d(-52, 40), Math.toRadians(-100))
+                                                          .splineToConstantHeading(new Vector2d(-57, 41.5), Math.toRadians(150))
+                                                          .setReversed(true)
+                                                          .splineToConstantHeading(new Vector2d(-52, 52), Math.toRadians(45))
+                                                          .setReversed(true)
+                                                          .splineToConstantHeading(new Vector2d(-40, 63), Math.toRadians(0))
+                                                          .splineToConstantHeading(new Vector2d(24, 63), Math.toRadians(0))
+                                                          .splineToConstantHeading(new Vector2d(50, 38), Math.toRadians(0))
+                                                          .setReversed(false)
+                                                          .splineToConstantHeading(new Vector2d(50, 62), Math.toRadians(0))
                                                           //.splineToConstantHeading(new Vector2d(-32, 12), Math.toRadians(-90))
                                                           //.splineToConstantHeading(new Vector2d(-30, 8), Math.toRadians(0))
                                                           //.splineToSplineHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))

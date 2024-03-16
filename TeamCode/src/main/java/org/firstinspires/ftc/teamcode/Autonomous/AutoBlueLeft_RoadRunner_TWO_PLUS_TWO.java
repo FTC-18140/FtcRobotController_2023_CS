@@ -174,22 +174,23 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
                 .build();
 
         truss1 = drive.trajectoryBuilder(yellow.end())
-                .splineToConstantHeading(new Vector2d(24, 56), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-40, 56), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(24, 57), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-40, 57), Math.toRadians(180))
                 .build();
 
         to_stack = drive.trajectoryBuilder(truss1.end())
-                .splineToConstantHeading(new Vector2d(-50, 26), Math.toRadians(100))
-                .splineToConstantHeading(new Vector2d(-54, 30), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-50, 28), Math.toRadians(-100))
+                .splineToConstantHeading(new Vector2d(-56, 30), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end(), true)
                 .splineToConstantHeading(new Vector2d(-50, 32), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(-48, 36), Math.toRadians(-45))
                 .build();
 
         truss2 = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-40, 50), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(24, 50), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-40, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(24, 54), Math.toRadians(0))
                 .build();
 
         backdrop2 = drive.trajectoryBuilder(truss2.end(), true)

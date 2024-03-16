@@ -85,8 +85,7 @@ public class Teleop extends OpMode  {
     @Override
     public void start() {}
 
-    public void loop()
-    {
+    public void loop() {
         ////////////////////////////////////////
         // UPDATE robot, gamepads, and timers
         ////////////////////////////////////////
@@ -95,7 +94,7 @@ public class Teleop extends OpMode  {
         tbdGamepad1.update();
         tbdGamepad2.update();
         telemetry.addData("Timer:", getRuntime());
-
+        boolean toggleManual = false;
         //////////////
         // DRIVING
         //////////////
@@ -106,7 +105,7 @@ public class Teleop extends OpMode  {
 //            telemetry.addData("imu: ", "reset");
 //        }
 
-        if ( robot.intake.driveSlowly()) {
+        if (robot.intake.driveSlowly()) {
 //            if (robot.intake.intakeElbowPos > 0.185) {
             robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
                     tbdGamepad1.getRightX() * 0.2);
@@ -114,8 +113,8 @@ public class Teleop extends OpMode  {
 //            robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
 //                    tbdGamepad1.getRightX());
         } else if (tbdGamepad1.getTrigger(RIGHT_TRIGGER) > 0.1) {
-            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.1, tbdGamepad1.getLeftX() * 0.1,
-                    tbdGamepad1.getRightX() * 0.1);
+            robot.joystickDrive(tbdGamepad1.getLeftY() * 0.2, tbdGamepad1.getLeftX() * 0.2,
+                    tbdGamepad1.getRightX() * 0.2);
         } else {
             robot.joystickDrive(tbdGamepad1.getLeftY(), tbdGamepad1.getLeftX(),
                     tbdGamepad1.getRightX());
@@ -124,23 +123,28 @@ public class Teleop extends OpMode  {
         //////////////////////
         // INTAKE UP & DOWN
         //////////////////////
-
+//        if (tbdGamepad1.getButtonPressed(DPAD_LEFT)) {
+//            toggleManual = true;
+//        } else if (tbdGamepad1.getButtonPressed(DPAD_RIGHT)) {
+//            toggleManual = false;
+//        }
+//        if (toggleManual = false) {
             try {
                 robot.intake.autoIntake(tbdGamepad1.getButton(B));
             } catch (Exception e) {
                 telemetry.addData("auto intake not working", 0);
             }
-
-        if (tbdGamepad1.getButton(LEFT_BUMPER)) {
-           robot.intake.goTo(WAIT_TO_INTAKE, false);
-        } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
-            robot.intake.mandibleHalf();
-            robot.delivery.setElbowPosition(0.92);
-        } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
-            robot.intake.goTo(TRANSFER, false);
-        } //else if (tbdGamepad1.getButtonPressed(B)) {
-            // robot.intake.goTo( DOWN_TO_PIXEL, false);
-        //}
+//        } else {
+//            if (tbdGamepad1.getButton(LEFT_BUMPER)) {
+//                robot.intake.goTo(WAIT_TO_INTAKE, false);
+//            } else if (tbdGamepad1.getButtonPressed(RIGHT_BUMPER)) {
+//                robot.intake.mandibleHalf();
+//                robot.delivery.setElbowPosition(0.92);
+//            } else if (tbdGamepad1.getButtonReleased(RIGHT_BUMPER)) {
+//                robot.intake.goTo(TRANSFER, false);
+//            } //else if (tbdGamepad1.getButtonPressed(B)) {
+//            robot.intake.goTo(DOWN_TO_PIXEL, false);
+//        }
 
 
 
@@ -178,6 +182,13 @@ public class Teleop extends OpMode  {
 
         if (robot.notifyDriver1()) { tbdGamepad1.notifyDriver( 1); }
 
+        ////////////////////
+        // AUTO ALIGN
+        ////////////////////
+        if (tbdGamepad1.getButton(A)) {
+            robot.alignToBackdrop(10, tbdGamepad1.getLeftX());
+            telemetry.addData("Attempting to line up", 0);
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////// GAMEPAD 2 //////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

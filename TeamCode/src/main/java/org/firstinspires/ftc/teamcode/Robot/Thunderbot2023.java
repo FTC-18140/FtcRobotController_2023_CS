@@ -6,16 +6,20 @@ import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.List;
@@ -31,6 +35,8 @@ public class Thunderbot2023
     DcMotorEx rightFront = null;
     DcMotorEx leftRear = null;
     DcMotorEx rightRear = null;
+    DistanceSensor lDistance = null;
+    DistanceSensor rDistance = null;
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
@@ -50,15 +56,17 @@ public class Thunderbot2023
     double heading = 0;
     double initRotation = 0;
     double lastAngle = 0;
+    double leftDistanceAway = 0;
+    double rightDistanceAway = 0;
 
     boolean moving = false;
 
-    public static double SPEED_GAIN = 0.0075;
+    public static double SPEED_GAIN = 0.05;
     public static double STRAFE_GAIN = 0.0075;
     public static double  TURN_GAIN = 0.001;
     public static double MAX_SPEED = 0.25;
     public static double MAX_STRAFE = 0.1;
-    public static double MAX_TURN = 0.15;
+    public static double MAX_TURN = 0.25;
 
 
     // converts inches to motor ticks
@@ -68,7 +76,7 @@ public class Thunderbot2023
     static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (WHEEL_DIAMETER_CM * Math.PI);
 
-    public static double MAX_VELOCITY_CM = 600;
+    public static double MAX_VELOCITY_CM = 250;
     static final double MAX_VELOCITY_TICKS = MAX_VELOCITY_CM * COUNTS_PER_CM;
 
     private Telemetry telemetry = null;
@@ -190,6 +198,16 @@ public class Thunderbot2023
         {
             telemetry.addData("leftRear not found in config file", 0);
         }
+        try {
+            lDistance = ahwMap.get(DistanceSensor.class, "lDistance");
+        } catch (Exception e) {
+            telemetry.addData("Left Distance Sensor not found", 0);
+        }
+        try {
+            rDistance = ahwMap.get(DistanceSensor.class, "rDistance");
+        } catch (Exception e) {
+            telemetry.addData("Right Distance Sensor not found", 0);
+        };
 
         try { linearSlide.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Lift not found", 0); }
@@ -207,6 +225,7 @@ public class Thunderbot2023
         catch (Exception e) {
             telemetry.addData("sensors not found", 0);
         }
+
     }
 
     /**
@@ -259,8 +278,7 @@ public class Thunderbot2023
         rightRear.setVelocity( backRight * MAX_VELOCITY_TICKS );
     }
 
-    public void orientedDrive(double forward, double right, double clockwise)
-    {
+    public void orientedDrive(double forward, double right, double clockwise) {
         double theta = toRadians(heading);
         double vx = (forward * cos(theta)) - (right * sin(theta));
         double vy = (forward * sin(theta)) + (right * cos(theta));
@@ -269,39 +287,58 @@ public class Thunderbot2023
 
         joystickDrive(vy, vx, clockwise);
     }
-    public boolean driveToTag(int tagID, double speed, double distanceAway)
-    {
-        if (!moving)
-        {
-            moving = true;
-        }
+    public boolean alignToBackdrop(double targetDistance, double stickValue) {
 
-        int tagNumber = eyes.getTagNumber(tagID);
-        double rangeError = (eyes.rangeError - distanceAway);
-        double headingError = eyes.headingError;
-        double yawError = eyes.yawError;
+        double avgDistance = (leftDistanceAway + rightDistanceAway)/2.0;
+        double rangeError = (avgDistance - targetDistance);
+        double headingError = leftDistanceAway - rightDistanceAway;
 
-        if (tagNumber == tagID) {
-
-            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
-                stop();
-                moving = false;
-                return true;
-            }
-            else {
-                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
-                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
-                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
-
-                joystickDrive(y, x, turn);
-                return false;
-            }
-        }
-        else {
+        if (rangeError < 1 && headingError < 0.5) {
             stop();
+            moving = false;
             return true;
         }
+        else {
+            double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+            double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+
+            joystickDrive(y, stickValue, turn);
+            return false;
+        }
     }
+//    public boolean driveToTag(int tagID, double speed, double distanceAway)
+//    {
+//        if (!moving)
+//        {
+//            moving = true;
+//        }
+//
+//        int tagNumber = eyes.getTagNumber(tagID);
+//        double rangeError = (eyes.rangeError - distanceAway);
+//        double headingError = eyes.headingError;
+//        double yawError = eyes.yawError;
+//
+//        if (tagNumber == tagID) {
+//
+//            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
+//                stop();
+//                moving = false;
+//                return true;
+//            }
+//            else {
+//                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
+//                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
+//                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
+//
+//                joystickDrive(y, x, turn);
+//                return false;
+//            }
+//        }
+//        else {
+//            stop();
+//            return true;
+//        }
+//    }
 
 
     /**
@@ -600,6 +637,9 @@ public class Thunderbot2023
         rightRearPosition = rightRear.getCurrentPosition();
 
         allMotors = (double) (leftFrontPosition + rightFrontPosition + leftRearPosition + rightRearPosition) / 4;
+
+        leftDistanceAway = lDistance.getDistance(DistanceUnit.CM);
+        rightDistanceAway = rDistance.getDistance(DistanceUnit.CM);
 
         telemetry.addData("Motor Position", leftFrontPosition);
         telemetry.addData("Motor Powers:", leftFront.getVelocity());

@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
+import android.graphics.Color;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -12,28 +17,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Config
 public class Sensors {
     Telemetry  telemetry;
-    DistanceSensor lDistance = null;
-    DistanceSensor rDistance = null;
+    ColorSensor lDistance = null;
+    ColorSensor rDistance = null;
 
     public void init(HardwareMap hwMap, Telemetry telem) {
         telemetry = telem;
         try {
-            lDistance = hwMap.get(DistanceSensor.class, ("lDistance"));
+            lDistance = hwMap.get(ColorSensor.class, "lDistance");
         } catch (Exception e) {
             telemetry.addData("Left Distance Sensor not found", 0);
         }
         try {
-            rDistance = hwMap.get(DistanceSensor.class, ("rDistance"));
+            rDistance = hwMap.get(ColorSensor.class, "rDistance");
         } catch (Exception e) {
             telemetry.addData("Right Distance Sensor not found", 0);
-        }
+        };
     }
 
-    public void distanceDetect() {
-        double leftDistance = lDistance.getDistance(DistanceUnit.CM);
-        double rightDistance = rDistance.getDistance(DistanceUnit.CM);
+    public void leftDistanceDetect() {
+        double leftDistance = ((DistanceSensor) lDistance).getDistance(DistanceUnit.CM);
 
         telemetry.addData("Left Distance = ", leftDistance);
+    }
+    public void rightDistanceDetect() {
+        double rightDistance = ((DistanceSensor) rDistance).getDistance(DistanceUnit.CM);
+
         telemetry.addData("Right Distance =  ", rightDistance);
     }
 

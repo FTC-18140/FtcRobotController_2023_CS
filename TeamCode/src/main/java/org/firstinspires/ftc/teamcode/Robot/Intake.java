@@ -36,16 +36,15 @@ public class Intake
     // 0.225 is the inside the pixel and ready to activate the grippers
     // 0 is the drop off point
     //
-    static public double LEFT_GRIP_DROP = 0.25;
-
+    static public double LEFT_GRIP_DROP = 0.3;
     static public double RIGHT_GRIP_DROP = 0;
-    static public double LEFT_GRIP_HOLD = 0.65;
+    static public double LEFT_GRIP_HOLD = 0.6;
     static public double RIGHT_GRIP_HOLD = 0.35;
 
     static public double MANDIBLE_INIT = 0;
-    static public double LEFT_MANDIBLE_OPEN = 0.6;
-    static public double RIGHT_MANDIBLE_OPEN = 0.6;
-    static public double LEFT_MANDIBLE_CLOSE = 0.15;
+    static public double LEFT_MANDIBLE_OPEN = 0.75;
+    static public double RIGHT_MANDIBLE_OPEN = 0.55;
+    static public double LEFT_MANDIBLE_CLOSE = 0.1;
     static public double RIGHT_MANDIBLE_CLOSE = 0.05;
 
     private Positions currentPosition = Positions.INIT;
@@ -72,9 +71,9 @@ public class Intake
         // WAIT_TO_INTAKE is right above the pixels with the grippers closed and above the pixels and about to go inside of the pixel
         WAIT_TO_INTAKE(0.1275, 0.1275, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // DOWN_TO_PIXEL is where the grippers are inside of the pixels and about to open to grab onto the pixels
-        DOWN_TO_PIXEL(0.145, 0.145, LEFT_GRIP_DROP, RIGHT_GRIP_DROP ),
+        DOWN_TO_PIXEL(0.15, 0.15, LEFT_GRIP_DROP, RIGHT_GRIP_DROP ),
         // INTAKE is where the grippers are in the pixels and open and holding onto the pixel
-        INTAKE( 0.145, 0.145, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
+        INTAKE( 0.15, 0.15, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD);
 
         public final double rElbowPos;
         public final double lElbowPos;
@@ -135,12 +134,14 @@ public class Intake
         try {
             leftMandible = hwMap.servo.get("landible");
             leftMandible.setDirection(Servo.Direction.FORWARD);
+            leftMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("landible not found", 0);
         }
         try {
             rightMandible =  hwMap.servo.get("randible");
             rightMandible.setDirection(Servo.Direction.REVERSE);
+            rightMandible.setPosition(MANDIBLE_INIT);
         } catch(Exception e) {
             telemetry.addData("randible not found", 0);
         }
@@ -296,8 +297,8 @@ public class Intake
     }
 
     public boolean mandibleHalf() {
-        setLeftMandiblePos(0.325);
-        setRightMandiblePos(0.175);
+        setLeftMandiblePos(0.3);
+        setRightMandiblePos(0.2);
         return true;
     }
     public void leftMandibleOpen(){
@@ -386,15 +387,16 @@ public class Intake
             telemetry.addData("beambreakleft", beamBreakLeft.getState());
             telemetry.addData("time", time.seconds());
             telemetry.addData("state = ", state);
-
+            if (button) {
+                time.reset();
+            }
             if ((leftloaded && rightloaded) || button) {
                 switch (state) {
                     case 0:
-                        time.reset();
                         if (!done) {
                             if (time.seconds() < 1) {
-                                goTo(Positions.DOWN_TO_PIXEL, false);
                                 mandibleClose();
+                                goTo(Positions.DOWN_TO_PIXEL, false);
                             } else {
                                 done = true;
                             }

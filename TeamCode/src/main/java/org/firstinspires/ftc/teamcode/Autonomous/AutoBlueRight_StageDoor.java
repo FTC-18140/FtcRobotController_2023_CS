@@ -21,7 +21,7 @@ public class AutoBlueRight_StageDoor extends OpMode {
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     SampleMecanumDrive drive;
 
-    Pose2d start = new Pose2d(FieldConstants.RedLeft2.START.x,FieldConstants.RedLeft2.START.y, FieldConstants.RedLeft2.START.h);
+    Pose2d start = new Pose2d(-36,61.5, Math.toRadians(-90));
 
     ElapsedTime spiketimer;
     String spikePos = "RIGHT";
@@ -185,7 +185,7 @@ public class AutoBlueRight_StageDoor extends OpMode {
                 .build();
 
         stack_center = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-50, 34), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-50, 36), Math.toRadians(-90))
                 .lineTo(new Vector2d(-36, 32))
                 .build();
 
@@ -193,7 +193,6 @@ public class AutoBlueRight_StageDoor extends OpMode {
                 .splineToConstantHeading(new Vector2d(-42, 42), Math.toRadians(-90))
                 .splineTo(new Vector2d(-29, 36), Math.toRadians(0))
                 .build();
-
 
         // Select starting substate based on vision processing result.
         // Also, initialize the substate step
@@ -216,53 +215,54 @@ public class AutoBlueRight_StageDoor extends OpMode {
         }
 //backs up and aligns to the stack and backdrop
         back_and_turn = drive.trajectorySequenceBuilder(spikeTrajectory.end())
-                .lineTo(new Vector2d(-44, -42))
-                .turn(Math.toRadians(90))
+                .lineTo(new Vector2d(-42, 42))
+                .turn(Math.toRadians(-90))
                 .build();
 
         back_and_turn_right = drive.trajectorySequenceBuilder(spikeTrajectory.end())
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(-44, -42), Math.toRadians(-90))
-                .turn(Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-42, 42), Math.toRadians(90))
+                .turn(Math.toRadians(-180))
                 .build();
+
 //splines to the stack, then slows down as it aligns more accurately with the stack
-        if (spikePos == "RIGHT"){
+        if (spikePos == "LEFT"){
             go_to_stack = drive.trajectoryBuilder(back_and_turn_right.end())
-                    .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-60.5, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-52, 38), Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(-55.5, 40), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }else{
             go_to_stack = drive.trajectoryBuilder(back_and_turn.end())
-                    .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-60.5, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-52, 38), Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(-57.5, 40.5), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }
 
 
-        //backs away to knock extra pixels less
+        //backs away to knock extra pixels loose
         move_to_transfer = drive.trajectoryBuilder(go_to_stack.end())
-                .lineTo(new Vector2d(-50, -38))
+                .lineTo(new Vector2d(-48, 36))
                 .build();
 
         //aligns to the truss
         yellow = drive.trajectoryBuilder(move_to_transfer.end())
-                .splineToConstantHeading(new Vector2d(-55, -36), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-56, -20), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-42, -13), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, -13), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-55, 36), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-56, 20), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-42, 13), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, 13), Math.toRadians(0))
                 .build();
 
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
                 .build();
         to_backdrop_left = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -31), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 31), Math.toRadians(0))
                 .build();
         to_backdrop_right = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(47.5, -44), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 44), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(47.5, -36), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51, 34), Math.toRadians(0))
                 .build();
         switch(spikePos){
             case("LEFT"):
@@ -279,21 +279,21 @@ public class AutoBlueRight_StageDoor extends OpMode {
 
                 break;
         }
-        if (spikePos == "LEFT"){
+        if (spikePos == "RIGHT"){
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(48, -44), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(51, 44), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
-                    .splineToConstantHeading(new Vector2d(-48, -20), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48, 20), Math.toRadians(0))
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(47.5, -31), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(51, 31), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
-                    .splineToConstantHeading(new Vector2d(-48, -20), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48, 20), Math.toRadians(0))
                     .build();
         }
 

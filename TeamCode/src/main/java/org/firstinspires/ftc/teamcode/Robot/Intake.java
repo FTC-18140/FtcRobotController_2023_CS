@@ -62,7 +62,7 @@ public class Intake
     public enum Positions
     {
         // TRANSFER is  the position where it is right above the delivery grippers and drops the pixels into it
-        TRANSFER( 0.0275, 0.0275, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
+        TRANSFER( 0.0175, 0.0175, LEFT_GRIP_DROP, RIGHT_GRIP_DROP),
         // READY_TO_TRANSFER is where it is right above the  delivery grippers and is about to drop the pixels
         READY_TO_TRANSFER(0, 0, LEFT_GRIP_HOLD, RIGHT_GRIP_HOLD),
         // INIT is where the elbow and grippers initialize to
@@ -297,8 +297,8 @@ public class Intake
     }
 
     public boolean mandibleHalf() {
-        setLeftMandiblePos(0.3);
-        setRightMandiblePos(0.2);
+        setLeftMandiblePos(0.225);
+        setRightMandiblePos(0.125);
         return true;
     }
     public void leftMandibleOpen(){
@@ -330,7 +330,7 @@ public class Intake
 
         boolean done = false;
 
-        boolean leftloaded = !beamBreakLeft.getState();
+        boolean  leftloaded = !beamBreakLeft.getState();
         boolean rightloaded = !beamBreakRight.getState();
 
 

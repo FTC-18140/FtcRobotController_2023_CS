@@ -129,11 +129,9 @@ public class Teleop extends OpMode  {
 //            toggleManual = false;
 //        }
 //        if (toggleManual = false) {
-            try {
+
                 robot.intake.autoIntake(tbdGamepad1.getButton(B));
-            } catch (Exception e) {
-                telemetry.addData("auto intake not working", 0);
-            }
+
 //        } else {
 //            if (tbdGamepad1.getButton(LEFT_BUMPER)) {
 //                robot.intake.goTo(WAIT_TO_INTAKE, false);
@@ -144,7 +142,7 @@ public class Teleop extends OpMode  {
 //                robot.intake.goTo(TRANSFER, false);
 //            } //else if (tbdGamepad1.getButtonPressed(B)) {
 //            robot.intake.goTo(DOWN_TO_PIXEL, false);
-//        }
+
 
 
 

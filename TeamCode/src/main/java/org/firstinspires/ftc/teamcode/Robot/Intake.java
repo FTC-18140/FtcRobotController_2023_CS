@@ -43,7 +43,7 @@ public class Intake
 
     static public double MANDIBLE_INIT = 0;
     static public double LEFT_MANDIBLE_OPEN = 0.75;
-    static public double RIGHT_MANDIBLE_OPEN = 0.55;
+    static public double RIGHT_MANDIBLE_OPEN = 0.75;
     static public double LEFT_MANDIBLE_CLOSE = 0.1;
     static public double RIGHT_MANDIBLE_CLOSE = 0.05;
 

@@ -87,7 +87,7 @@ public class FieldConstants {
 
     public enum BlueLeft {
         START(12,62, Math.toRadians(-90)),
-        SPIKE_RIGHT(11,36,Math.toRadians(-150)),
+        SPIKE_RIGHT(9,36,Math.toRadians(-150)),
         SPIKE_CENTER(22,30,Math.toRadians(-120)),
         SPIKE_LEFT(33,40,Math.toRadians(-130)),
         BACKDROP_RIGHT(52,27.5,Math.toRadians(180)),
@@ -96,7 +96,7 @@ public class FieldConstants {
         TRUSS_IN(-36,-12,Math.toRadians(90)),
         TRUSS_OUT(-36,36,Math.toRadians(90)),
         STACK(-24,52,Math.toRadians(90)),
-        PARK(58,58,Math.toRadians(0));
+        PARK(58,60,Math.toRadians(0));
 
         public final double x;
         public final double y;

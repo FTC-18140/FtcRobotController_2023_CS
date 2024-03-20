@@ -124,13 +124,13 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
     public void start(){
         switch(tagNum){
             case(1):
-                spike_x = FieldConstants.BlueLeft.SPIKE_LEFT.x;
+                spike_x = FieldConstants.BlueLeft.SPIKE_LEFT.x - 2;
                 spike_y = FieldConstants.BlueLeft.SPIKE_LEFT.y;
                 spike_heading = FieldConstants.BlueLeft.SPIKE_LEFT.h;
-                backdrop_x = FieldConstants.BlueLeft.BACKDROP_LEFT.x;
+                backdrop_x = FieldConstants.BlueLeft.BACKDROP_LEFT.x - 1;
                 backdrop_y = FieldConstants.BlueLeft.BACKDROP_LEFT.y;
 
-                backdrop2_x = 51;
+                backdrop2_x = 52;
                 backdrop2_y = 45;
                 spike_tangent = Math.toRadians(-90);
                 break;
@@ -141,7 +141,7 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
                 backdrop_x = FieldConstants.BlueLeft.BACKDROP_CENTER.x;
                 backdrop_y = FieldConstants.BlueLeft.BACKDROP_CENTER.y;
 
-                backdrop2_x = 50.5;
+                backdrop2_x = 52;
                 backdrop2_y = 32;
                 spike_tangent = Math.toRadians(-90);
                 break;
@@ -152,7 +152,7 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
                 backdrop_x = FieldConstants.BlueLeft.BACKDROP_RIGHT.x;
                 backdrop_y = FieldConstants.BlueLeft.BACKDROP_RIGHT.y;
 
-                backdrop2_x = 50.5;
+                backdrop2_x = 52;
                 backdrop2_y = 32;
                 spike_tangent = Math.toRadians(180);
                 break;
@@ -174,23 +174,24 @@ public class AutoBlueLeft_RoadRunner_TWO_PLUS_TWO extends OpMode {
                 .build();
 
         truss1 = drive.trajectoryBuilder(yellow.end())
-                .splineToConstantHeading(new Vector2d(24, 57), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-40, 57), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(12, 58), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-40, 58), Math.toRadians(180))
                 .build();
 
         to_stack = drive.trajectoryBuilder(truss1.end())
-                .splineToConstantHeading(new Vector2d(-50, 28), Math.toRadians(-100))
-                .splineToConstantHeading(new Vector2d(-56, 30), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(-51, 44), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-52, 33), Math.toRadians(-150))
+                .splineToConstantHeading(new Vector2d(-57, 35), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         move_to_transfer = drive.trajectoryBuilder(to_stack.end(), true)
-                .splineToConstantHeading(new Vector2d(-50, 32), Math.toRadians(-45))
-                .splineToConstantHeading(new Vector2d(-48, 36), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(-50, 42), Math.toRadians(45))
+                .splineToConstantHeading(new Vector2d(-48, 46), Math.toRadians(45))
                 .build();
 
         truss2 = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-40, 54), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(24, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-40, 58), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(24, 58), Math.toRadians(0))
                 .build();
 
         backdrop2 = drive.trajectoryBuilder(truss2.end(), true)

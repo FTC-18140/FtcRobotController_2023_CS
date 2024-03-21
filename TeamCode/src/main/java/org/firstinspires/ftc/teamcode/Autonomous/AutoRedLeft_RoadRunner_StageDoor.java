@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(group = "autoredleft")
-public class AutoRedLeft_ThroughTruss extends OpMode {
+public class AutoRedLeft_RoadRunner_StageDoor extends OpMode {
 
     boolean stepdone = false;
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
@@ -185,8 +185,8 @@ public class AutoRedLeft_ThroughTruss extends OpMode {
                 .build();
 
         stack_center = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-54, -32), Math.toRadians(90))
-                .lineTo(new Vector2d(-37, -33))
+                .splineToConstantHeading(new Vector2d(-54, -34), Math.toRadians(90))
+                .lineTo(new Vector2d(-40, -33))
                 .build();
 
         stack_right = drive.trajectorySequenceBuilder(start)
@@ -216,13 +216,13 @@ public class AutoRedLeft_ThroughTruss extends OpMode {
         }
 //backs up and aligns to the stack and backdrop
         back_and_turn = drive.trajectorySequenceBuilder(spikeTrajectory.end())
-                .lineTo(new Vector2d(-42, -42))
+                .lineTo(new Vector2d(-44, -42))
                 .turn(Math.toRadians(90))
                 .build();
 
         back_and_turn_right = drive.trajectorySequenceBuilder(spikeTrajectory.end())
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-44, -42), Math.toRadians(-90))
                 .turn(Math.toRadians(180))
                 .build();
 //splines to the stack, then slows down as it aligns more accurately with the stack
@@ -241,26 +241,28 @@ public class AutoRedLeft_ThroughTruss extends OpMode {
 
         //backs away to knock extra pixels less
         move_to_transfer = drive.trajectoryBuilder(go_to_stack.end())
-                .lineTo(new Vector2d(-52, -42))
+                .lineTo(new Vector2d(-50, -38))
                 .build();
 
         //aligns to the truss
-        yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-36, -62), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, -62), Math.toRadians(0))
+        yellow = drive.trajectoryBuilder(move_to_transfer.end())
+                .splineToConstantHeading(new Vector2d(-55, -36), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-56, -20), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-42, -13), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, -13), Math.toRadians(0))
                 .build();
 
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
                 .build();
         to_backdrop_left = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -28.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, -31), Math.toRadians(0))
                 .build();
         to_backdrop_right = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -42), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(47.5, -44), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -34), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(47.5, -36), Math.toRadians(0))
                 .build();
         switch(spikePos){
             case("LEFT"):
@@ -287,7 +289,7 @@ public class AutoRedLeft_ThroughTruss extends OpMode {
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(48.5, -31), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(47.5, -31), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())

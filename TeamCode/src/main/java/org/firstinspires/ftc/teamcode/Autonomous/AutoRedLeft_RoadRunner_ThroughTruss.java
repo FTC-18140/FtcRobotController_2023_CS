@@ -9,20 +9,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
-import org.firstinspires.ftc.teamcode.Robot.TGEVisionProcessor;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(group = "autoblueright")
-public class AutoBlueRight_ThroughTruss extends OpMode {
+@Autonomous(group = "autoredleft")
+public class AutoRedLeft_RoadRunner_ThroughTruss extends OpMode {
 
     boolean stepdone = false;
     ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     SampleMecanumDrive drive;
 
-    Pose2d start = new Pose2d(-36,61.5, Math.toRadians(-90));
+    Pose2d start = new Pose2d(FieldConstants.RedLeft2.START.x,FieldConstants.RedLeft2.START.y, FieldConstants.RedLeft2.START.h);
 
     ElapsedTime spiketimer;
     String spikePos = "RIGHT";
@@ -136,7 +135,6 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
     public void init() {
         robot.init(hardwareMap, telemetry, true);
         drive = robot.drive;
-        TGEVisionProcessor.theColor = "BLUE";
         spiketimer = new ElapsedTime();
     }
     @Override
@@ -181,19 +179,19 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
 //                .lineTo(new Vector2d(-44, -33))
 //                .build();
 
-        stack_right = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-50, 34), Math.toRadians(-90))
-                .lineTo(new Vector2d(-38, 34))
+        stack_left = drive.trajectorySequenceBuilder(start)
+                .splineToConstantHeading(new Vector2d(-58, -32), Math.toRadians(90))
+                .lineTo(new Vector2d(-46, -33))
                 .build();
 
         stack_center = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-50, 36), Math.toRadians(-90))
-                .lineTo(new Vector2d(-36, 32))
+                .splineToConstantHeading(new Vector2d(-54, -32), Math.toRadians(90))
+                .lineTo(new Vector2d(-37, -33))
                 .build();
 
-        stack_left = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-42, 42), Math.toRadians(-90))
-                .splineTo(new Vector2d(-29, 36), Math.toRadians(0))
+        stack_right = drive.trajectorySequenceBuilder(start)
+                .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(90))
+                .splineTo(new Vector2d(-32, -36), Math.toRadians(0))
                 .build();
 
 
@@ -218,54 +216,52 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
         }
 //backs up and aligns to the stack and backdrop
         back_and_turn = drive.trajectorySequenceBuilder(spikeTrajectory.end())
-                .lineTo(new Vector2d(-42, 42))
-                .turn(Math.toRadians(-90))
+                .lineTo(new Vector2d(-42, -42))
+                .turn(Math.toRadians(90))
                 .build();
 
         back_and_turn_right = drive.trajectorySequenceBuilder(spikeTrajectory.end())
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(-42, 42), Math.toRadians(90))
-                .turn(Math.toRadians(-180))
+                .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(-90))
+                .turn(Math.toRadians(180))
                 .build();
 //splines to the stack, then slows down as it aligns more accurately with the stack
-        if (spikePos == "LEFT"){
+        if (spikePos == "RIGHT"){
             go_to_stack = drive.trajectoryBuilder(back_and_turn_right.end())
-                    .splineToConstantHeading(new Vector2d(-52, 38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-58, 40), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(-60.5, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }else{
             go_to_stack = drive.trajectoryBuilder(back_and_turn.end())
-                    .splineToConstantHeading(new Vector2d(-52, 38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-58, 40.5), Math.toRadians(-150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(-60.5, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }
 
 
         //backs away to knock extra pixels less
         move_to_transfer = drive.trajectoryBuilder(go_to_stack.end())
-                .lineTo(new Vector2d(-48, 36))
+                .lineTo(new Vector2d(-52, -42))
                 .build();
 
         //aligns to the truss
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-36, 61.5), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, 61.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-36, -62), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, -62), Math.toRadians(0))
                 .build();
 
 //        to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
 //                .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
 //                .build();
-
         to_backdrop_left = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, 31), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, -28.5), Math.toRadians(0))
                 .build();
         to_backdrop_right = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, 44), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, -42), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(51, 34), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, -34), Math.toRadians(0))
                 .build();
-
         switch(spikePos){
             case("LEFT"):
                 backdropTrajectory = to_backdrop_left;
@@ -281,23 +277,21 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
 
                 break;
         }
-        if (spikePos == "RIGHT"){
+        if (spikePos == "LEFT"){
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-
-                    .splineToConstantHeading(new Vector2d(51, 44), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48, -44), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
-                    .splineToConstantHeading(new Vector2d(48, 20), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(-48, -20), Math.toRadians(0))
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(46, 33), Math.toRadians(-90))
-                    .splineToConstantHeading(new Vector2d(50, 31), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(48.5, -31), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
-                    .splineToConstantHeading(new Vector2d(48, 20), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(-48, -20), Math.toRadians(0))
                     .build();
         }
 
@@ -327,7 +321,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
             case DROP_PIXEL:
                 if ( spiketimer.seconds() > 0.5) {
                     step_left = Spike_Left.BACKUP;
-                    drive.followTrajectorySequenceAsync(back_and_turn_right);
+                    drive.followTrajectorySequenceAsync(back_and_turn);
                 }
 
                 break;
@@ -391,7 +385,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
                 break;
             case DROP_PIXEL:
                 if ( spiketimer.seconds() > 0.5) {
-                    drive.followTrajectorySequenceAsync(back_and_turn);
+                    drive.followTrajectorySequenceAsync(back_and_turn_right);
                     step_right = Spike_Right.BACKUP;
                     done = true;
                 }
@@ -415,7 +409,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
                 if(!drive.isBusy()){
                     robot.intake.goTo(Intake.Positions.WAIT_TO_INTAKE, false);
                     robot.intake.dropBoth();
-                    robot.intake.rightMandibleClose();
+                    robot.intake.leftMandibleClose();
                     drive.followTrajectoryAsync(go_to_stack);
                     stack_step = Stack_State.GRAB_FROM_STACK;
                     spiketimer.reset();
@@ -424,8 +418,8 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
             case GRAB_FROM_STACK:
                 if (!drive.isBusy()) {
 
-                    robot.intake.leftMandibleClose();
-                    robot.delivery.dropRight();
+                    robot.intake.rightMandibleClose();
+                    robot.delivery.dropLeft();
                     drive.followTrajectoryAsync(move_to_transfer);
                     stack_step = Stack_State.MOVE_TO_TRANSFER;
                 }
@@ -455,7 +449,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
                 break;
             case GRIP:
                 if(spiketimer.seconds() >= 0.5){
-                    robot.delivery.holdPixelRight();
+                    robot.delivery.holdPixelLeft();
                     done = true;
                 }
                 break;
@@ -512,25 +506,25 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
 //                    spiketimer.reset();
 //                }
 //                break;
-//            case MOVE_TO_TRANSFER:
-//                if(!drive.isBusy()){
-//                    step = State.AUTO_INTAKE;
-//                    robot.intake.autoIntake(true);
-//                    robot.intake.dropBoth();
-//                    spiketimer.reset();
-//                }
-//                break;
-//            case AUTO_INTAKE:
-//                stepdone = robot.intake.autoIntake(false);
-//
-//                if ( stepdone )  {
-//                    robot.delivery.holdPixelsBoth();
-//                    step = State.DELIVERY_GRIP;
-//                    stepdone = false;
-////                    step = State.TO_BACKDROP;
-////                    drive.followTrajectoryAsync(yellow);
-//                }
-//            break;
+            case MOVE_TO_TRANSFER:
+                if(!drive.isBusy()){
+                    step = State.AUTO_INTAKE;
+                    robot.intake.autoIntake(true);
+                    robot.intake.dropBoth();
+                    spiketimer.reset();
+                }
+                break;
+            case AUTO_INTAKE:
+                stepdone = robot.intake.autoIntake(false);
+
+                if ( stepdone )  {
+                    robot.delivery.holdPixelsBoth();
+                    step = State.DELIVERY_GRIP;
+                    stepdone = false;
+//                    step = State.TO_BACKDROP;
+//                    drive.followTrajectoryAsync(yellow);
+                }
+            break;
 //            case TRANSFER_INTAKE:
 //                if(spiketimer.seconds() >= 0.6){
 //                    robot.intake.holdPixelRight();
@@ -575,7 +569,7 @@ public class AutoBlueRight_ThroughTruss extends OpMode {
 
                     spiketimer.reset();
                     step = State.SECOND_PIXEL;
-                    robot.delivery.dropLeft();
+                    robot.delivery.dropRight();
                 }
                 break;
             case SECOND_PIXEL:

@@ -45,7 +45,7 @@ public class Intake
     static public double LEFT_MANDIBLE_OPEN = 0.75;
     static public double RIGHT_MANDIBLE_OPEN = 0.75;
     static public double LEFT_MANDIBLE_CLOSE = 0.1;
-    static public double RIGHT_MANDIBLE_CLOSE = 0.05;
+    static public double RIGHT_MANDIBLE_CLOSE = 0;
 
     private Positions currentPosition = Positions.INIT;
     private Positions previousPosition = Positions.INIT;

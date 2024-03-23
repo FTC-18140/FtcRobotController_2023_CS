@@ -182,12 +182,12 @@ public class AutoBlueRight_RoadRunner_StageDoor extends OpMode {
 //                .build();
 
         stack_right = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-53, 32), Math.toRadians(-90))
-                .lineTo(new Vector2d(-43, 34))
+                .splineToConstantHeading(new Vector2d(-50, 34), Math.toRadians(-90))
+                .lineTo(new Vector2d(-40, 36))
                 .build();
 
         stack_center = drive.trajectorySequenceBuilder(start)
-                .splineToConstantHeading(new Vector2d(-50, 31), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-50, 36), Math.toRadians(-90))
                 .lineTo(new Vector2d(-36, 32))
                 .build();
 
@@ -246,22 +246,22 @@ public class AutoBlueRight_RoadRunner_StageDoor extends OpMode {
                 .lineTo(new Vector2d(-52, 36))
                 .build();
 
-        //aligns to the truss
+        //aligns to the truss+
         yellow = drive.trajectoryBuilder(move_to_transfer.end())
                 .splineToConstantHeading(new Vector2d(-54, 36), Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-53, 20), Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(-42, 11), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, 11), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-42, 10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, 10), Math.toRadians(0))
                 .build();
 
         to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
                 .build();
         to_backdrop_right = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(51, 31), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51, 28), Math.toRadians(0))
                 .build();
         to_backdrop_left = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(51, 45), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51, 43), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
                 .splineToConstantHeading(new Vector2d(51, 34), Math.toRadians(0))
@@ -284,7 +284,7 @@ public class AutoBlueRight_RoadRunner_StageDoor extends OpMode {
         if (spikePos == "RIGHT"){
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
 
-                    .splineToConstantHeading(new Vector2d(51, 44), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(51, 41), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
@@ -292,7 +292,7 @@ public class AutoBlueRight_RoadRunner_StageDoor extends OpMode {
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(46, 33), Math.toRadians(-90))
+                    .splineToConstantHeading(new Vector2d(51, 33), Math.toRadians(-90))
                     .splineToConstantHeading(new Vector2d(50, 31), Math.toRadians(0))
                     .build();
 

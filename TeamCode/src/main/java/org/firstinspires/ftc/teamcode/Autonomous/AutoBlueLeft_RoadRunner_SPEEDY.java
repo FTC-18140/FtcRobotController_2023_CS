@@ -121,7 +121,8 @@ public class AutoBlueLeft_RoadRunner_SPEEDY extends OpMode {
                 .build();
 
         park = drive.trajectoryBuilder(yellow.end())
-                .splineToConstantHeading(new Vector2d(FieldConstants.BlueLeft.PARK.x, FieldConstants.BlueLeft.PARK.y), Math.toRadians(0))
+                //.splineToConstantHeading(new Vector2d(FieldConstants.BlueLeft.PARK.x, FieldConstants.BlueLeft.PARK.y), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(FieldConstants.BlueLeft.PARK.x, 11), Math.toRadians(0))
                 .build();
 
         drive.followTrajectoryAsync(purple);

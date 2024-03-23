@@ -15,7 +15,7 @@ public class FieldConstants {
         TRUSS_IN(-36,-12,Math.toRadians(90)),
         TRUSS_OUT(-36,36,Math.toRadians(90)),
         STACK(-24,52,Math.toRadians(90)),
-        PARK(54,-63,Math.toRadians(0)),
+        PARK(54,-61.5,Math.toRadians(0)),
         PARK_LEFT(54,-10,Math.toRadians(0));
 
         public final double x;

@@ -229,12 +229,12 @@ public class AutoRedLeft_RoadRunner_ThroughTruss extends OpMode {
         if (spikePos == "RIGHT"){
             go_to_stack = drive.trajectoryBuilder(back_and_turn_right.end())
                     .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-60.5, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-59, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }else{
             go_to_stack = drive.trajectoryBuilder(back_and_turn.end())
                     .splineToConstantHeading(new Vector2d(-52, -38), Math.toRadians(180))
-                    .splineToConstantHeading(new Vector2d(-60.5, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToConstantHeading(new Vector2d(-59, -41.5), Math.toRadians(150), SampleMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
         }
 
@@ -246,22 +246,24 @@ public class AutoRedLeft_RoadRunner_ThroughTruss extends OpMode {
 
         //aligns to the truss
         yellow = drive.trajectoryBuilder(move_to_transfer.end(), true)
-                .splineToConstantHeading(new Vector2d(-36, -62), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(16, -62), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-36, -61), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(16, -61), Math.toRadians(0))
                 .build();
 
 //        to_backdrop = drive.trajectoryBuilder(yellow.end(), true)
 //                .splineToConstantHeading(new Vector2d(backdrop_x, backdrop_y), Math.toRadians(0))
 //                .build();
+
         to_backdrop_left = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -28.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48.5, -24), Math.toRadians(0))
                 .build();
         to_backdrop_right = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -42), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48.5, -42), Math.toRadians(0))
                 .build();
         to_backdrop_center = drive.trajectoryBuilder(yellow.end(), true)
-                .splineToConstantHeading(new Vector2d(48, -34), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48.5, -32), Math.toRadians(0))
                 .build();
+
         switch(spikePos){
             case("LEFT"):
                 backdropTrajectory = to_backdrop_left;
@@ -279,7 +281,7 @@ public class AutoRedLeft_RoadRunner_ThroughTruss extends OpMode {
         }
         if (spikePos == "LEFT"){
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(48, -44), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(49, -42), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())
@@ -287,7 +289,7 @@ public class AutoRedLeft_RoadRunner_ThroughTruss extends OpMode {
                     .build();
         }else{
             second_pixel = drive.trajectoryBuilder(backdropTrajectory.end())
-                    .splineToConstantHeading(new Vector2d(48.5, -31), Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(49, -28), Math.toRadians(0))
                     .build();
 
             park = drive.trajectoryBuilder(second_pixel.end())

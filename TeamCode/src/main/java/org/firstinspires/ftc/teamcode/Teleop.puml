@@ -1,0 +1,25 @@
+@startuml
+class org.firstinspires.ftc.teamcode.Teleop {
++ {static} double WRIST_INCREMENT
++ {static} double WRIST_POSITION
++ {static} double TWIST_INCREMENT
++ {static} double TWIST_POSITION
++ {static} double ELBOW_INCREMENT
++ {static} double ELBOW_POSITION
++ {static} double INTAKE_INCREMENT
++ {static} double INTAKE_POSITION
+~ Thunderbot2023 robot
+~ boolean toggle
+~ TBDGamepad tbdGamepad1
+~ TBDGamepad tbdGamepad2
++ void init()
++ void init_loop()
++ void start()
++ void loop()
+}
+
+
+
+
+com.qualcomm.robotcore.eventloop.opmode.OpMode <|-- org.firstinspires.ftc.teamcode.Teleop
+@enduml

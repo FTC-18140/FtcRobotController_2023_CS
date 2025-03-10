@@ -1,0 +1,73 @@
+@startuml
+class org.firstinspires.ftc.teamcode.Robot.Thunderbot2023 {
++ IMU imu
+~ Orientation angles
+~ DcMotorEx leftFront
+~ DcMotorEx rightFront
+~ DcMotorEx leftRear
+~ DcMotorEx rightRear
+~ DistanceSensor lDistance
+~ DistanceSensor rDistance
++ LinearSlide linearSlide
++ Delivery delivery
++ EndGame endGame
++ Intake intake
++ ArtemisEyes eyes
++ Sensors sensors
+~ List<LynxModule> allHubs
+~ long leftFrontPosition
+~ long rightFrontPosition
+~ long leftRearPosition
+~ long rightRearPosition
+~ double allMotors
+~ double heading
+~ double initRotation
+~ double lastAngle
+~ double leftDistanceAway
+~ double rightDistanceAway
+~ boolean moving
++ {static} double SPEED_GAIN
++ {static} double STRAFE_GAIN
++ {static} double TURN_GAIN
++ {static} double MAX_SPEED
++ {static} double MAX_STRAFE
++ {static} double MAX_TURN
+~ {static} double COUNTS_PER_MOTOR_REV
+~ {static} double DRIVE_GEAR_REDUCTION
+~ {static} double WHEEL_DIAMETER_CM
+~ {static} double COUNTS_PER_CM
++ {static} double MAX_VELOCITY_CM
+~ {static} double MAX_VELOCITY_TICKS
+- Telemetry telemetry
+- long initPosition
+- double startAngle
+- boolean notifyTheDriver1
+- boolean notifyTheDriver2
++ void init(HardwareMap,Telemetry,boolean,boolean)
++ void joystickDrive(double,double,double)
++ void orientedDrive(double,double,double)
++ boolean alignToBackdrop(double,double)
++ boolean drive(double,double,double)
++ boolean gyroDrive(double,double,double)
++ boolean turn(double,double)
++ boolean turnTo(double,double)
++ boolean strafe(Direction,double,double)
+- double getHeading()
++ void update()
++ void start()
++ void stop()
++ void resetIMUYaw()
++ String getSpikePos()
++ double getPropX()
++ double getPropY()
++ boolean notifyDriver1()
++ boolean notifyDriver2()
+}
+
+
+enum org.firstinspires.ftc.teamcode.Robot.Direction {
++  LEFT
++  RIGHT
+}
+
+@enduml

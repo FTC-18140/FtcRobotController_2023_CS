@@ -131,39 +131,6 @@ public class ThunderbotAuto2023
         drive.setWeightedDrivePower(thePose);
     }
 
-    public boolean driveToTag(int tagID, double speed, double distanceAway)
-    {
-        if (!moving)
-        {
-            moving = true;
-        }
-
-        int tagNumber = eyes.getTagNumber(tagID);
-        double rangeError = (eyes.rangeError - distanceAway);
-        double headingError = eyes.headingError;
-        double yawError = eyes.yawError;
-
-        if (tagNumber == tagID) {
-
-            if (rangeError < 1 && headingError < 0.5 && yawError < 1) {
-                stop();
-                moving = false;
-                return true;
-            }
-            else {
-                double y = Range.clip(-rangeError * SPEED_GAIN, -MAX_SPEED, MAX_SPEED);
-                double x = Range.clip(-yawError * STRAFE_GAIN, -MAX_STRAFE, MAX_STRAFE);
-                double turn = Range.clip(-headingError * TURN_GAIN, -MAX_TURN, MAX_TURN);
-
-                joystickDrive(y, x, turn);
-                return false;
-            }
-        }
-        else {
-            stop();
-            return true;
-        }
-    }
 
     public void update()
     {

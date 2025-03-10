@@ -1,0 +1,500 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 6,
+    "backwardDepth": 6,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "org.firstinspires.ftc.teamcode.Teleop",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+!dump_memory
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1966404727 { 
+   	label=firstinspires
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_806447760 { 
+   	label=ftc
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   ArtemisEyes69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ArtemisEyes</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   aprilTagFinder: AprilTagProcessor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   headingError: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rangeError: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   tgeFinder: TGEVisionProcessor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   theBackCamera: WebcamName [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   theFrontCamera: WebcamName [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   thePortal: VisionPortal [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   yawError: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ activateBackCamera()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ activateFrontCamera()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTagNumber(tagNum: int): int</TD></TR>
+<TR><TD ALIGN="LEFT" ># init(hardwareMap: HardwareMap, telem: Telemetry)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ startAprilTagProcessor()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ startPropVisionProcessor()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ stopAprilTagProcessor()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ stopPropVisionProcessor()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Delivery69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Delivery</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   WRIST_TOGGLE_INCREMENT: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   clearOfTransferZone: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   lElbow: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   lElbowPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftGripPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftGripper: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   leftGripperClosed: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rElbow: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rElbowPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightGripPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightGripper: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   rightGripperClosed: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   twist: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   twistPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   wrist: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   wristPos: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- autoSetWristPos(position: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clearedTransferZone(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropBoth()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropLeft()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropRight()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ goTo(thePos: Positions)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ gripperClosed(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ holdPixelLeft()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ holdPixelRight()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ holdPixelsBoth()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init(hwMap: HardwareMap, telem: Telemetry, ifAuto: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >- setElbowPos(position: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setElbowPosition(position: double): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setWristPosition(wristPos: double): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleGripperRight()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleGrippersLeft()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleTwistCCW()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleTwistCW()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleUp()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EndGame69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EndGame</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   leftLift: DcMotor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftPower: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightLift: DcMotor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   rightPower: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ init(hwMap: HardwareMap, telem: Telemetry)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ pullUp(power: double)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Intake69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Intake</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   autoIntakeOverride: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   beamBreakLeft: DigitalChannel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   beamBreakRight: DigitalChannel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   clearOfTransferZone: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   currentPosition: Positions [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   done: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   lIntake: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   lIntakeElbowPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftGripPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftGripper: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   leftGripperClosed: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftMandible: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftMandiblePos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   moveSlowly: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   previousPosition: Positions [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rIntake: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rIntakeElbowPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightGripPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightGripper: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   rightGripperClosed: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightMandible: Servo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightMandiblePos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   state: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   time: ElapsedTime [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   toggle: boolean [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ autoIntake(button: boolean): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ autoIntakeState(button: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clearedTransferZone(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ driveSlowly(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropBoth()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropLeft()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropRight()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ goTo(pos: Positions, gripperToo: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ gripperClosed(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ holdPixelLeft()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ holdPixelRight()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ holdPixelsBoth()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init(hwMap: HardwareMap, telem: Telemetry, ifAuto: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ leftMandibleClose()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ leftMandibleOpen()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ leftMandibleToggle()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ mandibleClose(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ mandibleHalf(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ mandibleOpen()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ rightMandibleClose()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ rightMandibleOpen()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ rightMandibleToggle()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleGripper()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleUp()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+LinearSlide69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)LinearSlide</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   COUNTS_PER_CM: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   COUNTS_PER_MOTOR_REV: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   DRIVE_GEAR_REDUCTION: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   SPOOL_DIAMETER_CM: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftLinear: DcMotorEx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftSlidePosition: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightLinear: DcMotorEx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightSlidePosition: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   stepNumber: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   targetCounts: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ goToLinear(pos: Positions)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init(hwMap: HardwareMap, telem: Telemetry)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ linearPower(power: double)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ linearToPosition(cm: double, power: double)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ slideTogglePositionsDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ slideTogglePositionsUp()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleDown(cmToggle: double, ignoreLimit: boolean): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toggleUp(cmToggle: double): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Sensors69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Sensors</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   lDistance: ColorSensor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rDistance: ColorSensor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ init(hwMap: HardwareMap, telem: Telemetry)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ leftDistanceDetect()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ rightDistanceDetect()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TBDGamepad69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TBDGamepad</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   buttons: boolean[] [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   changed: boolean[] [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   gamepad: Gamepad [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftNewTrigger: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftOldTrigger: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   leftTriggerChanged: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   oldButtons: boolean[] [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightNewTrigger: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightOldTrigger: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rightTriggerChanged: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   triggerThreshold: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getButton(button: Button): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getButtonPressed(theButton: Button): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getButtonReleased(theButton: Button): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getExpo(stick: Stick): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTrigger(trigger: Trigger): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTriggerBoolean(trigger: Trigger): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTriggerPressed(theTrigger: Trigger): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ notifyDriver(numBlips: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TGEVisionProcessor69360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TGEVisionProcessor</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   bitmapText: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   contourPts: Point[] [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cvCvtcolorOutput: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   cvCvtcolorSrc: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cvDilate0Output: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   cvDilate0Src: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cvDilate1Output: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   cvDilate1Src: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cvErodeOutput: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   cvErodeSrc: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cvExtractchannelOutput: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   cvExtractchannelSrc: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cvThresholdOutput: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   cvThresholdSrc: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   findContoursInput: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   findContoursOutput: ArrayList&lt;MatOfPoint&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   index: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   inittime: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   myBitmap: Bitmap [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   myMat: Mat [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   numCountours: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   numPts: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   spikePos: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   telemetry: Telemetry [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   xPos: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   yPos: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- cvCvtcolor(src: Mat, code: int, dst: Mat)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cvCvtcolorOutput(): Mat</TD></TR>
+<TR><TD ALIGN="LEFT" >- cvDilate(src: Mat, kernel: Mat, anchor: Point, iterations: double, borderType: int, borderValue: Scalar, dst: Mat)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cvDilate0Output(): Mat</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cvDilate1Output(): Mat</TD></TR>
+<TR><TD ALIGN="LEFT" >- cvErode(src: Mat, kernel: Mat, anchor: Point, iterations: double, borderType: int, borderValue: Scalar, dst: Mat)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cvErodeOutput(): Mat</TD></TR>
+<TR><TD ALIGN="LEFT" >- cvExtractchannel(src: Mat, channel: double, dst: Mat)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cvExtractchannelOutput(): Mat</TD></TR>
+<TR><TD ALIGN="LEFT" >- cvThreshold(src: Mat, threshold: double, maxVal: double, type: int, dst: Mat)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cvThresholdOutput(): Mat</TD></TR>
+<TR><TD ALIGN="LEFT" >- findContours(input: Mat, externalOnly: boolean, contours: List&lt;MatOfPoint&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findContoursOutput(): ArrayList&lt;MatOfPoint&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init(width: int, height: int, calibration: CameraCalibration)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onDrawFrame(canvas: Canvas, onscreenWidth: int, onscreenHeight: int, scaleBmpPxToCanvasPx: float, scaleCanvasDensity: float, userContext: Object)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ processFrame(frame: Mat, captureTimeNanos: long): Object</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Teleop54126126[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Teleop</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   robot: Thunderbot2023 [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   tbdGamepad1: TBDGamepad [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   tbdGamepad2: TBDGamepad [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   toggle: boolean [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ init()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init_loop()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ loop()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ start()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Thunderbot202369360430[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Thunderbot2023</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   allHubs: List&lt;LynxModule&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   allMotors: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   angles: Orientation [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   delivery: Delivery [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   endGame: EndGame [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   eyes: ArtemisEyes [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   heading: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   imu: IMU [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   initPosition: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   initRotation: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   intake: Intake [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   lDistance: DistanceSensor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   lastAngle: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftDistanceAway: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftFront: DcMotorEx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftFrontPosition: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftRear: DcMotorEx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   leftRearPosition: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   linearSlide: LinearSlide [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   moving: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   notifyTheDriver1: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   notifyTheDriver2: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rDistance: DistanceSensor [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightDistanceAway: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightFront: DcMotorEx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightFrontPosition: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightRear: DcMotorEx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   rightRearPosition: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   sensors: Sensors [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   startAngle: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   telemetry: Telemetry [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ alignToBackdrop(targetDistance: double, stickValue: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ drive(targetHeading: double, distance: double, power: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ gyroDrive(targetHeading: double, distance: double, power: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init(ahwMap: HardwareMap, telem: Telemetry, withVision: boolean, ifAuto: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ joystickDrive(forward: double, right: double, clockwise: double)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ notifyDriver1(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ notifyDriver2(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ orientedDrive(forward: double, right: double, clockwise: double)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetIMUYaw()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ start()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ stop()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ strafe(dir: Direction, distance: double, power: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ turn(degreesToTurn: double, power: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ turnTo(targetHeading: double, power: double): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+ArtemisEyes69360430 -> TGEVisionProcessor69360430[label="tgeFinder
+[0..1]"];
+Teleop54126126 -> TBDGamepad69360430[label="tbdGamepad1
+[0..1]"];
+Teleop54126126 -> TBDGamepad69360430[label="tbdGamepad2
+[0..1]"];
+Teleop54126126 -> Thunderbot202369360430[label="robot
+[0..1]"];
+Thunderbot202369360430 -> ArtemisEyes69360430[label="eyes
+[0..1]"];
+Thunderbot202369360430 -> Delivery69360430[label="delivery
+[0..1]"];
+Thunderbot202369360430 -> EndGame69360430[label="endGame
+[0..1]"];
+Thunderbot202369360430 -> Intake69360430[label="intake
+[0..1]"];
+Thunderbot202369360430 -> LinearSlide69360430[label="linearSlide
+[0..1]"];
+Thunderbot202369360430 -> Sensors69360430[label="sensors
+[0..1]"];
+    
+}
+@enduml

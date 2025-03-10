@@ -6,13 +6,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-public class ArtemisEyes
+public class ThunderBotVision
 {
     private WebcamName theCamera;
     public TGEVisionProcessor tgeFinder;
     VisionPortal thePortal;
     Telemetry telemetry;
-    void init(HardwareMap hardwareMap, Telemetry telem )
+
+    void init(HardwareMap hardwareMap, Telemetry telem)
     {
         telemetry = telem;
         try
@@ -34,58 +35,68 @@ public class ArtemisEyes
         {
             telemetry.addData("exception:  ", e.getMessage());
         }
-
-
     }
 
-    public String getSpikePos() {
-        if (tgeFinder != null) {
-            if (thePortal.getProcessorEnabled(tgeFinder)){
+    public String getSpikePos()
+    {
+        if (tgeFinder != null)
+        {
+            if (thePortal.getProcessorEnabled(tgeFinder))
+            {
                 telemetry.addData("TGE Enabled YES!!", 0);
             }
             return tgeFinder.getSpikePos();
-
-        } else {
+        }
+        else
+        {
             return "TGEFINDER NOT INITIALIZED";
         }
-
-
     }
 
-    public double getPropX() {
-        if (tgeFinder != null) {
+    public double getPropX()
+    {
+        if (tgeFinder != null)
+        {
             return tgeFinder.xPos;
-        } else {
-            return -1;
         }
-    }
-    public double getPropY() {
-        if (tgeFinder != null) {
-            return tgeFinder.yPos;
-        } else {
+        else
+        {
             return -1;
         }
     }
 
+    public double getPropY()
+    {
+        if (tgeFinder != null)
+        {
+            return tgeFinder.yPos;
+        }
+        else
+        {
+            return -1;
+        }
+    }
 
     public void stopPropVisionProcessor()
     {
-        if ( tgeFinder != null )
+        if (tgeFinder != null)
         {
             thePortal.setProcessorEnabled(tgeFinder, false);
         }
-        else {
+        else
+        {
             telemetry.addData("Can't disable Prop Vision Processor. Not initialized.", 0);
         }
     }
 
     public void startPropVisionProcessor()
     {
-        if ( tgeFinder != null )
+        if (tgeFinder != null)
         {
             thePortal.setProcessorEnabled(tgeFinder, true);
         }
-        else {
+        else
+        {
             telemetry.addData("Can't enable Prop Vision Processor. Not initialized.", 0);
         }
     }

@@ -6,9 +6,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -42,7 +40,7 @@ public class Thunderbot2023
     public Delivery delivery = new Delivery();
     public EndGame endGame = new EndGame();
     public Intake intake = new Intake();
-    public ArtemisEyes eyes = new ArtemisEyes();
+    public ThunderBotVision eyes = new ThunderBotVision();
 
     public Sensors sensors = new Sensors();
     List<LynxModule> allHubs;
